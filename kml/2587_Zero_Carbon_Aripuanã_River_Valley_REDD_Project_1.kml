@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Fazenda_Mata_Mata_II.kml</name>
+	<Schema name="C:/Users/magno/Downloads/Fazenda_Mata_Mata_II.kml" id="temp">
+		<SimpleField type="int" name="Id"></SimpleField>
+		<SimpleField type="double" name="Hectares"></SimpleField>
+	</Schema>
+	<Placemark>
+		<ExtendedData>
+			<SchemaData schemaUrl="#temp">
+				<SimpleData name="Id">0</SimpleData>
+				<SimpleData name="Hectares">154030.825703</SimpleData>
+			</SchemaData>
+		</ExtendedData>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						-60.54706225147657,-6.436651054809782,0 -60.75165111478452,-6.438544787263551,0 -60.93898899210028,-6.440278839705773,0 -61.09107286145345,-6.441686571067297,0 -61.09089719993543,-6.489369329837131,0 -61.09070255779122,-6.542204319025655,0 -61.16342528000084,-6.480666109788059,0 -61.19373056000063,-6.48566582978795,0 -61.20404536214929,-6.607484349740236,0 -61.21532861000064,-6.740740279779762,0 -61.20835667000068,-6.788735829778209,0 -61.09694284137743,-6.73920252587084,0 -60.95962273698014,-6.678151590383231,0 -60.80991284369668,-6.611592297577175,0 -60.67603460754678,-6.552071577036635,0 -60.54688167000578,-6.494651669787543,0 -60.54706225147657,-6.436651054809782,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+</Document>
+</kml>

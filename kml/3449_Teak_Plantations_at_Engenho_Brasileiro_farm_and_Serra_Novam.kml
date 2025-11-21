@@ -1,0 +1,1311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document id="Eligibility_2010_-_2020" xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd">
+	<name>Eligibility 2010 - 2020</name>
+	<Snippet maxLines="0"></Snippet>
+	<Style id="PolyStyle00">
+		<LabelStyle>
+			<color>00000000</color>
+			<scale>0</scale>
+		</LabelStyle>
+		<LineStyle>
+			<color>00f0f0f0</color>
+			<width>0.4</width>
+		</LineStyle>
+		<PolyStyle>
+			<color>ff00aaff</color>
+		</PolyStyle>
+	</Style>
+	<Style id="PolyStyle01">
+		<LabelStyle>
+			<color>00000000</color>
+			<scale>0</scale>
+		</LabelStyle>
+		<LineStyle>
+			<color>00f0f0f0</color>
+			<width>0.4</width>
+		</LineStyle>
+		<PolyStyle>
+			<color>ffb2b2b2</color>
+		</PolyStyle>
+	</Style>
+	<Folder id="FeatureLayer0">
+		<name>Eligibility 2010 - 2020</name>
+		<Snippet maxLines="0"></Snippet>
+		<Placemark id="ID_00000">
+			<name>BRA</name>
+			<Snippet maxLines="0"></Snippet>
+			<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>BRA</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>0</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2010</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>Name</td>
+
+<td>BRA</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2020</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>CMP_10_20</td>
+
+<td>Non Forest Stable</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>ELE_10_20</td>
+
+<td>Eligible</td>
+
+</tr>
+
+<tr>
+
+<td>Area_Ha</td>
+
+<td>343.733434</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+			<styleUrl>#PolyStyle00</styleUrl>
+			<MultiGeometry>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.50217020427895,-8.598653678115241,0 -35.50224653276494,-8.598001264245976,0 -35.50224585510291,-8.597334895547773,0 -35.50227893540466,-8.59654230732461,0 -35.50230062789261,-8.595781643107347,0 -35.50234112048221,-8.595235719232193,0 -35.50235546743671,-8.594742581390902,0 -35.50241160503312,-8.593876223496475,0 -35.50597956895524,-8.595348359697464,0 -35.50762193189571,-8.596017082157452,0 -35.50888921482946,-8.596563240359661,0 -35.5098527691435,-8.596963480235409,0 -35.51098185947536,-8.597351545150406,0 -35.51178581333386,-8.597626332299969,0 -35.51252126712343,-8.597879901380283,0 -35.51316300116555,-8.598103660795587,0 -35.51399746131429,-8.598381986261598,0 -35.5144988167544,-8.598565909963529,0 -35.52648240159486,-8.600072456139797,0 -35.5263982944921,-8.602387863021463,0 -35.52639660995537,-8.603812838769523,0 -35.52636429717367,-8.604670053003856,0 -35.52634833472655,-8.605573494327604,0 -35.52633155269648,-8.606130217015986,0 -35.5263006438641,-8.607178335808252,0 -35.52629192345334,-8.607667987516386,0 -35.52628048708947,-8.60817442580351,0 -35.52626004188325,-8.608906248395039,0 -35.52625016129828,-8.609453319569532,0 -35.52624079037142,-8.609995475874799,0 -35.5262174489077,-8.610749921307049,0 -35.52618749809044,-8.611789936788821,0 -35.52465548804294,-8.611548919073766,0 -35.52328947821645,-8.611624014970864,0 -35.52018938584481,-8.611401348577937,0 -35.51990726820164,-8.611213946125755,0 -35.51959801705115,-8.611184585458314,0 -35.5194729642058,-8.611367394440482,0 -35.51651303729234,-8.611184604842988,0 -35.5156296461558,-8.61113516765381,0 -35.5143857236214,-8.611002869732694,0 -35.51397410195309,-8.611023991061142,0 -35.51319429493859,-8.610883247293968,0 -35.51266695993249,-8.61074143203534,0 -35.51200885314368,-8.610570421268591,0 -35.51124106815942,-8.61036186995141,0 -35.51036360120472,-8.610124118420604,0 -35.50975480424945,-8.609969787682465,0 -35.50910936008464,-8.609798772536843,0 -35.50860313053452,-8.60968615056416,0 -35.50829095487074,-8.609602726707534,0 -35.50802096554651,-8.609535986891942,0 -35.50781425381879,-8.609485930956824,0 -35.50766660196371,-8.60945256123636,0 -35.50751051216334,-8.609406677012267,0 -35.50734598557156,-8.609352448814196,0 -35.50738523230874,-8.608614983642321,0 -35.50740097763171,-8.608098167967025,0 -35.50741681549489,-8.607402893596559,0 -35.50742688601184,-8.606733404919018,0 -35.50743900972635,-8.606319712724334,0 -35.50745022874279,-8.605027160309005,0 -35.50661180344747,-8.605123267567263,0 -35.50600408378839,-8.605128761498927,0 -35.50558492578136,-8.605135595894426,0 -35.50490478270519,-8.605017571912542,0 -35.50450312837535,-8.605121530685082,0 -35.50416567430491,-8.605008005594147,0 -35.50377800558257,-8.604887377826481,0 -35.50345535857509,-8.604892242108006,0 -35.5029572532907,-8.60489709425684,0 -35.50242209623124,-8.604940709754846,0 -35.50204035739528,-8.604974413093677,0 -35.50180840667653,-8.604734847994759,0 -35.50173298646318,-8.604520635176906,0 -35.5016789768219,-8.60429822565043,0 -35.50168126014997,-8.604052086560321,0 -35.50171704376205,-8.603763979549264,0 -35.50175758049001,-8.603511363323095,0 -35.50181713422849,-8.602979845819387,0 -35.50187555864475,-8.602531595279173,0 -35.5019257591384,-8.60219047663667,0 -35.50192807909715,-8.601851290682513,0 -35.50198124380394,-8.601162600113751,0 -35.50203978287956,-8.600523801272493,0 -35.50206556066486,-8.599898260413651,0 -35.50209623793037,-8.599292459728039,0 -35.50217020427895,-8.598653678115241,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+					<innerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.51318795903362,-8.599033225645735,0 -35.51291846420246,-8.599033225411489,0 -35.51291846433718,-8.598763730973191,0 -35.51264896964803,-8.598763731398879,0 -35.51264896932251,-8.599033225891919,0 -35.51237947529577,-8.599033226177404,0 -35.5121099803004,-8.599033225376193,0 -35.5121099805565,-8.599302719969366,0 -35.51157099094581,-8.599302720614411,0 -35.51157099087555,-8.599572215313627,0 -35.51076250774365,-8.599572214561157,0 -35.5107625071562,-8.599841709421103,0 -35.51103200207769,-8.599841709201812,0 -35.51103200173627,-8.600111204003646,0 -35.51130149679982,-8.600111204444307,0 -35.51130149669849,-8.600380698284381,0 -35.51103200235801,-8.600380698796151,0 -35.51103200182479,-8.60118918226742,0 -35.51103200175948,-8.601458677052255,0 -35.51130149596131,-8.601458677231248,0 -35.51130149614207,-8.601728171957978,0 -35.51157099138799,-8.601728171887288,0 -35.51184048567123,-8.601728171633455,0 -35.51184048538099,-8.60199766625329,0 -35.51291846366195,-8.601997666737256,0 -35.5129184641904,-8.602267161134767,0 -35.51345745293616,-8.602267161039537,0 -35.51345745293393,-8.601997666745573,0 -35.51372694793879,-8.601997666011361,0 -35.51372694768526,-8.601189182369732,0 -35.51372694792928,-8.600380698697524,0 -35.51372694812316,-8.600111204434528,0 -35.51345745263233,-8.600111203893666,0 -35.51345745320421,-8.599302720022321,0 -35.51345745290208,-8.599033225696921,0 -35.51318795903362,-8.599033225645735,0 
+							</coordinates>
+						</LinearRing>
+					</innerBoundaryIs>
+				</Polygon>
+			</MultiGeometry>
+		</Placemark>
+		<Placemark id="ID_00001">
+			<name>BRA</name>
+			<Snippet maxLines="0"></Snippet>
+			<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>BRA</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>1</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2010</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>Name</td>
+
+<td>BRA</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2020</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>CMP_10_20</td>
+
+<td>Gain</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>ELE_10_20</td>
+
+<td>Non Eligible</td>
+
+</tr>
+
+<tr>
+
+<td>Area_Ha</td>
+
+<td>0.354061</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+			<styleUrl>#PolyStyle01</styleUrl>
+			<MultiGeometry>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.51372694792928,-8.600380698697524,0 -35.51345745315557,-8.600380698205475,0 -35.51345745263233,-8.600111203893666,0 -35.51372694812316,-8.600111204434528,0 -35.51372694792928,-8.600380698697524,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.51130149596131,-8.601458677231248,0 -35.51103200175948,-8.601458677052255,0 -35.51103200182479,-8.60118918226742,0 -35.51130149674372,-8.601189182495188,0 -35.51130149596131,-8.601458677231248,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.51345745293393,-8.601997666745573,0 -35.51345745293616,-8.602267161039537,0 -35.5129184641904,-8.602267161134767,0 -35.51291846366195,-8.601997666737256,0 -35.51345745293393,-8.601997666745573,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+			</MultiGeometry>
+		</Placemark>
+		<Placemark id="ID_00002">
+			<name>SER</name>
+			<Snippet maxLines="0"></Snippet>
+			<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>SER</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>2</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2010</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>Name</td>
+
+<td>SER</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2020</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>CMP_10_20</td>
+
+<td>Non Forest Stable</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>ELE_10_20</td>
+
+<td>Eligible</td>
+
+</tr>
+
+<tr>
+
+<td>Area_Ha</td>
+
+<td>140.2942</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+			<styleUrl>#PolyStyle00</styleUrl>
+			<MultiGeometry>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.52984049248,-8.583133044515895,0 -35.52886078386726,-8.581637948279525,0 -35.53601124106704,-8.583008532740333,0 -35.53788350867413,-8.583299574167384,0 -35.53900514453544,-8.585367998132153,0 -35.53955202395404,-8.586546400667521,0 -35.53926451899826,-8.590840499113906,0 -35.53917533346006,-8.591546043602781,0 -35.53911728519,-8.59387374955641,0 -35.53908496718022,-8.595701734550502,0 -35.53893365584776,-8.597521829299838,0 -35.53889746640717,-8.598427278715798,0 -35.53895170081694,-8.599399364821394,0 -35.5387899442088,-8.599400919298418,0 -35.53878994380743,-8.599302720615428,0 -35.53798146028552,-8.599302720150449,0 -35.53798146074333,-8.599033225291016,0 -35.53744247093999,-8.599033226039889,0 -35.5374424709273,-8.5987637310725,0 -35.53717297659048,-8.598763731556975,0 -35.53690348219236,-8.598763730948836,0 -35.53690348182347,-8.599033226026783,0 -35.53636449339379,-8.599033225251674,0 -35.536364493607,-8.599302720430765,0 -35.5363644932031,-8.599424222390725,0 -35.53493156654723,-8.599437981934074,0 -35.53160068129372,-8.598960089155746,0 -35.52955801629566,-8.598836614999481,0 -35.52867854558648,-8.598766938363571,0 -35.52652689566505,-8.59883573268514,0 -35.52880821912049,-8.598071245707295,0 -35.53178308463183,-8.596750831112342,0 -35.53178308458005,-8.597146763706803,0 -35.53151359025241,-8.597146763506032,0 -35.53151359026116,-8.597416257871302,0 -35.53124409569362,-8.597416258440374,0 -35.53124409556727,-8.597685752857398,0 -35.53097460165575,-8.597685752383018,0 -35.5309746014003,-8.597955247755447,0 -35.53151359045167,-8.597955247495339,0 -35.53151359026116,-8.597416257871302,0 -35.53205257924279,-8.597416257973574,0 -35.53205257942587,-8.596877269454273,0 -35.53232207436036,-8.596877269326317,0 -35.53232207397777,-8.597146763535495,0 -35.53259156904783,-8.597146763163414,0 -35.53259156833176,-8.59687726901538,0 -35.53232207436036,-8.596877269326317,0 -35.53232207388471,-8.596607774216082,0 -35.53259156857929,-8.596607774857979,0 -35.53259156887653,-8.596338279793565,0 -35.53259156832753,-8.596068785635357,0 -35.53286106348737,-8.596068785289043,0 -35.53286106307696,-8.595529796163207,0 -35.53313055780017,-8.595529795738322,0 -35.53313055813906,-8.594990806703313,0 -35.53340005243166,-8.594990807103517,0 -35.53340005170406,-8.594451818171278,0 -35.53340005210124,-8.593912828315878,0 -35.5334000523894,-8.593643334286725,0 -35.53325332387532,-8.593643333739843,0 -35.53348580223292,-8.593104344982342,0 -35.5336695469314,-8.593104345002658,0 -35.53366954719004,-8.592834850114905,0 -35.53393904166261,-8.592834850566934,0 -35.53393904178633,-8.592565355730976,0 -35.53393904129301,-8.592026366054881,0 -35.53420853604635,-8.592026366477684,0 -35.53420853614659,-8.591756871686766,0 -35.53420853561239,-8.591217883004385,0 -35.53420853587984,-8.590948388203296,0 -35.53393904189504,-8.590948388463302,0 -35.5336695469471,-8.590948388540452,0 -35.53313055779358,-8.590948388122298,0 -35.53313055767155,-8.591217883138205,0 -35.53313055722381,-8.5913925642019,0 -35.53265186449729,-8.590310477508714,0 -35.5328434692815,-8.587715660205477,0 -35.53205257965573,-8.586508760162442,0 -35.53205257977905,-8.586366980086785,0 -35.53195967117816,-8.586366980628355,0 -35.53178307619725,-8.586097490773895,0 -35.53124409516513,-8.585274997736134,0 -35.53124409537455,-8.585019507508818,0 -35.53151359024058,-8.585019507609612,0 -35.5315135900691,-8.584750013106309,0 -35.53178308468948,-8.584750013073572,0 -35.5317830850345,-8.584211023257479,0 -35.53205257921879,-8.584211023146372,0 -35.5320525797413,-8.583941528737244,0 -35.53178308483958,-8.583941528799169,0 -35.53178308470034,-8.583672034337456,0 -35.53151359084181,-8.58367203414957,0 -35.5315135907906,-8.583941528666438,0 -35.53043561225135,-8.583941529875249,0 -35.53037028266441,-8.583941529534004,0 -35.52989662282187,-8.583218702933396,0 -35.52989662276812,-8.583133044818233,0 -35.52984049248,-8.583133044515895,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+					<innerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53474752587528,-8.585558496254601,0 -35.53501702042282,-8.585558496502749,0 -35.53501702038128,-8.585289001802147,0 -35.53474752511633,-8.585289001504744,0 -35.53474752587528,-8.585558496254601,0 
+							</coordinates>
+						</LinearRing>
+					</innerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53267212544996,-8.594990806699011,0 -35.53278836573752,-8.594721312267387,0 -35.53286106333007,-8.594721311994205,0 -35.53286106288936,-8.594990807023809,0 -35.53267212544996,-8.594990806699011,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53187852505186,-8.59660777438377,0 -35.53231615914002,-8.595816090111443,0 -35.53259156866186,-8.595177572243763,0 -35.53259156881859,-8.595260301321172,0 -35.53259156829857,-8.595529796399168,0 -35.53259156832753,-8.596068785635357,0 -35.53232207401444,-8.596068784883119,0 -35.53232207437869,-8.596338280000136,0 -35.5320525798257,-8.596338280017763,0 -35.53205257914097,-8.596607774288874,0 -35.53187852505186,-8.59660777438377,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+			</MultiGeometry>
+		</Placemark>
+		<Placemark id="ID_00003">
+			<name>SER</name>
+			<Snippet maxLines="0"></Snippet>
+			<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>SER</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>3</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2010</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>Name</td>
+
+<td>SER</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2020</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>CMP_10_20</td>
+
+<td>Gain</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>ELE_10_20</td>
+
+<td>Non Eligible</td>
+
+</tr>
+
+<tr>
+
+<td>Area_Ha</td>
+
+<td>1.660246</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+			<styleUrl>#PolyStyle01</styleUrl>
+			<MultiGeometry>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53151359026116,-8.597416257871302,0 -35.53151359045167,-8.597955247495339,0 -35.5309746014003,-8.597955247755447,0 -35.53097460165576,-8.597685752383018,0 -35.53124409556727,-8.597685752857398,0 -35.53124409569362,-8.597416258440374,0 -35.53151359026116,-8.597416257871302,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53232207436037,-8.596877269326317,0 -35.53259156833177,-8.596877269015362,0 -35.53259156904784,-8.59714676316343,0 -35.53232207397777,-8.597146763535495,0 -35.53232207436037,-8.596877269326317,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53151359026116,-8.597416257871302,0 -35.53151359025241,-8.597146763506032,0 -35.53178308458005,-8.597146763706803,0 -35.53178308463182,-8.596750831112342,0 -35.53180476467216,-8.596741207993713,0 -35.53187852505186,-8.596607774383786,0 -35.53205257914098,-8.596607774288874,0 -35.5320525798257,-8.596338280017763,0 -35.5323220743787,-8.596338280000136,0 -35.53259156887652,-8.596338279793565,0 -35.53259156857929,-8.596607774857979,0 -35.53232207388471,-8.596607774216082,0 -35.53232207436037,-8.596877269326317,0 -35.53205257942588,-8.596877269454289,0 -35.53205257924279,-8.597416257973574,0 -35.53151359026116,-8.597416257871302,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.5325915688186,-8.595260301321172,0 -35.53259156866187,-8.595177572243747,0 -35.53267212544995,-8.594990806699027,0 -35.53286106288935,-8.594990807023807,0 -35.53286106340627,-8.595260301140405,0 -35.5325915688186,-8.595260301321172,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53278836573753,-8.594721312267369,0 -35.53286106335251,-8.594552766900204,0 -35.53286106333007,-8.594721311994205,0 -35.53278836573753,-8.594721312267369,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53313708407,-8.593912829038844,0 -35.53325332387532,-8.593643333739843,0 -35.5334000523894,-8.593643334286741,0 -35.53340005210125,-8.593912828315878,0 -35.53313708407,-8.593912829038844,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53195967117816,-8.586366980628371,0 -35.53205257977906,-8.586366980086785,0 -35.53205257965574,-8.586508760162442,0 -35.53195967117816,-8.586366980628371,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.5315135900691,-8.584750013106309,0 -35.53151359024058,-8.585019507609612,0 -35.53124409537456,-8.585019507508818,0 -35.53124409539354,-8.584750012950348,0 -35.5315135900691,-8.584750013106309,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.5315135900691,-8.584750013106309,0 -35.53151359079059,-8.583941528666438,0 -35.53151359084181,-8.58367203414957,0 -35.53178308470033,-8.583672034337456,0 -35.53178308483959,-8.583941528799169,0 -35.5320525797413,-8.583941528737244,0 -35.53205257921879,-8.584211023146372,0 -35.5317830850345,-8.584211023257479,0 -35.53178308468949,-8.58475001307357,0 -35.5315135900691,-8.584750013106309,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.52984049248,-8.583133044515879,0 -35.52989662276811,-8.583133044818233,0 -35.52989662282188,-8.58321870293338,0 -35.52984049248,-8.583133044515879,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+			</MultiGeometry>
+		</Placemark>
+		<Placemark id="ID_00004">
+			<name>SER</name>
+			<Snippet maxLines="0"></Snippet>
+			<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>SER</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>4</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2010</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>Name</td>
+
+<td>SER</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2020</td>
+
+<td>4</td>
+
+</tr>
+
+<tr>
+
+<td>CMP_10_20</td>
+
+<td>Other Non Forest</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>ELE_10_20</td>
+
+<td>Non Eligible</td>
+
+</tr>
+
+<tr>
+
+<td>Area_Ha</td>
+
+<td>0.088522</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+			<styleUrl>#PolyStyle01</styleUrl>
+			<MultiGeometry>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53474752587528,-8.585558496254601,0 -35.53474752511633,-8.585289001504744,0 -35.53501702038128,-8.585289001802147,0 -35.53501702042282,-8.585558496502749,0 -35.53474752587528,-8.585558496254601,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+			</MultiGeometry>
+		</Placemark>
+		<Placemark id="ID_00005">
+			<name>BRA</name>
+			<Snippet maxLines="0"></Snippet>
+			<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>BRA</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>5</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2010</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>Name</td>
+
+<td>BRA</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2020</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>CMP_10_20</td>
+
+<td>Deforestation</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>ELE_10_20</td>
+
+<td>Non Eligible</td>
+
+</tr>
+
+<tr>
+
+<td>Area_Ha</td>
+
+<td>2.035854</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+			<styleUrl>#PolyStyle01</styleUrl>
+			<MultiGeometry>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.51130149669849,-8.600380698284381,0 -35.51130149679982,-8.600111204444307,0 -35.51103200173627,-8.600111204003646,0 -35.51103200207769,-8.599841709201812,0 -35.5107625071562,-8.599841709421103,0 -35.51076250774365,-8.599572214561157,0 -35.51157099087555,-8.599572215313627,0 -35.51157099094581,-8.599302720614411,0 -35.5121099805565,-8.599302719969366,0 -35.5121099803004,-8.599033225376193,0 -35.51237947529577,-8.599033226177404,0 -35.51237947442893,-8.599572215262773,0 -35.5121099799599,-8.599572214565072,0 -35.51210998032649,-8.59984170915145,0 -35.51184048561788,-8.599841709223135,0 -35.5118404858489,-8.600111203860834,0 -35.51210997984037,-8.600111203740356,0 -35.51210997994183,-8.600650192902059,0 -35.51130149665833,-8.600650193024713,0 -35.51130149669849,-8.600380698284381,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.51345745320421,-8.599302720022321,0 -35.513187958237,-8.599302720031821,0 -35.51318795903362,-8.599033225645735,0 -35.51345745290208,-8.599033225696921,0 -35.51345745320421,-8.599302720022321,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.51345745293393,-8.601997666745573,0 -35.513457453247,-8.601189182036036,0 -35.51372694768526,-8.601189182369732,0 -35.51372694793879,-8.601997666011361,0 -35.51345745293393,-8.601997666745573,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.51157099138799,-8.601728171887288,0 -35.51130149614207,-8.601728171957978,0 -35.51130149596131,-8.601458677231248,0 -35.51157099101636,-8.601458677215248,0 -35.51157099138799,-8.601728171887288,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+			</MultiGeometry>
+		</Placemark>
+		<Placemark id="ID_00006">
+			<name>BRA</name>
+			<Snippet maxLines="0"></Snippet>
+			<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>BRA</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>6</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2010</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>Name</td>
+
+<td>BRA</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2020</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>CMP_10_20</td>
+
+<td>Stable Forest</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>ELE_10_20</td>
+
+<td>Non Eligible</td>
+
+</tr>
+
+<tr>
+
+<td>Area_Ha</td>
+
+<td>6.373107</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+			<styleUrl>#PolyStyle01</styleUrl>
+			<MultiGeometry>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.51237947529577,-8.599033226177404,0 -35.51264896932251,-8.599033225891919,0 -35.51264896964803,-8.598763731398879,0 -35.51291846433718,-8.598763730973191,0 -35.51291846420246,-8.599033225411489,0 -35.51318795903362,-8.599033225645735,0 -35.513187958237,-8.599302720031821,0 -35.51345745320421,-8.599302720022321,0 -35.51345745263233,-8.600111203893666,0 -35.51345745315557,-8.600380698205475,0 -35.51372694792928,-8.600380698697524,0 -35.51372694768526,-8.601189182369732,0 -35.513457453247,-8.601189182036036,0 -35.51345745293393,-8.601997666745573,0 -35.51291846366195,-8.601997666737256,0 -35.51184048538099,-8.60199766625329,0 -35.51184048567123,-8.601728171633455,0 -35.51157099138799,-8.601728171887288,0 -35.51157099101636,-8.601458677215248,0 -35.51130149596131,-8.601458677231248,0 -35.51130149674372,-8.601189182495188,0 -35.51103200182479,-8.60118918226742,0 -35.51103200235801,-8.600380698796151,0 -35.51130149669849,-8.600380698284381,0 -35.51130149665833,-8.600650193024713,0 -35.51210997994183,-8.600650192902059,0 -35.51210997984037,-8.600111203740356,0 -35.5118404858489,-8.600111203860834,0 -35.51184048561788,-8.599841709223135,0 -35.51210998032649,-8.59984170915145,0 -35.5121099799599,-8.599572214565072,0 -35.51237947442893,-8.599572215262773,0 -35.51237947529577,-8.599033226177404,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+			</MultiGeometry>
+		</Placemark>
+		<Placemark id="ID_00007">
+			<name>SER</name>
+			<Snippet maxLines="0"></Snippet>
+			<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>SER</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>7</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2010</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>Name</td>
+
+<td>SER</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2020</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>CMP_10_20</td>
+
+<td>Deforestation</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>ELE_10_20</td>
+
+<td>Non Eligible</td>
+
+</tr>
+
+<tr>
+
+<td>Area_Ha</td>
+
+<td>1.091803</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+			<styleUrl>#PolyStyle01</styleUrl>
+			<MultiGeometry>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53690348182346,-8.599033226026767,0 -35.53690348241228,-8.599302720191705,0 -35.536364493607,-8.59930272043075,0 -35.53636449339379,-8.599033225251656,0 -35.53690348182346,-8.599033226026767,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53690348182346,-8.599033226026767,0 -35.53690348219236,-8.598763730948816,0 -35.53717297659048,-8.598763731556975,0 -35.53717297640636,-8.599033225676019,0 -35.53690348182346,-8.599033226026767,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53259156832752,-8.596068785635339,0 -35.53259156829856,-8.595529796399168,0 -35.53286106307696,-8.595529796163207,0 -35.53286106348737,-8.596068785289043,0 -35.53259156832752,-8.596068785635339,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53313055813906,-8.594990806703313,0 -35.53313055779287,-8.594451817660696,0 -35.53340005170405,-8.594451818171278,0 -35.53340005243166,-8.594990807103517,0 -35.53313055813906,-8.594990806703313,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.5336695475044,-8.59256535522375,0 -35.53393904178632,-8.592565355730976,0 -35.53393904166261,-8.592834850566934,0 -35.53366954719003,-8.592834850114889,0 -35.53366954715043,-8.592678341198157,0 -35.53368426719096,-8.592644213625928,0 -35.5336695470458,-8.592610939462402,0 -35.5336695475044,-8.59256535522375,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.5336695475044,-8.59256535522375,0 -35.53364938094158,-8.592565355081945,0 -35.53353016072082,-8.592295861137613,0 -35.53366954697258,-8.59229586123881,0 -35.5336695475044,-8.59256535522375,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53393904129302,-8.592026366054863,0 -35.53393904158991,-8.591756872112391,0 -35.53420853614659,-8.591756871686766,0 -35.53420853604634,-8.592026366477686,0 -35.53393904129302,-8.592026366054863,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53393904143095,-8.591217882415959,0 -35.53393904189504,-8.590948388463302,0 -35.53420853587983,-8.590948388203296,0 -35.53420853561238,-8.591217883004385,0 -35.53393904143095,-8.591217882415959,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53313055767155,-8.591217883138205,0 -35.53313055779358,-8.590948388122298,0 -35.53366954694711,-8.590948388540468,0 -35.53366954720033,-8.591217882542338,0 -35.53313055767155,-8.591217883138205,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53037028266441,-8.583941529534004,0 -35.53043561225135,-8.583941529875249,0 -35.53043561199593,-8.584041225729983,0 -35.53037028266441,-8.583941529534004,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+			</MultiGeometry>
+		</Placemark>
+		<Placemark id="ID_00008">
+			<name>SER</name>
+			<Snippet maxLines="0"></Snippet>
+			<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>SER</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>8</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2010</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>Name</td>
+
+<td>SER</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>FNF_2020</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>CMP_10_20</td>
+
+<td>Stable Forest</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>ELE_10_20</td>
+
+<td>Non Eligible</td>
+
+</tr>
+
+<tr>
+
+<td>Area_Ha</td>
+
+<td>3.761196</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+			<styleUrl>#PolyStyle01</styleUrl>
+			<MultiGeometry>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53717297659048,-8.598763731556975,0 -35.53744247092731,-8.598763731072484,0 -35.53744247093999,-8.599033226039889,0 -35.53798146074333,-8.599033225291016,0 -35.53798146028552,-8.599302720150449,0 -35.53878994380744,-8.599302720615428,0 -35.5387899442088,-8.599400919298418,0 -35.5363644932031,-8.599424222390725,0 -35.536364493607,-8.59930272043075,0 -35.53690348241228,-8.599302720191705,0 -35.53690348182346,-8.599033226026767,0 -35.53717297640636,-8.599033225676019,0 -35.53717297659048,-8.598763731556975,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.5323220743787,-8.596338280000136,0 -35.53232207401442,-8.596068784883133,0 -35.53259156832752,-8.596068785635339,0 -35.53259156887652,-8.596338279793565,0 -35.5323220743787,-8.596338280000136,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53313708407,-8.593912829038844,0 -35.53340005210125,-8.593912828315878,0 -35.53340005170405,-8.594451818171278,0 -35.53313055779287,-8.594451817660696,0 -35.53313055813906,-8.594990806703313,0 -35.53313055780018,-8.59552979573834,0 -35.53286106307696,-8.595529796163207,0 -35.53259156829856,-8.595529796399168,0 -35.5325915688186,-8.595260301321172,0 -35.53286106340627,-8.595260301140405,0 -35.53286106288935,-8.594990807023807,0 -35.53286106333007,-8.594721311994205,0 -35.53286106335251,-8.594552766900204,0 -35.53313708407,-8.593912829038844,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53348580223293,-8.593104344982342,0 -35.53366954715043,-8.592678341198157,0 -35.53366954719003,-8.592834850114889,0 -35.5336695469314,-8.593104345002658,0 -35.53348580223293,-8.593104344982342,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.5336695475044,-8.59256535522375,0 -35.5336695470458,-8.592610939462402,0 -35.53364938094158,-8.592565355081945,0 -35.5336695475044,-8.59256535522375,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.5336695475044,-8.59256535522375,0 -35.53366954697258,-8.59229586123881,0 -35.53353016072082,-8.592295861137613,0 -35.53313055722381,-8.5913925642019,0 -35.53313055767155,-8.591217883138205,0 -35.53366954720033,-8.591217882542338,0 -35.53366954694711,-8.590948388540468,0 -35.53393904189504,-8.590948388463302,0 -35.53393904143095,-8.591217882415959,0 -35.53420853561238,-8.591217883004385,0 -35.53420853614659,-8.591756871686766,0 -35.53393904158991,-8.591756872112391,0 -35.53393904129302,-8.592026366054863,0 -35.53393904178632,-8.592565355730976,0 -35.5336695475044,-8.59256535522375,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+				<Polygon>
+					<outerBoundaryIs>
+						<LinearRing>
+							<coordinates>
+								-35.53043561199593,-8.584041225729983,0 -35.53043561225135,-8.583941529875249,0 -35.53151359079059,-8.583941528666438,0 -35.5315135900691,-8.584750013106309,0 -35.53124409539354,-8.584750012950348,0 -35.53124409537456,-8.585019507508818,0 -35.53124409516511,-8.585274997736152,0 -35.53043561199593,-8.584041225729983,0 
+							</coordinates>
+						</LinearRing>
+					</outerBoundaryIs>
+				</Polygon>
+			</MultiGeometry>
+		</Placemark>
+	</Folder>
+</Document>
+</kml>

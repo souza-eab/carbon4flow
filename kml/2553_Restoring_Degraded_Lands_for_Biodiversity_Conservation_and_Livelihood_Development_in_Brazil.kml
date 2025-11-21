@@ -1,0 +1,5518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Folder>
+	<name>Temporary Places</name>
+	<open>1</open>
+	<Document id="_017" xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd">
+		<name>2017</name>
+		<Snippet maxLines="0"></Snippet>
+		<Style id="PolyStyle00">
+			<LabelStyle>
+				<color>00000000</color>
+				<scale>0</scale>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff6e6e6e</color>
+				<width>0.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>fff5e1bc</color>
+			</PolyStyle>
+		</Style>
+		<Folder id="FeatureLayer0">
+			<name>2017</name>
+			<Snippet maxLines="0"></Snippet>
+			<Placemark id="ID_00000">
+				<name>2017</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2017</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>0</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2017</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>2.526881</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle00</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.79809283499998,-22.43789550199995,0 -42.79783371299993,-22.43873197799996,0 -42.79808149999997,-22.43963879199998,0 -42.79762468799998,-22.43974077399997,0 -42.79702932399994,-22.43937083599997,0 -42.79746456599997,-22.43915723199996,0 -42.79763015899994,-22.43896539999997,0 -42.79765382599993,-22.43880713299995,0 -42.79761783099997,-22.43868805699998,0 -42.79752560799994,-22.43860615599993,0 -42.79739801699998,-22.43858184099997,0 -42.79716292699993,-22.43861409999994,0 -42.79688812999996,-22.43870920899997,0 -42.79624392899996,-22.43841443899993,0 -42.79601462499994,-22.43831938899996,0 -42.79575278499993,-22.43831199399995,0 -42.79561269899995,-22.43821881699995,0 -42.79577902799997,-22.43758387599996,0 -42.79626801699993,-22.43772555299995,0 -42.79656596599995,-22.43781106999995,0 -42.79696044499997,-22.43792581099996,0 -42.79712295099995,-22.43788836399995,0 -42.79809283499998,-22.43789550199995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00001">
+				<name>2017</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2017</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>1</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2017</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>9.025432</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle00</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.79341013199996,-22.44177992299996,0 -42.79150350999998,-22.44078515799998,0 -42.79199849599996,-22.44056467199994,0 -42.79251963599995,-22.44023226399997,0 -42.79287311899998,-22.44003907699994,0 -42.79350832699998,-22.43990984099997,0 -42.79363686299996,-22.43973642399993,0 -42.79397727499997,-22.43978328499998,0 -42.79460011699996,-22.43956559299994,0 -42.79508150199996,-22.43913434599995,0 -42.79527937299997,-22.43901127499993,0 -42.79557479799996,-22.43900516999997,0 -42.79589193299995,-22.43914829899995,0 -42.79613573899996,-22.43931904099998,0 -42.79631532299993,-22.43968045499997,0 -42.79656882699993,-22.44035344599996,0 -42.79635301199994,-22.44068444499993,0 -42.79593403899997,-22.44101400099993,0 -42.79523339199994,-22.44139094199994,0 -42.79485933599994,-22.44159993699998,0 -42.79402569599995,-22.44178826799998,0 -42.79341013199996,-22.44177992299996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00002">
+				<name>2017</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2017</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>2</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2017</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.123962</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle00</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.77045161299998,-22.45449154999994,0 -42.77060181099995,-22.45447749299996,0 -42.77056624199997,-22.45508487799998,0 -42.77054829699995,-22.45529039299993,0 -42.77055475099996,-22.45528109499998,0 -42.77055197599998,-22.45532847899995,0 -42.77045311599994,-22.45540370599997,0 -42.77045161299998,-22.45449154999994,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+		</Folder>
+	</Document>
+	<Document id="_018" xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd">
+		<name>2018</name>
+		<Snippet maxLines="0"></Snippet>
+		<Style id="PolyStyle000">
+			<LabelStyle>
+				<color>00000000</color>
+				<scale>0</scale>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff6e6e6e</color>
+				<width>0.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>ffc2fcc3</color>
+			</PolyStyle>
+		</Style>
+		<Folder id="FeatureLayer0">
+			<name>2018</name>
+			<Snippet maxLines="0"></Snippet>
+			<Placemark id="ID_00000">
+				<name>2018</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2018</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>0</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2018</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>6.001086</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle000</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.81309681399995,-22.47784105199997,0 -42.81315577199996,-22.47779799199998,0 -42.81323737199995,-22.47784815199998,0 -42.81331131499996,-22.47806031599998,0 -42.81322472499994,-22.47814885899993,0 -42.81333182299994,-22.47824110399995,0 -42.81349245099995,-22.47818224999997,0 -42.81363483599995,-22.47828037899995,0 -42.81329478299995,-22.47861498799995,0 -42.81302132299993,-22.47842775599997,0 -42.81289729999997,-22.47850654099994,0 -42.81297316799998,-22.47879673999995,0 -42.81307450999998,-22.47907640399995,0 -42.81296500699995,-22.47917645499996,0 -42.81295880599998,-22.47940361799994,0 -42.81286445899997,-22.47984747099997,0 -42.81297932399997,-22.48002876299995,0 -42.81287154999995,-22.48024756899997,0 -42.81270744599993,-22.48028596199998,0 -42.81258888099995,-22.48033599199994,0 -42.81246013699996,-22.48048247899993,0 -42.81234020799997,-22.48069724399994,0 -42.81240433999994,-22.48077193799998,0 -42.81273984699993,-22.48069148799993,0 -42.81278776899995,-22.48092569499994,0 -42.81226940099998,-22.48110593099995,0 -42.81220599599993,-22.48220650099995,0 -42.81205941199994,-22.48225509499997,0 -42.81165592399998,-22.48243124899994,0 -42.81149466399995,-22.48269375699994,0 -42.81087284299997,-22.48120510299998,0 -42.81075048199995,-22.48089103299998,0 -42.81073394199996,-22.48059995799997,0 -42.81067730799998,-22.48039230799998,0 -42.81062093999998,-22.48023560099995,0 -42.81198494099993,-22.47911151499994,0 -42.81198569199995,-22.47911197399998,0 -42.81219072499994,-22.47923728399996,0 -42.81251066499993,-22.47963926499995,0 -42.81276294899993,-22.47945590199993,0 -42.81280053399996,-22.47928737799998,0 -42.81275646799998,-22.47909152699998,0 -42.81275573699997,-22.47856780999996,0 -42.81272051999997,-22.47851772899998,0 -42.81277006599998,-22.47845749999993,0 -42.81262971399997,-22.47829835499994,0 -42.81259496999996,-22.47831297299996,0 -42.81254726799995,-22.47826287599997,0 -42.81254814199997,-22.47815118499994,0 -42.81258824899993,-22.47805025999997,0 -42.81266254299993,-22.47800154499993,0 -42.81275104099996,-22.47801238999995,0 -42.81278229199995,-22.47793945799998,0 -42.81282268399997,-22.47791015199994,0 -42.81289414599996,-22.47794139599995,0 -42.81309681399995,-22.47784105199997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00001">
+				<name>2018</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2018</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>1</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2018</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.398644</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle000</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.81122938799996,-22.47876857099993,0 -42.81136425299997,-22.47896853799995,0 -42.81130687699994,-22.47902950699995,0 -42.81137961999997,-22.47909510199997,0 -42.81150804399994,-22.47903963199997,0 -42.81198829399995,-22.47910983199995,0 -42.81198569199995,-22.47911197399998,0 -42.81062093999998,-22.48023560099995,0 -42.81038719099996,-22.47979168299997,0 -42.81008489499993,-22.47935794199998,0 -42.81122938799996,-22.47876857099993,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00002">
+				<name>2018</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2018</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>2</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2018</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.548587</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle000</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.81378864499993,-22.47965411099995,0 -42.81384634599993,-22.47939717699995,0 -42.81404233399996,-22.47922899199995,0 -42.81388166499994,-22.47905499399997,0 -42.81416050299998,-22.47885079699995,0 -42.81430562099996,-22.47900305599995,0 -42.81440784599994,-22.47909947699998,0 -42.81461297699997,-22.47932510299995,0 -42.81466267699994,-22.47952508899994,0 -42.81457358499995,-22.47972333599995,0 -42.81378864499993,-22.47965411099995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00003">
+				<name>2018</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2018</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>3</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2018</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.103433</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle000</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.77056624199997,-22.45508487799998,0 -42.77061691599994,-22.45450452199998,0 -42.77077936199998,-22.45451792499995,0 -42.77072705499995,-22.45480060399996,0 -42.77066845799993,-22.45511727799993,0 -42.77055759399997,-22.45527699899998,0 -42.77055475099996,-22.45528109499998,0 -42.77054829699995,-22.45529039299993,0 -42.77056624199997,-22.45508487799998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00004">
+				<name>2018</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2018</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>4</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2018</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>29.942503</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle000</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.80795841899993,-22.44257686299994,0 -42.80804282299994,-22.44169279599993,0 -42.80819534799997,-22.44072692699996,0 -42.80845147399998,-22.44042838599995,0 -42.80811633899998,-22.43998094499995,0 -42.80804273399997,-22.43949829799993,0 -42.80840658799997,-22.43960740099993,0 -42.80842019399995,-22.43961475099997,0 -42.80923381299993,-22.44005426899997,0 -42.80993017599997,-22.44056697299993,0 -42.81020235299997,-22.44076736499994,0 -42.81090895099993,-22.44089823099995,0 -42.81152954099997,-22.44124936199995,0 -42.81170980699994,-22.44191520999993,0 -42.81201792999997,-22.44198897199993,0 -42.81206560899994,-22.44209019799996,0 -42.81216933299999,-22.44231040999995,0 -42.81216957399994,-22.44231092099994,0 -42.81215911799995,-22.44235072899994,0 -42.81215888299994,-22.44235162399997,0 -42.81202653499997,-22.44285551899998,0 -42.81178195899997,-22.44307882099997,0 -42.81200904899998,-22.44356969399996,0 -42.81198031199995,-22.44372231199998,0 -42.81193302099996,-22.44455740999996,0 -42.81271626999995,-22.44490081999993,0 -42.81293097699995,-22.44531619299994,0 -42.81240215799994,-22.44519852699995,0 -42.81091556499996,-22.44523243299994,0 -42.80980629099997,-22.44456851799998,0 -42.80963700999996,-22.44416889699994,0 -42.80848507299999,-22.44386953999998,0 -42.80739358699998,-22.44386915199993,0 -42.80703448699995,-22.44420593099994,0 -42.80637218499993,-22.44406977399996,0 -42.80557163599997,-22.44402793599994,0 -42.80501286399993,-22.44445337099995,0 -42.80455481699994,-22.44526962199996,0 -42.80462786899994,-22.44557322999998,0 -42.80462804799998,-22.44557397399996,0 -42.80462824599994,-22.44557479599996,0 -42.80462782999996,-22.44557464299993,0 -42.80438941399996,-22.44548714999996,0 -42.80438794999998,-22.44548518499994,0 -42.80358529099993,-22.44440770399996,0 -42.80483921299998,-22.44236466499996,0 -42.80496379899995,-22.44252637199997,0 -42.80546543199995,-22.44135478999993,0 -42.80569269699998,-22.44155588899997,0 -42.80616727599994,-22.44143343899998,0 -42.80631778699995,-22.44072551299996,0 -42.80721509399996,-22.44038903799998,0 -42.80741914899994,-22.44095697699993,0 -42.80775998199994,-22.44099435799995,0 -42.80782650899994,-22.44137371199997,0 -42.80749716199995,-22.44226356299998,0 -42.80729356099994,-22.44242859999997,0 -42.80743591999993,-22.44341030699997,0 -42.80769295199997,-22.44334651799994,0 -42.80839302299995,-22.44349126699996,0 -42.80795841899993,-22.44257686299994,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+		</Folder>
+	</Document>
+	<Document id="_019" xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd">
+		<name>2019</name>
+		<Snippet maxLines="0"></Snippet>
+		<Style id="PolyStyle001">
+			<LabelStyle>
+				<color>00000000</color>
+				<scale>0</scale>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff6e6e6e</color>
+				<width>0.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>ffd7fce4</color>
+			</PolyStyle>
+		</Style>
+		<Folder id="FeatureLayer0">
+			<name>2019</name>
+			<Snippet maxLines="0"></Snippet>
+			<Placemark id="ID_00000">
+				<name>2019</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>0</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>6.096866</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle001</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.75592734099996,-22.48222294999994,0 -42.75538839599994,-22.48174693899995,0 -42.75540784899994,-22.48168249099996,0 -42.75541698699993,-22.48165221499994,0 -42.75571370999995,-22.48066914299994,0 -42.75586413599996,-22.48017124399996,0 -42.75597138699993,-22.47981624799996,0 -42.75645189699998,-22.47822913699997,0 -42.75683073799996,-22.47681667299997,0 -42.75731999299995,-22.47547577299997,0 -42.75744131699997,-22.47511818699996,0 -42.75754184199997,-22.47482190099993,0 -42.75766983699998,-22.47444464599994,0 -42.75788540399998,-22.47447701599998,0 -42.75814369299997,-22.47455937399997,0 -42.75798506999996,-22.47502600599995,0 -42.75790559699993,-22.47525908399996,0 -42.75723362899998,-22.47724559799997,0 -42.75709049499994,-22.47776820199994,0 -42.75635315599993,-22.48018790199995,0 -42.75649968999994,-22.48041227999994,0 -42.75662763799994,-22.48062747899996,0 -42.75674172399994,-22.48078999599994,0 -42.75686468299995,-22.48089524399995,0 -42.75712790999995,-22.48092694799993,0 -42.75639499999994,-22.48263599999996,0 -42.75592734099996,-22.48222294999994,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00001">
+				<name>2019</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>1</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.252394</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle001</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.75818034399998,-22.47444861699995,0 -42.75796613399996,-22.47437205099993,0 -42.75771640299996,-22.47430739699996,0 -42.75793420199994,-22.47380886899998,0 -42.75813111199994,-22.47392064199994,0 -42.75830959399997,-22.47405802699996,0 -42.75818034399998,-22.47444861699995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00002">
+				<name>2019</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>2</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>7.000973</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle001</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.80847578799995,-22.43907379399997,0 -42.80953119499998,-22.43857069099994,0 -42.81000372099993,-22.43828508499996,0 -42.81018527499998,-22.43829732099994,0 -42.81030874899994,-22.43840968099994,0 -42.81015778199998,-22.43859592899997,0 -42.81016547999997,-22.43907108799993,0 -42.81050965599997,-22.43913276099994,0 -42.81068092999993,-22.43885798699995,0 -42.81109009599993,-22.43903034799996,0 -42.81176419599996,-22.43901850999998,0 -42.81228068599995,-22.43915294999994,0 -42.81311713299993,-22.43880560799994,0 -42.81315626999998,-22.43899985299993,0 -42.81250153099995,-22.43985277799993,0 -42.81191049599994,-22.43971698699994,0 -42.81161542699994,-22.43972303399994,0 -42.81134226499995,-22.43984575399998,0 -42.81119743699998,-22.44013141799996,0 -42.81116390799997,-22.44064142099995,0 -42.81207701299996,-22.44118652899994,0 -42.81173124099996,-22.44184782799994,0 -42.81163502699997,-22.44142845099998,0 -42.81158835199994,-22.44133225799993,0 -42.81157951299997,-22.44128137299998,0 -42.81156113299994,-22.44122438499994,0 -42.81152962599998,-22.44118513699993,0 -42.81116998999994,-22.44097122299996,0 -42.81092731099994,-22.44087834399994,0 -42.81077040999998,-22.44084635299993,0 -42.81046926599998,-22.44079448799994,0 -42.81028034199994,-22.44075608999998,0 -42.81011162499993,-22.44065824099994,0 -42.81004832999997,-22.44059765799994,0 -42.80994909799995,-22.44057540699998,0 -42.80993017599997,-22.44056554499997,0 -42.80923381299993,-22.44005284099995,0 -42.80842019399995,-22.43961332299995,0 -42.80830982499998,-22.43952245199995,0 -42.80847578799995,-22.43907379399997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00003">
+				<name>2019</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>3</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>7.579805</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle001</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.79964778199997,-22.44472651599995,0 -42.79970174799996,-22.44472662299995,0 -42.80026061099994,-22.44472773599995,0 -42.80084240999997,-22.44532001099998,0 -42.80115678899995,-22.44528785999995,0 -42.80233360199998,-22.44541233799998,0 -42.80327912799999,-22.44611013899993,0 -42.80428939899997,-22.44544901899997,0 -42.80438794999998,-22.44548518499994,0 -42.80438941399996,-22.44548714999996,0 -42.80462782999996,-22.44557464299993,0 -42.80461722599995,-22.44560713599998,0 -42.80446631299998,-22.44606954899996,0 -42.80339850399997,-22.44748319299998,0 -42.80320142599993,-22.44737551599997,0 -42.80282487199997,-22.44708955899995,0 -42.80223133099997,-22.44673115899997,0 -42.80162179799999,-22.44644892899993,0 -42.80086206399994,-22.44649582399995,0 -42.80018386699993,-22.44641910599995,0 -42.79967576099995,-22.44625825999998,0 -42.79937628399995,-22.44565618199994,0 -42.79899064899996,-22.44545145399996,0 -42.79909482399995,-22.44533652999996,0 -42.79964778199997,-22.44472651599995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.80462786899994,-22.44557322999998,0 -42.80462824599994,-22.44557336799994,0 -42.80462804799998,-22.44557397399996,0 -42.80462786899994,-22.44557322999998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00004">
+				<name>2019</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>4</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>5.487427</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle001</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.79585165799995,-22.44855399299996,0 -42.79584086299997,-22.44879680499997,0 -42.79595354099996,-22.44904264399997,0 -42.79586638099994,-22.44929902299998,0 -42.79555463199995,-22.44940302699996,0 -42.79493480999997,-22.44939082399998,0 -42.79419418399993,-22.44918256699998,0 -42.79350437799997,-22.44931782399993,0 -42.79340313899996,-22.44925576699995,0 -42.79341021699997,-22.44901999999996,0 -42.79359670899998,-22.44880531099994,0 -42.79353120699994,-22.44857592799997,0 -42.79328867499999,-22.44846955999998,0 -42.79332309299997,-22.44829257699996,0 -42.79315761299995,-22.44791677899997,0 -42.79278398499997,-22.44734009299998,0 -42.79237844399995,-22.44699247999995,0 -42.79177625399996,-22.44694955499995,0 -42.79191655999995,-22.44631974199996,0 -42.79229270099995,-22.44628516299997,0 -42.79252081299995,-22.44632905499998,0 -42.79274566399994,-22.44635161999997,0 -42.79303836499997,-22.44646906199995,0 -42.79358004699998,-22.44689977999997,0 -42.79415744899995,-22.44749910499996,0 -42.79446320799997,-22.44764220799993,0 -42.79461225299997,-22.44815878199995,0 -42.79472321999998,-22.44857503699996,0 -42.79512140699995,-22.44861764299998,0 -42.79531083199998,-22.44859469899995,0 -42.79585165799995,-22.44855399299996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00005">
+				<name>2019</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>5</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>2.199897</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle001</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.80338128299996,-22.44426679999998,0 -42.80257128599993,-22.44382200699994,0 -42.80229180199996,-22.44405233799995,0 -42.80155840999998,-22.44430542399994,0 -42.80119830599995,-22.44406159699997,0 -42.80121229099996,-22.44383892499997,0 -42.80100097599995,-22.44393865999996,0 -42.80070708699998,-22.44372018799993,0 -42.80042214599996,-22.44346147299996,0 -42.80073733899997,-22.44312125199997,0 -42.80165056599998,-22.44292650799997,0 -42.80247377599994,-22.44346000699994,0 -42.80338128299996,-22.44426679999998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00006">
+				<name>2019</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>6</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>6.586225</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle001</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.80142541299995,-22.44241698599996,0 -42.80082000699997,-22.44251404499994,0 -42.79953030999997,-22.44220019799997,0 -42.79899070199997,-22.44238962499998,0 -42.79860772499995,-22.44240622899997,0 -42.79786241999994,-22.44235119499996,0 -42.79725570599993,-22.44241405199995,0 -42.79626962499998,-22.44221526299998,0 -42.79609463999998,-22.44115397599995,0 -42.79657287899994,-22.44118758899998,0 -42.79689234699998,-22.44089399199993,0 -42.79675375999994,-22.44053838599996,0 -42.79777232799995,-22.44076878399994,0 -42.79809388499996,-22.44099873999994,0 -42.79860526999994,-22.44082739999993,0 -42.79922363199995,-22.44139205899995,0 -42.79971164799997,-22.44133357999993,0 -42.80007354299994,-22.44183350699996,0 -42.80056968899999,-22.44200471599993,0 -42.80067634899996,-22.44144366399996,0 -42.80108257299997,-22.44175076299996,0 -42.80094154899996,-22.44192101999994,0 -42.80142541299995,-22.44241698599996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00007">
+				<name>2019</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>7</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.49976</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle001</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.78773510899998,-22.43899186199997,0 -42.78703751899997,-22.44040676099996,0 -42.78677789399995,-22.44009277199996,0 -42.78701922499994,-22.43953148899993,0 -42.78726850299995,-22.43946611799993,0 -42.78755346199995,-22.43894897699994,0 -42.78773510899998,-22.43899186199997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00008">
+				<name>2019</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>8</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2019</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.271635</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle001</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.77045420599995,-22.45541015299995,0 -42.77055365199993,-22.45533474699994,0 -42.77055759399997,-22.45527699899998,0 -42.77066845799993,-22.45511727799993,0 -42.77072705499995,-22.45480060399996,0 -42.77078308299997,-22.45452650099998,0 -42.77092473799996,-22.45452941299993,0 -42.77080685799996,-22.45517044199994,0 -42.77080016499997,-22.45557371299998,0 -42.77055134399995,-22.45576224599995,0 -42.77045420599995,-22.45541015299995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+		</Folder>
+	</Document>
+	<Document id="_023" xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd">
+		<name>2023</name>
+		<Snippet maxLines="0"></Snippet>
+		<Style id="PolyStyle002">
+			<LabelStyle>
+				<color>00000000</color>
+				<scale>0</scale>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff6e6e6e</color>
+				<width>0.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>ffd2ebfa</color>
+			</PolyStyle>
+		</Style>
+		<Folder id="FeatureLayer0">
+			<name>2023</name>
+			<Snippet maxLines="0"></Snippet>
+			<Placemark id="ID_00000">
+				<name>2023</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2023</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>0</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2023</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>133.91206</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle002</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.72692878999993,-22.50257949499996,0 -42.72675631399994,-22.50253565499997,0 -42.72665676199995,-22.50251472699995,0 -42.72615525299994,-22.50113181799998,0 -42.72627941899998,-22.50110896599995,0 -42.72633441299996,-22.50112298499994,0 -42.72645767699998,-22.50115440399998,0 -42.72954139499996,-22.50194044199998,0 -42.72959509699996,-22.50193828699997,0 -42.72973211399994,-22.50258819299995,0 -42.72981387899995,-22.50258431399993,0 -42.73006622799994,-22.50257234499998,0 -42.73133568699996,-22.50251213499996,0 -42.73122914199996,-22.50184745599995,0 -42.73292676199998,-22.50198666799997,0 -42.73346701199995,-22.50209963699997,0 -42.73491646599996,-22.50254691599997,0 -42.73590725599996,-22.50283541399995,0 -42.73699950099996,-22.50319534199997,0 -42.73773800199996,-22.50339780599995,0 -42.73848245499994,-22.50353027699998,0 -42.73914147899995,-22.50359952299993,0 -42.73984462599998,-22.50365986799994,0 -42.74057786099996,-22.50465165999998,0 -42.74077063799996,-22.50490676599998,0 -42.74138148799994,-22.50438646699996,0 -42.74241851799997,-22.50358545099994,0 -42.74355861699996,-22.50286934599995,0 -42.74526877299996,-22.50170280399993,0 -42.74625951799993,-22.50107129599996,0 -42.74677816599996,-22.50081793499993,0 -42.75028606899997,-22.49842539799994,0 -42.75035526199997,-22.49851433999993,0 -42.75059776699993,-22.49882605899995,0 -42.75143953199995,-22.49963050899993,0 -42.75212643199995,-22.50017359199995,0 -42.75197815799999,-22.50112076999994,0 -42.75172918399994,-22.50235754499994,0 -42.75155953599995,-22.50320024499996,0 -42.75112374999998,-22.50536489699994,0 -42.75082103399996,-22.50532143999993,0 -42.75024172299993,-22.50528430899993,0 -42.74916418799995,-22.50521523799994,0 -42.74745008999997,-22.50511158799998,0 -42.74535125099993,-22.50496848399996,0 -42.74509176799995,-22.50495150899997,0 -42.74467194699997,-22.50571786499995,0 -42.74420393899993,-22.50657217199995,0 -42.74342391299996,-22.50801039799995,0 -42.74281583599998,-22.50758271199993,0 -42.74202142099995,-22.50688288999993,0 -42.74185646599994,-22.50672102299995,0 -42.74118739599993,-22.50719242299994,0 -42.74085695499997,-22.50747486199998,0 -42.74039661699993,-22.50786832499995,0 -42.74030620899998,-22.50794560099996,0 -42.74051170499996,-22.50812987799998,0 -42.74075528099996,-22.50829870799993,0 -42.74123466299994,-22.50830989099995,0 -42.74170972799993,-22.50805789599997,0 -42.74229186199995,-22.50801937799997,0 -42.74278017299997,-22.50810993399995,0 -42.74326321399997,-22.50833826799993,0 -42.74074684199996,-22.51269485299997,0 -42.73960844799996,-22.51187959399994,0 -42.73825676599995,-22.51014551499998,0 -42.73254996799994,-22.50573333299997,0 -42.73100670499997,-22.50572644199997,0 -42.73058668099998,-22.50475462399993,0 -42.72997567899995,-22.50343299899998,0 -42.72996859499995,-22.50333944699997,0 -42.72992770299993,-22.50332922299998,0 -42.72692878999993,-22.50257949499996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+		</Folder>
+	</Document>
+	<Document id="_021" xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd">
+		<name>2021</name>
+		<Snippet maxLines="0"></Snippet>
+		<Style id="PolyStyle003">
+			<LabelStyle>
+				<color>00000000</color>
+				<scale>0</scale>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff6e6e6e</color>
+				<width>0.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>ffdef2bf</color>
+			</PolyStyle>
+		</Style>
+		<Folder id="FeatureLayer0">
+			<name>2021</name>
+			<Snippet maxLines="0"></Snippet>
+			<Placemark id="ID_00000">
+				<name>2021</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>0</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>13.979006</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle003</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.72205966799999,-22.41062424399996,0 -42.72188488799998,-22.41016548299996,0 -42.72038857699994,-22.40931425899993,0 -42.71993692499996,-22.40963589499995,0 -42.71909894099997,-22.41017765799995,0 -42.71888924399997,-22.41088556499994,0 -42.71832634499998,-22.41121301699997,0 -42.71727875599998,-22.41083442599995,0 -42.71719902299998,-22.41107367899997,0 -42.71682053499995,-22.41121959999998,0 -42.71665516899998,-22.41147218199995,0 -42.71645895699993,-22.41090714099994,0 -42.71633922399997,-22.41029200199995,0 -42.71525355699998,-22.40944279899998,0 -42.71496784199996,-22.40927122899996,0 -42.71445058299997,-22.40899864999994,0 -42.71421371899999,-22.40896783499994,0 -42.71256291599997,-22.40794490099995,0 -42.71356821899997,-22.40755787399996,0 -42.71413504699996,-22.40792477899993,0 -42.71518885899997,-22.40808813099994,0 -42.71684420199995,-22.40805813399993,0 -42.71736315699997,-22.40910187699996,0 -42.71692414899996,-22.40933373899998,0 -42.71644641199998,-22.40866925899996,0 -42.71572747299996,-22.40924989299998,0 -42.71671192699995,-22.41057353299993,0 -42.71757248799997,-22.41027026099994,0 -42.72001692199996,-22.40937066199996,0 -42.71841626899993,-22.40839817599993,0 -42.71753944399995,-22.40748406299997,0 -42.71806882299995,-22.40669279299993,0 -42.71890147599998,-22.40603898199993,0 -42.71973136399998,-22.40755014899997,0 -42.71849767199996,-22.40766555299996,0 -42.71990958499998,-22.40880070399993,0 -42.72016404899995,-22.40846631399995,0 -42.72222576699994,-22.40978924899997,0 -42.72229773199996,-22.41084729899995,0 -42.72205966799999,-22.41062424399996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00001">
+				<name>2021</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>1</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.995743</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle003</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.76914063499999,-22.48238389399995,0 -42.76944765399998,-22.48271886799995,0 -42.76941922399993,-22.48390474799993,0 -42.76949909099994,-22.48433246099995,0 -42.76950799099995,-22.48444259099995,0 -42.76905951799995,-22.48423616499997,0 -42.76883825499993,-22.48416120299993,0 -42.76852736599994,-22.48393793599996,0 -42.76848329999996,-22.48356276199996,0 -42.76872946799995,-22.48337364799994,0 -42.76866088199995,-22.48302966699998,0 -42.76845866899998,-22.48316682399997,0 -42.76807790499998,-22.48316126099996,0 -42.76766058799996,-22.48303378899993,0 -42.76790747199993,-22.48270751699994,0 -42.76831717699997,-22.48275682199994,0 -42.76846673199998,-22.48278013799995,0 -42.76914063499999,-22.48238389399995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00002">
+				<name>2021</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>2</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>6.984297</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle003</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.73831252399998,-22.48670933899996,0 -42.73771644099998,-22.48789674599993,0 -42.73734767499997,-22.48820622099993,0 -42.73684090799998,-22.48791243899996,0 -42.73615686599993,-22.48801934299996,0 -42.73544107399994,-22.48817663099993,0 -42.73500899999993,-22.48821047499996,0 -42.73462566999996,-22.48838458099993,0 -42.73449678599997,-22.48814242599997,0 -42.73446706499993,-22.48789185299995,0 -42.73458529299995,-22.48758791699993,0 -42.73531655999994,-22.48696713199996,0 -42.73557691699995,-22.48692069399993,0 -42.73554036299998,-22.48656742899993,0 -42.73596522599996,-22.48555864899993,0 -42.73651135899996,-22.48573300799995,0 -42.73695603799996,-22.48575773499994,0 -42.73751364299994,-22.48627038199993,0 -42.73831252399998,-22.48670933899996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00003">
+				<name>2021</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>3</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>10.975694</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle003</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.77116314899996,-22.48329773799998,0 -42.77359390699996,-22.48159029199996,0 -42.77376077799994,-22.48177349599996,0 -42.77384081799994,-22.48186136899994,0 -42.77521000999997,-22.48336457199997,0 -42.77422119099998,-22.48389984799996,0 -42.77281334999998,-22.48375028199996,0 -42.77206861499997,-22.48413083399993,0 -42.77070033199993,-22.48505962399997,0 -42.77068361199997,-22.48579976199994,0 -42.76927047099997,-22.48660088599996,0 -42.76952369899993,-22.48463696599998,0 -42.76950799099995,-22.48444259099995,0 -42.76949909099994,-22.48433246099995,0 -42.76949007299993,-22.48422086399995,0 -42.77005568999994,-22.48380942599994,0 -42.77116314899996,-22.48329773799998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00004">
+				<name>2021</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>4</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>3.99419</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle003</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.77311827299997,-22.48066987099998,0 -42.77307169299996,-22.48005071899996,0 -42.77305443199998,-22.47991590599997,0 -42.77374171199995,-22.48021764099997,0 -42.77386555399994,-22.48046627099995,0 -42.77365876899995,-22.48126058199995,0 -42.77378399999998,-22.48138165299997,0 -42.77413980999995,-22.48110649899996,0 -42.77456185099993,-22.48084719799994,0 -42.77504791499996,-22.48083523999998,0 -42.77521627699997,-22.48117132299996,0 -42.77546072399997,-22.48110474599997,0 -42.77535891099996,-22.48170297599995,0 -42.77590629499997,-22.48224918199998,0 -42.77519577199996,-22.48321749699994,0 -42.77384081799994,-22.48186136899994,0 -42.77376077799994,-22.48177349599996,0 -42.77360954799997,-22.48140899499998,0 -42.77361109499998,-22.48077365999995,0 -42.77319610799998,-22.48104406599998,0 -42.77311827299997,-22.48066987099998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00005">
+				<name>2021</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>5</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>11.977627</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle003</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.78973775299994,-22.53010959199997,0 -42.78943598399997,-22.53121672299994,0 -42.78912962099997,-22.53152233699996,0 -42.78791490299994,-22.53243840199997,0 -42.78787656799994,-22.53236324799997,0 -42.78807344199998,-22.53209276499996,0 -42.78779781899993,-22.53189978099994,0 -42.78738381399995,-22.53202447099994,0 -42.78649221599994,-22.53223711199996,0 -42.78665880999995,-22.53180144199996,0 -42.78657697699998,-22.53148043799996,0 -42.78575264399996,-22.53158911299994,0 -42.78549909599997,-22.53127424899998,0 -42.78540232899996,-22.53094429299995,0 -42.78548259599995,-22.53050289399994,0 -42.78543121099995,-22.53012942899994,0 -42.78564711099995,-22.52973120499996,0 -42.78573858899995,-22.52956825999996,0 -42.78655171699995,-22.52951034499995,0 -42.78686058699998,-22.53011301999993,0 -42.78680981399998,-22.53052506299997,0 -42.78702692399997,-22.53051593199996,0 -42.78727903399994,-22.52991449099994,0 -42.78694849499993,-22.52958296199995,0 -42.78658719499998,-22.52898130099993,0 -42.78648912699998,-22.52860699399996,0 -42.78594082499995,-22.52847954899994,0 -42.78582971899993,-22.52793963799996,0 -42.78678510199995,-22.52811596099997,0 -42.78721918799994,-22.52829159299995,0 -42.78715893299994,-22.52874370099994,0 -42.78751333499997,-22.52899925099996,0 -42.78774369899998,-22.52919152299995,0 -42.78809818499997,-22.52937167699997,0 -42.78895682699994,-22.52933956399994,0 -42.78973775299994,-22.53010959199997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00006">
+				<name>2021</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>6</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>2.99822</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle003</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.74725085499995,-22.44866084899996,0 -42.74654586999998,-22.44939007299996,0 -42.74517538399994,-22.44870446099998,0 -42.74516186299996,-22.44798550799993,0 -42.74412048599999,-22.44742746899993,0 -42.74483001899995,-22.44712563599995,0 -42.74725085499995,-22.44866084899996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00007">
+				<name>2021</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>7</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>2.99305</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle003</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.71295691199998,-22.44771220999996,0 -42.71270636799994,-22.44718455399993,0 -42.71264424899994,-22.44704791199996,0 -42.71244898899994,-22.44660148799994,0 -42.71225499599996,-22.44655835099996,0 -42.71200426599995,-22.44644834599995,0 -42.71199574699995,-22.44632949999993,0 -42.71208015399998,-22.44613577699994,0 -42.71178576599993,-22.44575607099995,0 -42.71144838699996,-22.44566167899995,0 -42.71111527799997,-22.44531195299993,0 -42.71104189599998,-22.44516593499998,0 -42.71084184399996,-22.44508441699998,0 -42.71070652499998,-22.44467933399994,0 -42.71107761199994,-22.44410930399994,0 -42.71141805799994,-22.44416082999993,0 -42.71178862699998,-22.44462434199994,0 -42.71173253299997,-22.44536925099993,0 -42.71220886899994,-22.44605483599997,0 -42.71229273199998,-22.44558988299997,0 -42.71258039499997,-22.44527906099995,0 -42.71301410699994,-22.44560117899994,0 -42.71326988799996,-22.44622551199996,0 -42.71280073999998,-22.44662982799997,0 -42.71312662399998,-22.44750227399993,0 -42.71295691199998,-22.44771220999996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00008">
+				<name>2021</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>8</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>7.983479</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle003</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.74257850599997,-22.43577272499994,0 -42.74113328999994,-22.43626461199995,0 -42.74010612699993,-22.43559619299998,0 -42.73965850299993,-22.43441948899994,0 -42.73870122099999,-22.43361474599993,0 -42.73839395099998,-22.43382392099994,0 -42.73919537499995,-22.43519020799994,0 -42.74010084299994,-22.43633039199995,0 -42.74141977999994,-22.43742435699994,0 -42.73993778299996,-22.43716640999997,0 -42.73877020799995,-22.43569975299994,0 -42.73822840099996,-22.43715312999996,0 -42.73791584099996,-22.43497605399995,0 -42.73812413699994,-22.43421725699994,0 -42.73806804399993,-22.43352613899998,0 -42.73922095999995,-22.43321363799993,0 -42.74058034699993,-22.43491111999998,0 -42.74257850599997,-22.43577272499994,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00009">
+				<name>2021</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>9</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2021</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.000686</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle003</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.71020278399993,-22.44504881799998,0 -42.71069297299994,-22.44519546399994,0 -42.71004765999993,-22.44543385799994,0 -42.71013429399994,-22.44589311899995,0 -42.70916348299994,-22.44520177499993,0 -42.70945512699996,-22.44440751599996,0 -42.71020278399993,-22.44504881799998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+		</Folder>
+	</Document>
+	<Document id="_024" xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd">
+		<name>2024</name>
+		<Snippet maxLines="0"></Snippet>
+		<Style id="PolyStyle004">
+			<LabelStyle>
+				<color>00000000</color>
+				<scale>0</scale>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff6e6e6e</color>
+				<width>0.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>fff5bcd0</color>
+			</PolyStyle>
+		</Style>
+		<Folder id="FeatureLayer0">
+			<name>2024</name>
+			<Snippet maxLines="0"></Snippet>
+			<Placemark id="ID_00000">
+				<name>2024</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2024</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>0</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2024</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>65.89371</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle004</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.78654202499996,-22.54984409999997,0 -42.78546360599995,-22.54957560099996,0 -42.78493387599997,-22.54929484099994,0 -42.78431066199994,-22.54846383299997,0 -42.78412802399998,-22.54734038799995,0 -42.78394528899997,-22.54568970099996,0 -42.78380957899998,-22.54433543199997,0 -42.78354708099994,-22.54249431399995,0 -42.78237603299993,-22.54185351299998,0 -42.78117354099993,-22.54178519799996,0 -42.78146801199995,-22.54059545899997,0 -42.78218834999996,-22.53902099999993,0 -42.78299485299993,-22.53838601499996,0 -42.78318401099995,-22.53898262399997,0 -42.78359177399994,-22.53876466199995,0 -42.78407395299996,-22.53844822099995,0 -42.78458318499997,-22.53776086499994,0 -42.78450938899994,-22.53680387399993,0 -42.78449650999994,-22.53624714299997,0 -42.78531679899993,-22.53581161899996,0 -42.78572664799998,-22.53571639099994,0 -42.78600951099997,-22.53681008199993,0 -42.78672996899996,-22.53734445899994,0 -42.78714561799995,-22.53701326999993,0 -42.78697078199997,-22.53627948199994,0 -42.78730383399994,-22.53555159099994,0 -42.78790122899994,-22.53533058699998,0 -42.78835674599998,-22.53582362199995,0 -42.78768584999995,-22.53650859799995,0 -42.78843539899998,-22.53732236399998,0 -42.78869291199993,-22.53722675399996,0 -42.78884567199998,-22.53841099899995,0 -42.78913226699996,-22.54001199299995,0 -42.78791773199998,-22.54092295599997,0 -42.78692833199995,-22.53992127299995,0 -42.78435844199998,-22.53933884099996,0 -42.78354053999993,-22.53915489699995,0 -42.78321331999996,-22.53921098399996,0 -42.78324513899997,-22.53975918899994,0 -42.78407288399995,-22.54094469399996,0 -42.78504477399997,-22.54109419699995,0 -42.78623672899994,-22.54079536499995,0 -42.78671441499995,-22.54124945399997,0 -42.78618431099994,-22.54221873099993,0 -42.78632523799996,-22.54284593099993,0 -42.78687177299997,-22.54288974999997,0 -42.78740609699997,-22.54313831399998,0 -42.78844715399998,-22.54304864199997,0 -42.79033602799996,-22.54407313799993,0 -42.79000823899997,-22.54557919399997,0 -42.78759834699997,-22.54712790199994,0 -42.78706894499993,-22.54760146099994,0 -42.78654202499996,-22.54984409999997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+		</Folder>
+	</Document>
+	<Document id="_020" xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd">
+		<name>2020</name>
+		<Snippet maxLines="0"></Snippet>
+		<Style id="PolyStyle005">
+			<LabelStyle>
+				<color>00000000</color>
+				<scale>0</scale>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff6e6e6e</color>
+				<width>0.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>ffc2defc</color>
+			</PolyStyle>
+		</Style>
+		<Folder id="FeatureLayer0">
+			<name>2020</name>
+			<Snippet maxLines="0"></Snippet>
+			<Placemark id="ID_00000">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>0</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>5.192486</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.79700381899994,-22.44624445199997,0 -42.79674819199994,-22.44641278199998,0 -42.79643710499994,-22.44637155699996,0 -42.79626698299995,-22.44643628899996,0 -42.79629031399998,-22.44661666999997,0 -42.79621588599997,-22.44675613699997,0 -42.79624833199995,-22.44705842199994,0 -42.79606057299998,-22.44721085699996,0 -42.79560074799997,-22.44727220399994,0 -42.79527044099996,-22.44735844399997,0 -42.79528950899999,-22.44762129399993,0 -42.79514175399999,-22.44771939199995,0 -42.79497148499996,-22.44759510899996,0 -42.79483188199998,-22.44762806199998,0 -42.79480397199995,-22.44732432099994,0 -42.79416072399994,-22.44687692499997,0 -42.79370742099997,-22.44655548999998,0 -42.79359898799999,-22.44636022299994,0 -42.79318277799996,-22.44624641099995,0 -42.79329859899997,-22.44599665699997,0 -42.79389093099996,-22.44581239699994,0 -42.79425120299993,-22.44573101199995,0 -42.79440340499997,-22.44540633599996,0 -42.79477325999994,-22.44519633099998,0 -42.79577011499998,-22.44568414599996,0 -42.79574865299998,-22.44577211599994,0 -42.79565371299998,-22.44588858399993,0 -42.79569999999995,-22.44598571099993,0 -42.79585956299996,-22.44600868999993,0 -42.79593896499995,-22.44607789199995,0 -42.79604754599995,-22.44600913999994,0 -42.79619179399998,-22.44613969599993,0 -42.79637505799997,-22.44606580299995,0 -42.79632073499994,-22.44579191999998,0 -42.79644845799993,-22.44574832499995,0 -42.79678026999994,-22.44585137599995,0 -42.79695924599997,-22.44586950699994,0 -42.79703515299997,-22.44603221599994,0 -42.79700381899994,-22.44624445199997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00001">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>1</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>4.224282</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.79491736999995,-22.44352905699998,0 -42.79483112599996,-22.44354844299994,0 -42.79449206299995,-22.44346850099993,0 -42.79438921899998,-22.44400971799996,0 -42.79411790899997,-22.44411727199997,0 -42.79386441699995,-22.44437910499994,0 -42.79361722999994,-22.44445084099993,0 -42.79245945499997,-22.44476671399997,0 -42.79247889199996,-22.44426260999995,0 -42.79257551599994,-22.44409778699998,0 -42.79234496799995,-22.44396992399993,0 -42.79226399499998,-22.44346194599996,0 -42.79250355099998,-22.44294142899997,0 -42.79309864299995,-22.44221231699993,0 -42.79328867899994,-22.44223945699997,0 -42.79349707099993,-22.44253289499994,0 -42.79353239399995,-22.44278755799996,0 -42.79375018499996,-22.44303677999994,0 -42.79396165999998,-22.44301079299993,0 -42.79427678099995,-22.44301773799998,0 -42.79470706899997,-22.44309711999995,0 -42.79486429499997,-22.44313958899994,0 -42.79491736999995,-22.44352905699998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00002">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>2</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.994987</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.80114024999995,-22.45741602299995,0 -42.80091997599993,-22.45735998199996,0 -42.80082418099994,-22.45755779199993,0 -42.80063270199997,-22.45761808699996,0 -42.80066704599994,-22.45738197099996,0 -42.80037475299997,-22.45727689599994,0 -42.80007655099996,-22.45716860599998,0 -42.79973640399993,-22.45717286699994,0 -42.79972715899999,-22.45714064699996,0 -42.79970735499995,-22.45710288499993,0 -42.79986083899996,-22.45705878599995,0 -42.79986609099996,-22.45695968499996,0 -42.80029484899995,-22.45698020299994,0 -42.80036454199995,-22.45682234199995,0 -42.79995309799995,-22.45674878099993,0 -42.80021275499996,-22.45641343299997,0 -42.80040411899995,-22.45634304999993,0 -42.80056130699995,-22.45645866399997,0 -42.80064338899996,-22.45646310299998,0 -42.80077304799994,-22.45671802399994,0 -42.80108266799994,-22.45668722199997,0 -42.80098748399996,-22.45707468799998,0 -42.80127858199995,-22.45718236499994,0 -42.80114024999995,-22.45741602299995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00003">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>3</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>4.126478</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.76498936299998,-22.48096621199994,0 -42.76522923599998,-22.48060851499997,0 -42.76560217599996,-22.48005234399994,0 -42.76603317899998,-22.47974059799998,0 -42.76613560399994,-22.47966651299993,0 -42.76620393199994,-22.47961709199996,0 -42.76645313199998,-22.47910390999994,0 -42.76666049599993,-22.47867688099996,0 -42.76672072299993,-22.47862978599994,0 -42.76698922599996,-22.47841982699998,0 -42.76701037699996,-22.47840328799998,0 -42.76707812999996,-22.47839377099996,0 -42.76756609899996,-22.47832522999994,0 -42.76688342899996,-22.47993640899995,0 -42.76661521899996,-22.48062140099995,0 -42.76590718999995,-22.48239995199998,0 -42.76543546999994,-22.48223691899994,0 -42.76545139799998,-22.48222094799996,0 -42.76544293099994,-22.48204516499993,0 -42.76588273099998,-22.48165819099995,0 -42.76543998399995,-22.48109031699994,0 -42.76506386499995,-22.48148795099996,0 -42.76492805099997,-22.48120519999998,0 -42.76498936299998,-22.48096621199994,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00004">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>4</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>5.049502</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.81217003099994,-22.44237549999997,0 -42.81215911799995,-22.44235072899994,0 -42.81216957399994,-22.44231092099994,0 -42.81216933299999,-22.44231040999995,0 -42.81216957399994,-22.44230949299998,0 -42.81206560899994,-22.44208876999994,0 -42.81262768799996,-22.43983234699994,0 -42.81339334099994,-22.43936517299994,0 -42.81483708099995,-22.44048611799997,0 -42.81504123099995,-22.44086944899993,0 -42.81442824199996,-22.44114236799993,0 -42.81401316099993,-22.44138138999995,0 -42.81345754299997,-22.44141799499994,0 -42.81300675699998,-22.44159999299995,0 -42.81267585899997,-22.44197676299996,0 -42.81245683699996,-22.44247136299998,0 -42.81229527099998,-22.44268491099996,0 -42.81207177799996,-22.44285015899993,0 -42.81217003099994,-22.44237549999997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00005">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>5</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>10.11485</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.71656000099995,-22.50668117999993,0 -42.71641417899997,-22.50672226799998,0 -42.71627637599994,-22.50665504299997,0 -42.71624141699994,-22.50628286299997,0 -42.71649712399994,-22.50591426899996,0 -42.71689169199993,-22.50592998299993,0 -42.71721700199998,-22.50593107899994,0 -42.71730865499995,-22.50583721899994,0 -42.71713428899994,-22.50550113799994,0 -42.71717314999995,-22.50536148499998,0 -42.71773886999995,-22.50530436799994,0 -42.71801399399993,-22.50549261999993,0 -42.71825886499994,-22.50534552799996,0 -42.71852944799997,-22.50538298899994,0 -42.71871435999998,-22.50545911999995,0 -42.71913236699993,-22.50574676399998,0 -42.71942401299998,-22.50577166799997,0 -42.71967547799994,-22.50577549799993,0 -42.71983112099997,-22.50590998199993,0 -42.71901225699997,-22.50733000699995,0 -42.71782036099995,-22.50958783899994,0 -42.71670755799994,-22.51161240899996,0 -42.71628283899997,-22.51077613299998,0 -42.71664880599997,-22.50975730699997,0 -42.71655358399994,-22.50954557099993,0 -42.71673618499995,-22.50938632599997,0 -42.71693872699996,-22.50942695999993,0 -42.71712279099995,-22.50953206599996,0 -42.71742264199997,-22.51001103399994,0 -42.71861437399997,-22.50779729699997,0 -42.71782136799993,-22.50800453499994,0 -42.71680167099998,-22.50822743599997,0 -42.71647205099998,-22.50814723799994,0 -42.71530409699994,-22.50749951199998,0 -42.71302849199998,-22.50643132599993,0 -42.71334665199998,-22.50578729099993,0 -42.71353370599996,-22.50542744299997,0 -42.71423762899997,-22.50585793299996,0 -42.71449716199993,-22.50612165799993,0 -42.71457882999994,-22.50637810899997,0 -42.71471273199995,-22.50652982399998,0 -42.71505645599996,-22.50654869499994,0 -42.71544315399996,-22.50692167399995,0 -42.71565109099998,-22.50710942899997,0 -42.71606753499998,-22.50733197499994,0 -42.71632304299993,-22.50759831899995,0 -42.71658834199997,-22.50766182499996,0 -42.71679979499999,-22.50777190899993,0 -42.71757287499997,-22.50758024099997,0 -42.71793651799993,-22.50741045399997,0 -42.71819076899993,-22.50724437999997,0 -42.71832241699997,-22.50721935299998,0 -42.71866781099993,-22.50703390599995,0 -42.71887631999994,-22.50678515899995,0 -42.71899893199998,-22.50657550499994,0 -42.71887938999998,-22.50645009599998,0 -42.71868606499999,-22.50627210399995,0 -42.71849219499995,-22.50611054699993,0 -42.71830518699994,-22.50599897299998,0 -42.71802920099998,-22.50630821099998,0 -42.71779015399994,-22.50636955699997,0 -42.71724568199994,-22.50629170999997,0 -42.71656000099995,-22.50668117999993,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00006">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>6</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.7016</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.72581557599995,-22.49751657899998,0 -42.72575311899993,-22.49728404599995,0 -42.72574654299996,-22.49707846799993,0 -42.72577034199998,-22.49683868699998,0 -42.72582053699995,-22.49660543599998,0 -42.72597354299995,-22.49616737399998,0 -42.72606898899994,-22.49599864599998,0 -42.72628919199997,-22.49610642099998,0 -42.72642268399994,-22.49604673699997,0 -42.72682784099993,-22.49623310499993,0 -42.72742284999998,-22.49659415499997,0 -42.72696078299998,-22.49687141399994,0 -42.72592516999998,-22.49770283199996,0 -42.72581557599995,-22.49751657899998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00007">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>7</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>8.481565</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.79949308699997,-22.44370004399997,0 -42.80000591999993,-22.44373353799995,0 -42.80008669199998,-22.44382447999993,0 -42.80009118099997,-22.44404424599998,0 -42.79961163699994,-22.44451101199996,0 -42.79970174799996,-22.44472662299995,0 -42.79964778199997,-22.44472651599995,0 -42.79909482399995,-22.44533652999996,0 -42.79894915099993,-22.44541170199994,0 -42.79840629799997,-22.44521538199996,0 -42.79824367899994,-22.44507977799998,0 -42.79822862899994,-22.44494553899995,0 -42.79799169499995,-22.44482320499998,0 -42.79789022399996,-22.44489356599996,0 -42.79777367499997,-22.44475154199995,0 -42.79761349499995,-22.44466961299997,0 -42.79751816399994,-22.44463536899997,0 -42.79714991199995,-22.44446009599994,0 -42.79660888299998,-22.44419208499994,0 -42.79625337199997,-22.44409150799993,0 -42.79632291399997,-22.44423570399994,0 -42.79648839899994,-22.44434780099994,0 -42.79691642399996,-22.44446011899993,0 -42.79705278399996,-22.44463917699994,0 -42.79763563899996,-22.44499711899994,0 -42.79793470099997,-22.44524654299994,0 -42.79798819599995,-22.44541009799997,0 -42.79832866199996,-22.44560088799994,0 -42.79842399499995,-22.44573911699996,0 -42.79854564299995,-22.44615507199995,0 -42.79863341899994,-22.44614836599993,0 -42.79860256699993,-22.44637221399995,0 -42.79828951099995,-22.44650127799997,0 -42.79800353799993,-22.44646801899995,0 -42.79784135999995,-22.44634223199995,0 -42.79768866699993,-22.44621885599997,0 -42.79764313399994,-22.44609673999997,0 -42.79755682699994,-22.44591392899997,0 -42.79738556199993,-22.44590865799995,0 -42.79732122299998,-22.44569094899998,0 -42.79686503999994,-22.44574908499993,0 -42.79669856899994,-22.44560190899995,0 -42.79665414599998,-22.44528301299994,0 -42.79651914899995,-22.44519222199995,0 -42.79593248099997,-22.44526797899994,0 -42.79547181699996,-22.44509440199994,0 -42.79515095999994,-22.44510531799995,0 -42.79484909899998,-22.44509125199994,0 -42.79415430399996,-22.44465330399993,0 -42.79532596099995,-22.44397714899998,0 -42.79543870999998,-22.44405911899997,0 -42.79552574099995,-22.44403907599997,0 -42.79574112699999,-22.44401586299995,0 -42.79600741799993,-22.44400031899994,0 -42.79613549799996,-22.44398499899995,0 -42.79639146999995,-22.44391841299995,0 -42.79668932499993,-22.44397678499996,0 -42.79747328799994,-22.44412107799997,0 -42.79769666799996,-22.44398295499997,0 -42.79800804999996,-22.44397209999994,0 -42.79852273099993,-22.44387750999994,0 -42.79869599199998,-22.44377056899998,0 -42.79922740199999,-22.44379783399995,0 -42.79949308699997,-22.44370004399997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00008">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>8</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.494861</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.86058649899996,-22.43174175599995,0 -42.86052944299996,-22.43193261099998,0 -42.86026284699994,-22.43196466999996,0 -42.86017423099997,-22.43189802299997,0 -42.85967847099994,-22.43231813899996,0 -42.85956965999998,-22.43223886699997,0 -42.85968754399994,-22.43199654699998,0 -42.85980865299996,-22.43155258599995,0 -42.86042133199993,-22.43146702799993,0 -42.86058649899996,-22.43174175599995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00009">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>9</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.617475</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.85703551099994,-22.45397312399996,0 -42.85684473599997,-22.45395851999996,0 -42.85670702699997,-22.45393277799997,0 -42.85670685099996,-22.45382844499994,0 -42.85676851699998,-22.45377030499998,0 -42.85708549799995,-22.45388778499995,0 -42.85717550499993,-22.45373596199994,0 -42.85737403999997,-22.45366313899996,0 -42.85731064399994,-22.45339597199995,0 -42.85746934499997,-22.45325812399994,0 -42.85770892999994,-22.45330643099993,0 -42.85802425499998,-22.45347149299994,0 -42.85814730699997,-22.45360296999996,0 -42.85819345299996,-22.45365486999998,0 -42.85822811099996,-22.45372826699997,0 -42.85760349399993,-22.45394834799998,0 -42.85737808699997,-22.45399103999995,0 -42.85703551099994,-22.45397312399996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00010">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>10</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.996815</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.69550410299996,-22.41546307099998,0 -42.69498254699994,-22.41598333799993,0 -42.69371280299998,-22.41541412999993,0 -42.69359203399995,-22.41452402999994,0 -42.69460775099998,-22.41469402099995,0 -42.69526168299996,-22.41489143099994,0 -42.69550410299996,-22.41546307099998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00011">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>11</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.38844</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.85556052699997,-22.45367546799997,0 -42.85560127099995,-22.45374318499995,0 -42.85555193599998,-22.45388145899994,0 -42.85570011099998,-22.45410175299997,0 -42.85544887699996,-22.45433341899997,0 -42.85502935399995,-22.45373823699998,0 -42.85506113799994,-22.45368403699996,0 -42.85496002799994,-22.45359720399995,0 -42.85510364599998,-22.45349333099995,0 -42.85543771799996,-22.45365497499995,0 -42.85548538099994,-22.45353562399998,0 -42.85538193699995,-22.45344352399997,0 -42.85550368699995,-22.45335817999995,0 -42.85565945399998,-22.45353041399994,0 -42.85556052699997,-22.45367546799997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00012">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>12</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>2.991255</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.70378253299998,-22.42043503599996,0 -42.70406399599995,-22.42065287399993,0 -42.70398175899993,-22.42082485099996,0 -42.70404322999997,-22.42108341099993,0 -42.70399014599997,-22.42130337799995,0 -42.70383381699997,-22.42139728699993,0 -42.70378715199996,-22.42165305299994,0 -42.70351671099996,-22.42190617699998,0 -42.70316579099995,-22.42174132399998,0 -42.70286765799995,-22.42156431799998,0 -42.70242990399998,-22.42150073799996,0 -42.70219793499996,-22.42136187199998,0 -42.70211195599995,-22.42107333699994,0 -42.70170732199995,-22.42105270299993,0 -42.70159806699996,-22.42120223799998,0 -42.70144185299995,-22.42119217099997,0 -42.70143667899998,-22.42104701099993,0 -42.70111779199993,-22.42092799099993,0 -42.70119244199998,-22.42079679699998,0 -42.70154944799998,-22.42059008799998,0 -42.70188928099998,-22.42043833399998,0 -42.70244431499998,-22.42047174999993,0 -42.70275130499994,-22.42044509699997,0 -42.70304863699994,-22.42036614899996,0 -42.70325971999995,-22.42055078399994,0 -42.70378253299998,-22.42043503599996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00013">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>13</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>6.999198</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.84153778499996,-22.44768841499996,0 -42.84073112699997,-22.44761701399995,0 -42.84000821899997,-22.44785314199993,0 -42.83902951799996,-22.44887933099994,0 -42.83848606699996,-22.44859889199995,0 -42.83961949699994,-22.44702543299996,0 -42.84009981899993,-22.44712426899997,0 -42.84024998599995,-22.44690581899994,0 -42.84052352499998,-22.44667297299998,0 -42.84046471299996,-22.44657760599995,0 -42.83980258399998,-22.44592413199996,0 -42.83966506199994,-22.44561220099996,0 -42.84009354799997,-22.44532006099996,0 -42.84065538299996,-22.44580491699998,0 -42.84084185499995,-22.44590956799993,0 -42.84151683899995,-22.44552677499996,0 -42.84131543199993,-22.44537630799994,0 -42.84162327299998,-22.44522205099997,0 -42.84187643999996,-22.44541100899994,0 -42.84273317799995,-22.44571005899996,0 -42.84253457299997,-22.44675302699994,0 -42.84216746299995,-22.44690581199995,0 -42.84153778499996,-22.44768841499996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00014">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>14</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.008837</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.84376573099996,-22.44560922499994,0 -42.84295793799998,-22.44545301099993,0 -42.84350710699994,-22.44478676999995,0 -42.84376817099997,-22.44468023199994,0 -42.84425678099996,-22.44515844499995,0 -42.84458054499999,-22.44505857299998,0 -42.84456408899996,-22.44480156699996,0 -42.84494548099997,-22.44458285099995,0 -42.84507318499993,-22.44458920099993,0 -42.84518256499996,-22.44468677699996,0 -42.84487401499996,-22.44480247799993,0 -42.84473162799998,-22.44478240699993,0 -42.84461336099997,-22.44494704999994,0 -42.84489594599995,-22.44518717299997,0 -42.84461848699993,-22.44527712899998,0 -42.84451687299998,-22.44517573399997,0 -42.84376573099996,-22.44560922499994,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00015">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>15</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>2.001062</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.85217675099994,-22.45164203199994,0 -42.85190684799994,-22.45210448499995,0 -42.85149952499995,-22.45219262699993,0 -42.85126729499996,-22.45187575299997,0 -42.85122875399998,-22.45165312499995,0 -42.85096796799996,-22.45126812299998,0 -42.85107008499995,-22.45109865599994,0 -42.85096524999994,-22.45079605899997,0 -42.85096000699997,-22.45054868499994,0 -42.85108008699996,-22.45044118999994,0 -42.85091408399995,-22.45036941499995,0 -42.85108798599998,-22.45029201099993,0 -42.85133149199999,-22.45023552799995,0 -42.85157545699997,-22.45018661899996,0 -42.85177063199995,-22.45038558899995,0 -42.85205503099996,-22.45075455299997,0 -42.85217675099994,-22.45164203199994,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00016">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>16</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.517004</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.85321728299994,-22.44994855399995,0 -42.85279253699997,-22.45025352099998,0 -42.85250293899998,-22.44996562699998,0 -42.85229219299998,-22.45004361899993,0 -42.85196117799995,-22.44996643699994,0 -42.85196572899997,-22.44994909999997,0 -42.85209442399997,-22.44968016699994,0 -42.85236935699993,-22.44959873999994,0 -42.85266201099995,-22.44957559899996,0 -42.85321728299994,-22.44994855399995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00017">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>17</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.003091</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.84713585599997,-22.45009601099997,0 -42.84660438999998,-22.44986820999998,0 -42.84625777899998,-22.44983161299996,0 -42.84592103599994,-22.44981970799995,0 -42.84575071999996,-22.44978260899995,0 -42.84567065099998,-22.44969147599994,0 -42.84595816299998,-22.44956620499994,0 -42.84616509899996,-22.44943472599994,0 -42.84654590799994,-22.44944235399993,0 -42.84674951999995,-22.44948688399995,0 -42.84698455699998,-22.44950190199995,0 -42.84768329299993,-22.44943592599998,0 -42.84781240999996,-22.44943151999996,0 -42.84755660799993,-22.45003364899998,0 -42.84713585599997,-22.45009601099997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00018">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>18</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>2.00213</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.85489520999994,-22.44755909899993,0 -42.85472527599995,-22.44768293199996,0 -42.85445854199997,-22.44775204999996,0 -42.85435449499994,-22.44788796099994,0 -42.85476748499997,-22.44800467099998,0 -42.85489389899993,-22.44828135199998,0 -42.85451720599997,-22.44844845099993,0 -42.85418844999998,-22.44853604199994,0 -42.85387690199997,-22.44844425099996,0 -42.85380069499996,-22.44818395799996,0 -42.85373213599996,-22.44804912399997,0 -42.85399169999994,-22.44791194399994,0 -42.85387551699995,-22.44773489299996,0 -42.85400065899995,-22.44740075499993,0 -42.85424101899997,-22.44716085499994,0 -42.85454671899998,-22.44715159799995,0 -42.85464926599997,-22.44701993299998,0 -42.85459128999997,-22.44690873299993,0 -42.85400505299998,-22.44696667699998,0 -42.85407472199995,-22.44677470099998,0 -42.85396292799993,-22.44662701699997,0 -42.85401441899995,-22.44626115399996,0 -42.85427551999993,-22.44625182899995,0 -42.85434378299993,-22.44662704399997,0 -42.85471921799996,-22.44668150299998,0 -42.85478849599997,-22.44662903099993,0 -42.85464060499993,-22.44640424699998,0 -42.85489835199996,-22.44633321599997,0 -42.85515745499998,-22.44637894399995,0 -42.85535180999995,-22.44655833999997,0 -42.85522349999997,-22.44672771299997,0 -42.85511300099995,-22.44699468599998,0 -42.85466456499995,-22.44728370699994,0 -42.85489520999994,-22.44755909899993,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00019">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>19</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.993088</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.85275567899998,-22.44497786799997,0 -42.85280520299995,-22.44489496499995,0 -42.85290988999998,-22.44490232199996,0 -42.85305852699997,-22.44468482699995,0 -42.85326722199994,-22.44470202999997,0 -42.85351859799994,-22.44476548499995,0 -42.85352499599998,-22.44455509599993,0 -42.85335037599998,-22.44457591399993,0 -42.85279946599996,-22.44432006499994,0 -42.85320135199999,-22.44409054899995,0 -42.85362301999993,-22.44404339999994,0 -42.85389891499995,-22.44393207699994,0 -42.85402144899996,-22.44409856899995,0 -42.85368847399997,-22.44481241099993,0 -42.85350587399995,-22.44500724099993,0 -42.85338444999996,-22.44509874299996,0 -42.85338097399995,-22.44519198699993,0 -42.85325097899994,-22.44533585099998,0 -42.85303624299996,-22.44533980199998,0 -42.85275567899998,-22.44497786799997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00020">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>20</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.1492</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.85408047799996,-22.44264878599995,0 -42.85384941199993,-22.44287527899996,0 -42.85370896099994,-22.44276580099995,0 -42.85379147299994,-22.44270392099997,0 -42.85375570899998,-22.44256936699998,0 -42.85363165599995,-22.44256848299995,0 -42.85336777999999,-22.44254334499993,0 -42.85332765699997,-22.44248688399995,0 -42.85351779999996,-22.44235931899993,0 -42.85365294499996,-22.44241637599998,0 -42.85408047799996,-22.44264878599995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00021">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>21</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.195439</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.85349163299998,-22.44214020499993,0 -42.85357365399994,-22.44207990299998,0 -42.85366900199995,-22.44187507499993,0 -42.85392445599996,-22.44196484499997,0 -42.85358974499997,-22.44222831999997,0 -42.85325703599995,-22.44228686299994,0 -42.85319304599994,-22.44213461999993,0 -42.85305882099993,-22.44212937199995,0 -42.85301803499993,-22.44190815399998,0 -42.85332158599994,-22.44197551399998,0 -42.85349163299998,-22.44214020499993,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00022">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>22</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>0.055816</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.85452904899995,-22.44218869499997,0 -42.85442688799998,-22.44221282999996,0 -42.85431690599995,-22.44230610499994,0 -42.85418847699998,-22.44223268899998,0 -42.85423002999994,-22.44213660299994,0 -42.85426670799995,-22.44199846599997,0 -42.85452904899995,-22.44218869499997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00023">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>23</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>2.034507</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.86165456899994,-22.42843733899997,0 -42.86188947599993,-22.42855114199995,0 -42.86201581899996,-22.42873846099997,0 -42.86199229499994,-22.42912941999998,0 -42.86150408799995,-22.42951028599998,0 -42.86112441699998,-22.42940337299996,0 -42.86067890599998,-22.42935622199997,0 -42.86015695099996,-22.42939264999995,0 -42.85970382699998,-22.42936699599994,0 -42.85935239599996,-22.42923493699993,0 -42.85907193899993,-22.42935630199997,0 -42.85897110399998,-22.42904177399993,0 -42.85912285199998,-22.42887546699995,0 -42.85923499099994,-22.42896462299996,0 -42.85935806799995,-22.42888142599998,0 -42.85954904099998,-22.42907114099995,0 -42.85948672099994,-22.42914215799993,0 -42.85957548999994,-22.42919704199994,0 -42.85965877099994,-22.42908842899993,0 -42.85999832899995,-22.42882561199997,0 -42.86035764699994,-22.42881887599998,0 -42.86083823599995,-22.42883613799995,0 -42.86120764599997,-22.42846006499997,0 -42.86165456899994,-22.42843733899997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00024">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>24</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.999047</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.79616159699998,-22.42528486599997,0 -42.79584932999995,-22.42528598999996,0 -42.79572600999995,-22.42486347599993,0 -42.79520301899998,-22.42481133599995,0 -42.79512011899993,-22.42405226299996,0 -42.79545391999994,-22.42362941299996,0 -42.79536343399997,-22.42327888999995,0 -42.79503764299994,-22.42337276599994,0 -42.79482623399997,-22.42289252899997,0 -42.79496121599993,-22.42270967899998,0 -42.79514942699996,-22.42267527899998,0 -42.79545445499997,-22.42281792699998,0 -42.79579686899996,-22.42333069199998,0 -42.79601599199998,-22.42368620799994,0 -42.79616159699998,-22.42528486599997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00025">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>25</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.394068</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.81340429199997,-22.42410282499998,0 -42.81295870399998,-22.42447356599996,0 -42.81277334099997,-22.42489296399998,0 -42.81239133499997,-22.42503359499995,0 -42.81211230399998,-22.42504556999995,0 -42.81176882399996,-22.42496770299994,0 -42.81186080199996,-22.42424701299996,0 -42.81242029699996,-22.42379353999996,0 -42.81270520899994,-22.42404892399998,0 -42.81282261599995,-22.42396957599993,0 -42.81308886899996,-22.42396724799994,0 -42.81328202899994,-22.42397500999994,0 -42.81340429199997,-22.42410282499998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00026">
+				<name>2020</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>26</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2020</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.008199</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle005</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.81510391699993,-22.42380871599994,0 -42.81487831799996,-22.42395504799998,0 -42.81464662499997,-22.42416228899998,0 -42.81421341599997,-22.42408358499995,0 -42.81402279899999,-22.42376412699997,0 -42.81371507599994,-22.42349368099997,0 -42.81344536499995,-22.42336499799995,0 -42.81393337499998,-22.42321989199996,0 -42.81440126899997,-22.42309210999997,0 -42.81510391699993,-22.42380871599994,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+		</Folder>
+	</Document>
+	<Document id="_025" xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd">
+		<name>2025</name>
+		<Snippet maxLines="0"></Snippet>
+		<Style id="PolyStyle006">
+			<LabelStyle>
+				<color>00000000</color>
+				<scale>0</scale>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff6e6e6e</color>
+				<width>0.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>fff5c6ce</color>
+			</PolyStyle>
+		</Style>
+		<Folder id="FeatureLayer0">
+			<name>2025</name>
+			<Snippet maxLines="0"></Snippet>
+			<Placemark id="ID_00000">
+				<name>2025</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2025</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>0</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2025</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>97.24581</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle006</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.76522295399997,-22.47039552399997,0 -42.76555998699996,-22.47039694199998,0 -42.76568062499996,-22.47053014399995,0 -42.76563866899994,-22.47077672099994,0 -42.76582701099994,-22.47087186499994,0 -42.76598357799998,-22.47100403199994,0 -42.76608711399996,-22.47156937799997,0 -42.76633329599997,-22.47158483899995,0 -42.76650832299998,-22.47162401299994,0 -42.76624667999994,-22.47176561399993,0 -42.76624158199996,-22.47199908799996,0 -42.76630592899994,-22.47203026699998,0 -42.76651535199994,-22.47201789999997,0 -42.76685495099997,-22.47216296399995,0 -42.76697107199993,-22.47237526999993,0 -42.76700143499994,-22.47260160999997,0 -42.76730335099995,-22.47268761899994,0 -42.76791590199997,-22.47239612199996,0 -42.76818416399993,-22.47254112599995,0 -42.76845252499993,-22.47265688099998,0 -42.76855781699993,-22.47284970299995,0 -42.76902823799998,-22.47296619399998,0 -42.76937198099995,-22.47323806699995,0 -42.76942651299998,-22.47414876399995,0 -42.76767099499995,-22.47800896899997,0 -42.76555992799996,-22.47717754399997,0 -42.76569215699993,-22.47650277199995,0 -42.76439746599993,-22.47582575099995,0 -42.76365815099996,-22.47624299399996,0 -42.76288404299999,-22.47608522999997,0 -42.76268895399994,-22.47664589599998,0 -42.76295897599994,-22.47720618799997,0 -42.76285676699996,-22.47765505199993,0 -42.76247016399998,-22.47859243099998,0 -42.76262097799997,-22.47939131699997,0 -42.76314637399997,-22.47991470999995,0 -42.76415861599997,-22.48001715099997,0 -42.76442262199998,-22.47968382099998,0 -42.76453440299997,-22.47858528099994,0 -42.76425328999994,-22.47766528999995,0 -42.76433602199995,-22.47739124399993,0 -42.76495091899994,-22.47732641699997,0 -42.76553553099995,-22.47719940799993,0 -42.76767278499995,-22.47802493899997,0 -42.76756033199996,-22.47825244899997,0 -42.76707812999996,-22.47839377099996,0 -42.76701037699996,-22.47840328799998,0 -42.76698922599996,-22.47841982699998,0 -42.76680949199994,-22.47847250299998,0 -42.76672072299993,-22.47862978599994,0 -42.76666049599993,-22.47867688099996,0 -42.76645313199998,-22.47910390999994,0 -42.76613560399994,-22.47966651299993,0 -42.76603317899998,-22.47974059799998,0 -42.76560874299997,-22.47996782599995,0 -42.76484070899994,-22.48110909699994,0 -42.76496862999994,-22.48155509399993,0 -42.76539873299998,-22.48192545799998,0 -42.76540203799993,-22.48218738399993,0 -42.76495559099993,-22.48256418399995,0 -42.76261437199997,-22.48050926599996,0 -42.76243063799996,-22.48048157799997,0 -42.76219193499998,-22.48052904299993,0 -42.76188806799996,-22.48084037399997,0 -42.76159074399993,-22.48111740999997,0 -42.76142108599998,-22.48136453399997,0 -42.76132412799996,-22.48145009199993,0 -42.76139773999995,-22.48161640699993,0 -42.76183015599997,-22.48226412499997,0 -42.76178591799993,-22.48286694699993,0 -42.76245624099994,-22.48378747999993,0 -42.76249223399998,-22.48400905099993,0 -42.76252029499994,-22.48430437799993,0 -42.76175146399999,-22.48488047599994,0 -42.76240109399998,-22.48584129099993,0 -42.76229018399994,-22.48626241699998,0 -42.76155740699994,-22.48649076399994,0 -42.76087268499998,-22.48622892999998,0 -42.76027310299997,-22.48616650999998,0 -42.76035021899997,-22.48538624899993,0 -42.75989923599997,-22.48539871699995,0 -42.75965818599997,-22.48515717599997,0 -42.75987322499998,-22.48488442999997,0 -42.76036214399994,-22.48448778499994,0 -42.76062948299995,-22.48421159899993,0 -42.76037765299998,-22.48409593099996,0 -42.76008815399996,-22.48438784899997,0 -42.75971805599994,-22.48414996399998,0 -42.75952899099997,-22.48342555399995,0 -42.75893145099997,-22.48297546799995,0 -42.75793526099994,-22.48226298899993,0 -42.75749844299997,-22.48128113699994,0 -42.75702454299994,-22.48119522599995,0 -42.75713099899997,-22.48094414299993,0 -42.75973915799995,-22.47538898699997,0 -42.75998821299999,-22.47536865499995,0 -42.76046448599993,-22.47498501499996,0 -42.76101587399995,-22.47442630699993,0 -42.76131596099998,-22.47388822699997,0 -42.76108769799998,-22.47346355799993,0 -42.76522295399997,-22.47039552399997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+		</Folder>
+	</Document>
+	<Document id="_022" xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd">
+		<name>2022</name>
+		<Snippet maxLines="0"></Snippet>
+		<Style id="PolyStyle007">
+			<LabelStyle>
+				<color>00000000</color>
+				<scale>0</scale>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff6e6e6e</color>
+				<width>0.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>fff2d2ce</color>
+			</PolyStyle>
+		</Style>
+		<Folder id="FeatureLayer0">
+			<name>2022</name>
+			<Snippet maxLines="0"></Snippet>
+			<Placemark id="ID_00000">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>0</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>21.953116</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.72289634299995,-22.41170840299998,0 -42.72304949299996,-22.41221470999994,0 -42.72351830999997,-22.41235127399995,0 -42.72384247399998,-22.41293342399996,0 -42.72520371099995,-22.41348096599995,0 -42.72539662799994,-22.41384589799998,0 -42.72523951399995,-22.41462102199995,0 -42.72552923699993,-22.41539158499995,0 -42.72743856799997,-22.41689739699996,0 -42.72668692599996,-22.41744997899997,0 -42.72628155499996,-22.41763105999996,0 -42.72539108699993,-22.41708213799996,0 -42.72497376799998,-22.41642452499997,0 -42.72371426599994,-22.41547016799996,0 -42.72310444299995,-22.41527021999997,0 -42.72243586099995,-22.41474271699997,0 -42.72177155299994,-22.41445348599996,0 -42.72074287899994,-22.41416043399994,0 -42.71974207199997,-22.41388499999994,0 -42.71894591299997,-22.41319430899995,0 -42.71918516899996,-22.41275288399993,0 -42.72054400899998,-22.41166037299996,0 -42.72118595299997,-22.41133259899993,0 -42.72200305199993,-22.41142732899993,0 -42.72289634299995,-22.41170840299998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00001">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>1</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>23.964641</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.82350486499996,-22.43665105699995,0 -42.81699139999995,-22.44455045099994,0 -42.81532798799998,-22.44339972499995,0 -42.81385667199999,-22.44469442399998,0 -42.81344871699997,-22.44464526799993,0 -42.81521119699994,-22.44163802199995,0 -42.81627850899997,-22.44144613099996,0 -42.81649066699998,-22.44059104199994,0 -42.81613346399996,-22.44013408599994,0 -42.81801941299994,-22.43883642299994,0 -42.81769824699995,-22.43996909899994,0 -42.81505845399994,-22.44296020899998,0 -42.81565349599998,-22.44340267099994,0 -42.81745635999994,-22.44112659599995,0 -42.81961229699994,-22.43870924899994,0 -42.82112652999996,-22.43806609299997,0 -42.82166909099993,-22.43680698099996,0 -42.82291620999996,-22.43537804499994,0 -42.82350486499996,-22.43665105699995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00002">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>2</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>20.46136</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.74580824199995,-22.54320352599996,0 -42.74447069099995,-22.54263270499996,0 -42.74779995299997,-22.54182107399993,0 -42.74863942099995,-22.54099559299993,0 -42.74719411299998,-22.54018961399994,0 -42.74726524199997,-22.53911352599994,0 -42.74841105699994,-22.53734662799997,0 -42.74968702299998,-22.53686615199996,0 -42.75032190599995,-22.53927835299993,0 -42.75055448099994,-22.54065922399997,0 -42.75077210599994,-22.54139391199993,0 -42.75139206599994,-22.54177808699995,0 -42.75290098099998,-22.54115268999993,0 -42.75356561599995,-22.54174506999993,0 -42.74580824199995,-22.54320352599996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00003">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>3</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.996166</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.79539021499994,-22.46104175199997,0 -42.79582470199995,-22.46125248599998,0 -42.79527304999993,-22.46156522799993,0 -42.79566599399993,-22.46196102399995,0 -42.79586479399995,-22.46254778399998,0 -42.79592666199994,-22.46308194099993,0 -42.79602526299993,-22.46357903899997,0 -42.79560623099997,-22.46346447599996,0 -42.79488081499994,-22.46271203999993,0 -42.79484543399997,-22.46222680799997,0 -42.79493638099996,-22.46128638299996,0 -42.79539021499994,-22.46104175199997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00004">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>4</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>7.986499</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.75252149299996,-22.48150085599997,0 -42.75348274999993,-22.48069495599998,0 -42.75483839699996,-22.48135985099998,0 -42.75540784899994,-22.48168249099996,0 -42.75538839599994,-22.48174693899995,0 -42.75592734099996,-22.48222294999994,0 -42.75517868199995,-22.48291227999994,0 -42.75449636399998,-22.48434337799995,0 -42.75414335499994,-22.48398761399994,0 -42.75314568299996,-22.48437293199993,0 -42.75310559999997,-22.48382890699997,0 -42.75368259499993,-22.48279379199994,0 -42.75435066999995,-22.48175785799998,0 -42.75406323199996,-22.48150344699997,0 -42.75361983399995,-22.48193067899996,0 -42.75299377299996,-22.48290419999995,0 -42.75215291199999,-22.48276572399993,0 -42.75222730099995,-22.48249972099995,0 -42.75252149299996,-22.48150085599997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00005">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>5</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>2.499056</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.73880567999998,-22.45227051799998,0 -42.73989455799995,-22.45419022899995,0 -42.73978889899996,-22.45443453599995,0 -42.73912228799998,-22.45411007699994,0 -42.73798328999993,-22.45410037799996,0 -42.73838033499993,-22.45327035299994,0 -42.73809027999994,-22.45220767899997,0 -42.73880567999998,-22.45227051799998,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00006">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>6</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.296142</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.74351714799997,-22.45286553999995,0 -42.74367291999994,-22.45335546099994,0 -42.74342845599995,-22.45331280499994,0 -42.74364144099997,-22.45363304599994,0 -42.74342249699998,-22.45374803999994,0 -42.74313802499995,-22.45369007999994,0 -42.74255100299996,-22.45359295799994,0 -42.74183712799993,-22.45343564799998,0 -42.74198202199995,-22.45327526799997,0 -42.74220676099998,-22.45316747599998,0 -42.74274525899995,-22.45286164299995,0 -42.74318071399995,-22.45266401199996,0 -42.74351714799997,-22.45286553999995,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00007">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>7</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>5.991413</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.81140261299998,-22.45155104399993,0 -42.81094506099998,-22.45333326699995,0 -42.81063724599994,-22.45344387799997,0 -42.80953214999994,-22.45419755099994,0 -42.80859411699998,-22.45388240599993,0 -42.80974573299994,-22.45189156699996,0 -42.81074616399997,-22.45016696999994,0 -42.81140261299998,-22.45155104399993,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00008">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>8</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>1.102059</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.73817293799993,-22.45501608899997,0 -42.73808549299997,-22.45627156999996,0 -42.73713287799995,-22.45666320699996,0 -42.73661343399993,-22.45663512499993,0 -42.73682575899994,-22.45627604199996,0 -42.73756385099995,-22.45609033099993,0 -42.73758727199998,-22.45547480699997,0 -42.73817293799993,-22.45501608899997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00009">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>9</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>12.969532</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.77553099799997,-22.43410178199997,0 -42.77437190499995,-22.43323700099995,0 -42.77408656599994,-22.43219853199997,0 -42.77385734699993,-22.43188886399997,0 -42.77344575099994,-22.43226988399994,0 -42.77357913199995,-22.43307446599994,0 -42.77343328099994,-22.43316869499995,0 -42.77310057699998,-22.43304708099993,0 -42.77193834899998,-22.43361534499996,0 -42.77211435899994,-22.43312240499995,0 -42.77182269499997,-22.43272225899995,0 -42.77153451199996,-22.43272066599997,0 -42.77165957799997,-22.43241208799998,0 -42.77197895399996,-22.43193805499993,0 -42.77145986199997,-22.43094695499997,0 -42.77315192299994,-22.42980163499993,0 -42.77378788099998,-22.42966125199996,0 -42.77390238799995,-22.43010667799996,0 -42.77482591399996,-22.43033222899993,0 -42.77513932199997,-22.42943421199993,0 -42.77587162899994,-22.43105069099994,0 -42.77494190999994,-22.43153695499996,0 -42.77496384999995,-22.43210885899998,0 -42.77531597999996,-22.43260613499996,0 -42.77588957199998,-22.43305901999997,0 -42.77587535599997,-22.43345386599998,0 -42.77548690699996,-22.43338813799994,0 -42.77532659799994,-22.43346589099997,0 -42.77604570399996,-22.43403343699998,0 -42.77553099799997,-22.43410178199997,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00010">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>10</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>5.737411</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.77292699199995,-22.44176721299993,0 -42.77288053899997,-22.44269528199993,0 -42.77239006699995,-22.44302171899994,0 -42.77169460999994,-22.44352640099993,0 -42.77182315499994,-22.44406708399998,0 -42.77158876299995,-22.44405365899996,0 -42.77035898099996,-22.44357889599996,0 -42.76991091199994,-22.44327289899996,0 -42.77025863799997,-22.44276724399998,0 -42.76974501799998,-22.44253797699997,0 -42.77026093999996,-22.44223107699997,0 -42.77093106199993,-22.44172211499995,0 -42.77171436199995,-22.44151232499996,0 -42.77229584799994,-22.44154562799997,0 -42.77292699199995,-22.44176721299993,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+			<Placemark id="ID_00011">
+				<name>2022</name>
+				<Snippet maxLines="0"></Snippet>
+				<description><![CDATA[<html xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+
+<head>
+
+<META http-equiv="Content-Type" content="text/html">
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+</head>
+
+<body style="margin:0px 0px 0px 0px;overflow:auto;background:#FFFFFF;">
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-collapse:collapse;padding:3px 3px 3px 3px">
+
+<tr style="text-align:center;font-weight:bold;background:#9CBCE2">
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+<table style="font-family:Arial,Verdana,Times;font-size:12px;text-align:left;width:100%;border-spacing:0px; padding:3px 3px 3px 3px">
+
+<tr>
+
+<td>FID</td>
+
+<td>11</td>
+
+</tr>
+
+<tr bgcolor="#D4E4F3">
+
+<td>YEAR_</td>
+
+<td>2022</td>
+
+</tr>
+
+<tr>
+
+<td>Extent_Ha</td>
+
+<td>5.027516</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>]]></description>
+				<styleUrl>#PolyStyle007</styleUrl>
+				<MultiGeometry>
+					<Polygon>
+						<outerBoundaryIs>
+							<LinearRing>
+								<coordinates>
+									-42.76276270799997,-22.44236154699996,0 -42.76316522499997,-22.44390197599995,0 -42.76317731399996,-22.44410085899995,0 -42.76295698999996,-22.44392510899996,0 -42.76273330099997,-22.44385526299993,0 -42.76246954799996,-22.44401709499994,0 -42.76265364399995,-22.44477455899994,0 -42.76271219699998,-22.44491911699993,0 -42.76250383999997,-22.44519370899997,0 -42.76157741799994,-22.44471146599994,0 -42.76129302399994,-22.44534321699996,0 -42.75935435199995,-22.44515316299993,0 -42.75866769899994,-22.44527759699997,0 -42.75874438199997,-22.44493151099994,0 -42.75888354399996,-22.44487690199998,0 -42.75914111199995,-22.44484263299995,0 -42.75975990099994,-22.44508685799997,0 -42.76062083199997,-22.44450542799996,0 -42.76116075399995,-22.44400140599993,0 -42.76140168399996,-22.44372933299996,0 -42.76165821999996,-22.44412304399998,0 -42.76202687899996,-22.44348084999996,0 -42.76170892999994,-22.44286485499998,0 -42.76192928599994,-22.44257158599993,0 -42.76276270799997,-22.44236154699996,0 
+								</coordinates>
+							</LinearRing>
+						</outerBoundaryIs>
+					</Polygon>
+				</MultiGeometry>
+			</Placemark>
+		</Folder>
+	</Document>
+</Folder>
+</kml>
