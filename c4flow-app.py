@@ -1,3 +1,6 @@
+!pip install pandas rapidfuzz streamlit pandas requests io plotly datetime folium numpy scipy
+
+
 import streamlit as st
 import pandas as pd
 import requests
