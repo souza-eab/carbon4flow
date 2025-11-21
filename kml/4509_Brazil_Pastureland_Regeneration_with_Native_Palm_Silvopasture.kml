@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>Vale do Paraíba</name>
+	<NetworkLink>
+		<name>Vale do Paraíba</name>
+		<Link>
+			<href>https://www.google.com/maps/d/u/0/kml?mid=1i7PkdlftBWpCND6h0Hksq_I8bUHuaX4</href>
+		</Link>
+	</NetworkLink>
+</Document>
+</kml>
