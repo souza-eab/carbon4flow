@@ -1567,7 +1567,19 @@ with story_tabs[1]:
     """)
 
     # Carregar geometrias dos KMLs
-    KML_DIR = r"D:\OneDrive - IPAM-Amazonia\1_BKP_Git\2024\0_Demanda_Espacializar_proj_priv\2025\kml"
+    #KML_DIR = r"D:\OneDrive - IPAM-Amazonia\1_BKP_Git\2024\0_Demanda_Espacializar_proj_priv\2025\kml"
+    #KML_DIR = r"kml"
+    
+
+    import os
+
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    KML_DIR = os.path.join(BASE_DIR, "kml")
+
+    print("BASE_DIR:", BASE_DIR)
+    print("KML_DIR:", KML_DIR)
+    print("Exists?", os.path.exists(KML_DIR))
+
     gdf_combined, erros = carregar_geometrias(df_all, KML_DIR)
 
     if erros:
