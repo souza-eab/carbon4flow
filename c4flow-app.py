@@ -1,4 +1,4 @@
-!pip install pandas rapidfuzz streamlit pandas requests io plotly datetime folium numpy scipy
+#!pip install pandas rapidfuzz streamlit pandas requests io plotly datetime folium numpy scipy
 
 
 import streamlit as st
@@ -400,12 +400,12 @@ with tabs[0]:
         selected_points = st.plotly_chart(fig_states, use_container_width=True, on_select="rerun", key="state_chart")
         
         # Capturar clique no gráfico
-        if selected_points and selected_points.get("selection"):
-            if selected_points["selection"].get("points"):
-                clicked_state = selected_points["selection"]["points"][0].get("y")
-                if clicked_state:
-                    st.session_state.selected_state_overview = clicked_state
-                    st.rerun()
+        #if selected_points and selected_points.get("selection"):
+         #   if selected_points["selection"].get("points"):
+          #      clicked_state = selected_points["selection"]["points"][0].get("y")
+           #     if clicked_state:
+            #        st.session_state.selected_state_overview = clicked_state
+             #       st.rerun()
 
 # =====================================
 # FUNÇÃO PARA CRIAR MAPAS
