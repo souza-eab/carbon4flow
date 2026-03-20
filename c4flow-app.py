@@ -721,8 +721,10 @@ with tabs[3]:
                     yaxis_title="Quantidade de VCUs",
                     legend_title="Métricas",
                     template="plotly_white",
-                    height=600,
-                    hovermode='x unified'
+                    height=450,
+                    hovermode='x unified',
+                    #hovermode='x unified',
+                    margin=dict(t=50, b=40, l=60, r=20)  # <-- t=50 igual ao de totais
                 )
 
                 st.plotly_chart(fig, use_container_width=True)
@@ -737,19 +739,19 @@ with tabs[3]:
                     'Sum_Retired':          '#FFC2A3',
                     'Sum_Active':           '#A3C4F3',
                 }
-    
+
                 labels  = []
                 valores = []
                 cores   = []
-    
+
                 for col_name, cor in metricas_totais.items():
                     if col_name in df_proj.columns:
                         labels.append(col_name.replace('Sum_', '').replace('Sum', '').replace('Total', 'Total '))
                         valores.append(pd.to_numeric(df_proj[col_name], errors='coerce').sum())
                         cores.append(cor)
-    
+
                 fig_tot = go.Figure()
-    
+
                 fig_tot.add_trace(go.Bar(
                     x=labels,
                     y=valores,
@@ -759,7 +761,7 @@ with tabs[3]:
                     textfont=dict(size=10),
                     showlegend=False
                 ))
-    
+
                 fig_tot.update_layout(
                     title="Totais Acumulados",
                     xaxis_title="",
@@ -769,9 +771,9 @@ with tabs[3]:
                     margin=dict(t=50, b=40, l=40, r=20),
                     yaxis=dict(showticklabels=False)   # evita poluição visual no eixo Y
                 )
-    
+
                 st.plotly_chart(fig_tot, use_container_width=True)
-                
+
             #######################
             # Tabela de dados
             with st.expander("📊 Ver Tabela de Dados Detalhada"):
