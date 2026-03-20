@@ -800,10 +800,18 @@ with tabs[3]:
                 if pos == 3: return "🥉 3º"
                 return f"#{pos}º"
 
+            #def build_rank_df(df_escopo, projeto_sel, metricas):
+            #    """Agrega totais por projeto no escopo e rankeia por TotalVintageQuantity."""
+            #    agg = df_escopo.groupby('resourceName_x')[metricas].sum().reset_index()
+            #    agg = agg.sort_values('TotalVintageQuantity', ascending=False).reset_index(drop=True)
+            #    agg.insert(0, 'Posição', [badge(i + 1) for i in range(len(agg))])
+            #    agg['Destaque'] = agg['resourceName_x'] == projeto_sel
+            #    return agg
+            
             def build_rank_df(df_escopo, projeto_sel, metricas):
-                """Agrega totais por projeto no escopo e rankeia por TotalVintageQuantity."""
+                """Agrega totais por projeto no escopo e rankeia por SumQuantity."""
                 agg = df_escopo.groupby('resourceName_x')[metricas].sum().reset_index()
-                agg = agg.sort_values('TotalVintageQuantity', ascending=False).reset_index(drop=True)
+                agg = agg.sort_values('SumQuantity', ascending=False).reset_index(drop=True)  # <-- aqui
                 agg.insert(0, 'Posição', [badge(i + 1) for i in range(len(agg))])
                 agg['Destaque'] = agg['resourceName_x'] == projeto_sel
                 return agg
@@ -876,7 +884,7 @@ with tabs[3]:
                     )
                 else:
                     st.info("Protocolo não disponível para este projeto.")
-                    
+
 
             # =====================================
             # ABA 5: DADOS BRUTOS
