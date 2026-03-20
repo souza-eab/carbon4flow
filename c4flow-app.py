@@ -791,31 +791,6 @@ with tabs[3]:
             # Rankings
             st.subheader("🏆 Ranking do Projeto")
             
-            # Cores customizadas para os multiselects do ranking
-            st.markdown("""
-                <style>
-                /* Protocolo - Verde */
-                [data-testid="stExpander"] [data-baseweb="tag"]:has(~ [data-baseweb="tag"]) {
-                    background-color: #1E800A !important;
-                    border-color: #1E800A !important;
-                }
-
-                /* Fallback geral - col_adv1 verde, col_adv2 azul */
-                div[data-testid="column"]:nth-child(1) [data-baseweb="tag"] {
-                    background-color: #1E800A !important;
-                    border-color: #1E800A !important;
-                    color: white !important;
-                }
-
-                div[data-testid="column"]:nth-child(2) [data-baseweb="tag"] {
-                    background-color: #2E86AB !important;
-                    border-color: #2E86AB !important;
-                    color: white !important;
-                }
-                </style>
-            """, unsafe_allow_html=True)
-
-
             # Filtros avançados
             estat_filtrado = estatisticas.copy()
 
@@ -825,6 +800,18 @@ with tabs[3]:
                 with col_adv1:
                     if 'protocol' in estat_filtrado.columns:
                         protocols = sorted(estat_filtrado['protocol'].dropna().unique().tolist())
+
+                        st.markdown("""
+                            <style>
+                            div[data-testid="stMultiSelect"][aria-label="Protocolo:"] [data-baseweb="tag"] {
+                                background-color: #1E800A !important;
+                                border-color: #1E800A !important;
+                                color: white !important;
+                            }
+                            </style>
+                        """, unsafe_allow_html=True)
+                        
+                        
                         selected_protocol = st.multiselect(
                             "Protocolo:",
                             options=protocols,
@@ -837,6 +824,17 @@ with tabs[3]:
                 with col_adv2:
                     if 'vcsProjectStatus' in estat_filtrado.columns:
                         statuses = sorted(estat_filtrado['vcsProjectStatus'].dropna().unique().tolist())
+
+                        st.markdown("""
+                            <style>
+                            div[data-testid="stMultiSelect"][aria-label="Status:"] [data-baseweb="tag"] {
+                                background-color: #2E86AB !important;
+                                border-color: #2E86AB !important;
+                                color: white !important;
+                            }
+                            </style>
+                        """, unsafe_allow_html=True)
+                        
                         selected_status = st.multiselect(
                             "Status:",
                             options=statuses,
