@@ -648,11 +648,11 @@ with tabs[3]:
 
             with col_m3:
                 if 'protocol' in df_proj.columns:
-                    st.metric("Protocolo", df_proj['protocol'].iloc[0])
+                    st.metric("Protocolo", df_proj['protocol'].iloc[0],delta_color="off")
             
             with col_m4:
                 if 'vcsProjectStatus' in df_proj.columns:
-                    st.metric("Status", df_proj['vcsProjectStatus'].iloc[0])
+                    st.metric("Status", df_proj['vcsProjectStatus'].iloc[0],delta_color="off")
             
             st.divider()
 
@@ -663,7 +663,7 @@ with tabs[3]:
             
             # Gráfico interativo
                 fig = go.Figure()
-    
+
                 # Barras
                 fig.add_trace(go.Bar(
                     x=df_proj['Ano_Periodo'],
@@ -671,21 +671,21 @@ with tabs[3]:
                     name='Total Vintage',
                     marker_color='#1E800A'
                 ))
-                
+
                 fig.add_trace(go.Bar(
                     x=df_proj['Ano_Periodo'],
                     y=df_proj['SumQuantity'],
                     name='Sum Quantity',
                     marker_color='#6DD458'
                 ))
-                
+
                 fig.add_trace(go.Bar(
                     x=df_proj['Ano_Periodo'],
                     y=df_proj['Sum_Retired'],
                     name='Retired',
                     marker_color='#FFC2A3'
                 ))
-                
+
                 # Linha da média com IC
                 if 'Mean' in df_proj.columns:
                     fig.add_trace(go.Scatter(
@@ -696,7 +696,7 @@ with tabs[3]:
                         line=dict(color='#1E800A', width=3),
                         marker=dict(size=8)
                     ))
-                
+
                 if 'IC_Mais' in df_proj.columns and 'IC_Menos' in df_proj.columns:
                     fig.add_trace(go.Scatter(
                         x=df_proj['Ano_Periodo'],
@@ -705,7 +705,7 @@ with tabs[3]:
                         name='IC Superior',
                         line=dict(color='gray', width=2, dash='dot')
                     ))
-                    
+
                     fig.add_trace(go.Scatter(
                         x=df_proj['Ano_Periodo'],
                         y=df_proj['IC_Menos'],
@@ -713,7 +713,7 @@ with tabs[3]:
                         name='IC Inferior',
                         line=dict(color='gray', width=2, dash='dot')
                     ))
-                
+
                 fig.update_layout(
                     barmode='group',
                     title=f"Análise de VCUs - {projeto_sel}",
@@ -721,57 +721,59 @@ with tabs[3]:
                     yaxis_title="Quantidade de VCUs",
                     legend_title="Métricas",
                     template="plotly_white",
-                    height=600,
-                    hovermode='x unified'
+                    height=450,
+                    hovermode='x unified',
+                    #hovermode='x unified',
+                    margin=dict(t=50, b=40, l=60, r=20)  # <-- t=50 igual ao de totais
                 )
-                
+
                 st.plotly_chart(fig, use_container_width=True)
 
 
             #################################
             with col_graf2:
             # Soma total de todos os anos por métrica
-            metricas_totais = {
-                'TotalVintageQuantity': '#1E800A',
-                'SumQuantity':          '#6DD458',
-                'Sum_Retired':          '#FFC2A3',
-                'Sum_Active':           '#A3C4F3',
-            }
+                metricas_totais = {
+                    'TotalVintageQuantity': '#1E800A',
+                    'SumQuantity':          '#6DD458',
+                    'Sum_Retired':          '#FFC2A3',
+                    'Sum_Active':           '#A3C4F3',
+                }
 
-            labels  = []
-            valores = []
-            cores   = []
+                labels  = []
+                valores = []
+                cores   = []
 
-            for col_name, cor in metricas_totais.items():
-                if col_name in df_proj.columns:
-                    labels.append(col_name.replace('Sum_', '').replace('Sum', '').replace('Total', 'Total '))
-                    valores.append(pd.to_numeric(df_proj[col_name], errors='coerce').sum())
-                    cores.append(cor)
+                for col_name, cor in metricas_totais.items():
+                    if col_name in df_proj.columns:
+                        labels.append(col_name.replace('Sum_', '').replace('Sum', '').replace('Total', 'Total '))
+                        valores.append(pd.to_numeric(df_proj[col_name], errors='coerce').sum())
+                        cores.append(cor)
 
-            fig_tot = go.Figure()
+                fig_tot = go.Figure()
 
-            fig_tot.add_trace(go.Bar(
-                x=labels,
-                y=valores,
-                marker_color=cores,
-                text=[f"{v:,.0f}" for v in valores],
-                textposition='outside',
-                textfont=dict(size=10),
-                showlegend=False
-            ))
+                fig_tot.add_trace(go.Bar(
+                    x=labels,
+                    y=valores,
+                    marker_color=cores,
+                    text=[f"{v:,.0f}" for v in valores],
+                    textposition='outside',
+                    textfont=dict(size=10),
+                    showlegend=False
+                ))
 
-            fig_tot.update_layout(
-                title="Totais Acumulados",
-                xaxis_title="",
-                yaxis_title="VCUs",
-                template="plotly_white",
-                height=450,
-                margin=dict(t=50, b=40, l=40, r=20),
-                yaxis=dict(showticklabels=False)   # evita poluição visual no eixo Y
-            )
+                fig_tot.update_layout(
+                    title="Totais Acumulados",
+                    xaxis_title="",
+                    yaxis_title="VCUs",
+                    template="plotly_white",
+                    height=450,
+                    margin=dict(t=50, b=40, l=40, r=20),
+                    yaxis=dict(showticklabels=False)   # evita poluição visual no eixo Y
+                )
 
-            st.plotly_chart(fig_tot, use_container_width=True)
-            
+                st.plotly_chart(fig_tot, use_container_width=True)
+
             #######################
             # Tabela de dados
             with st.expander("📊 Ver Tabela de Dados Detalhada"):
@@ -784,6 +786,165 @@ with tabs[3]:
                     }),
                     use_container_width=True
                 )
+
+            
+            #######################
+            # Rankings
+            st.subheader("🏆 Ranking do Projeto")
+            
+            # Filtros avançados
+            estat_filtrado = estatisticas.copy()
+
+            with st.expander("🔍 Filtros Avançados"):
+                col_adv1, col_adv2 = st.columns(2)
+
+                with col_adv1:
+                    if 'protocol' in estat_filtrado.columns:
+                        protocols = sorted(estat_filtrado['protocol'].dropna().unique().tolist())
+
+                        st.markdown("""
+                            <style>
+                            div[data-testid="stMultiSelect"][aria-label="Protocolo:"] [data-baseweb="tag"] {
+                                background-color: #1E800A !important;
+                                border-color: #1E800A !important;
+                                color: white !important;
+                            }
+                            </style>
+                        """, unsafe_allow_html=True)
+                        
+                        
+                        selected_protocol = st.multiselect(
+                            "Protocolo:",
+                            options=protocols,
+                            default=protocols,
+                            key="rank_protocol"
+                        )
+                        if selected_protocol:
+                            estat_filtrado = estat_filtrado[estat_filtrado['protocol'].isin(selected_protocol)]
+
+                with col_adv2:
+                    if 'vcsProjectStatus' in estat_filtrado.columns:
+                        statuses = sorted(estat_filtrado['vcsProjectStatus'].dropna().unique().tolist())
+
+                        st.markdown("""
+                            <style>
+                            div[data-testid="stMultiSelect"][aria-label="Status:"] [data-baseweb="tag"] {
+                                background-color: #2E86AB !important;
+                                border-color: #2E86AB !important;
+                                color: white !important;
+                            }
+                            </style>
+                        """, unsafe_allow_html=True)
+
+                        selected_status = st.multiselect(
+                            "Status:",
+                            options=statuses,
+                            default=statuses,
+                            key="rank_status"
+                        )
+                        if selected_status:
+                            estat_filtrado = estat_filtrado[estat_filtrado['vcsProjectStatus'].isin(selected_status)]
+
+            st.info(f"📍 **{len(estat_filtrado['resourceName_x'].unique()):,}** projetos sendo considerados no ranking")
+
+            metricas_rank = ['TotalVintageQuantity', 'SumQuantity', 'Sum_Retired', 'Sum_Active']
+            metricas_rank = [m for m in metricas_rank if m in estat_filtrado.columns]
+
+
+            #metricas_rank = ['TotalVintageQuantity', 'SumQuantity', 'Sum_Retired', 'Sum_Active']
+            #metricas_rank = [m for m in metricas_rank if m in estatisticas.columns]
+
+            def badge(pos):
+                if pos == 1: return "🥇 1º"
+                if pos == 2: return "🥈 2º"
+                if pos == 3: return "🥉 3º"
+                return f"#{pos}º"
+
+            #def build_rank_df(df_escopo, projeto_sel, metricas):
+            #    """Agrega totais por projeto no escopo e rankeia por TotalVintageQuantity."""
+            #    agg = df_escopo.groupby('resourceName_x')[metricas].sum().reset_index()
+            #    agg = agg.sort_values('TotalVintageQuantity', ascending=False).reset_index(drop=True)
+            #    agg.insert(0, 'Posição', [badge(i + 1) for i in range(len(agg))])
+            #    agg['Destaque'] = agg['resourceName_x'] == projeto_sel
+            #    return agg
+            
+            def build_rank_df(df_escopo, projeto_sel, metricas):
+                """Agrega totais por projeto no escopo e rankeia por SumQuantity."""
+                agg = df_escopo.groupby('resourceName_x')[metricas].sum().reset_index()
+                agg = agg.sort_values('SumQuantity', ascending=False).reset_index(drop=True)  # <-- aqui
+                agg.insert(0, 'Posição', [badge(i + 1) for i in range(len(agg))])
+                agg['Destaque'] = agg['resourceName_x'] == projeto_sel
+                return agg
+
+            col_r1, col_r2, col_r3 = st.columns(3)
+
+            # --- Rank 1: mesmo estado ---
+            with col_r1:
+                st.markdown(f"**📍 Rank — {estado_sel}**")
+                df_estado_rank = estatisticas[estatisticas['state_Recode'] == estado_sel]
+                rank_estado = build_rank_df(df_estado_rank, projeto_sel, metricas_rank)
+                pos_estado = rank_estado[rank_estado['resourceName_x'] == projeto_sel]['Posição'].values
+                st.caption(f"Posição do projeto selecionado: **{pos_estado[0] if len(pos_estado) else 'N/A'}**")
+
+                display_rank = rank_estado.drop(columns=['Destaque']).rename(columns={'resourceName_x': 'Projeto'})
+                st.dataframe(
+                    display_rank.style
+                        .apply(lambda row: [
+                            'background-color: #e6f4ea; font-weight: bold'
+                            if rank_estado.loc[row.name, 'Destaque'] else ''
+                            for _ in row
+                        ], axis=1)
+                        .format({m: "{:,.0f}" for m in metricas_rank if m in display_rank.columns}),
+                    use_container_width=True,
+                    height=300
+                )
+
+            # --- Rank 2: todos os projetos ---
+            with col_r2:
+                st.markdown("**🌎 Rank — Geral**")
+                rank_geral = build_rank_df(estatisticas, projeto_sel, metricas_rank)
+                pos_geral = rank_geral[rank_geral['resourceName_x'] == projeto_sel]['Posição'].values
+                st.caption(f"Posição do projeto selecionado: **{pos_geral[0] if len(pos_geral) else 'N/A'}**")
+
+                display_rank_g = rank_geral.drop(columns=['Destaque']).rename(columns={'resourceName_x': 'Projeto'})
+                st.dataframe(
+                    display_rank_g.style
+                        .apply(lambda row: [
+                            'background-color: #e6f4ea; font-weight: bold'
+                            if rank_geral.loc[row.name, 'Destaque'] else ''
+                            for _ in row
+                        ], axis=1)
+                        .format({m: "{:,.0f}" for m in metricas_rank if m in display_rank_g.columns}),
+                    use_container_width=True,
+                    height=300
+                )
+
+            # --- Rank 3: mesmo protocolo ---
+            with col_r3:
+                protocolo_sel = df_proj['protocol'].iloc[0] if 'protocol' in df_proj.columns else None
+                st.markdown(f"**📋 Rank — Protocolo: {protocolo_sel or 'N/A'}**")
+
+                if protocolo_sel and 'protocol' in estatisticas.columns:
+                    df_proto_rank = estatisticas[estatisticas['protocol'] == protocolo_sel]
+                    rank_proto = build_rank_df(df_proto_rank, projeto_sel, metricas_rank)
+                    pos_proto = rank_proto[rank_proto['resourceName_x'] == projeto_sel]['Posição'].values
+                    st.caption(f"Posição do projeto selecionado: **{pos_proto[0] if len(pos_proto) else 'N/A'}**")
+
+                    display_rank_p = rank_proto.drop(columns=['Destaque']).rename(columns={'resourceName_x': 'Projeto'})
+                    st.dataframe(
+                        display_rank_p.style
+                            .apply(lambda row: [
+                                'background-color: #e6f4ea; font-weight: bold'
+                                if rank_proto.loc[row.name, 'Destaque'] else ''
+                                for _ in row
+                            ], axis=1)
+                            .format({m: "{:,.0f}" for m in metricas_rank if m in display_rank_p.columns}),
+                        use_container_width=True,
+                        height=300
+                    )
+                else:
+                    st.info("Protocolo não disponível para este projeto.")
+
 
             # =====================================
             # ABA 5: DADOS BRUTOS
