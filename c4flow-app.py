@@ -648,11 +648,11 @@ with tabs[3]:
 
             with col_m3:
                 if 'protocol' in df_proj.columns:
-                    st.metric("Protocolo", df_proj['protocol'].iloc[0])
+                    st.metric("Protocolo", df_proj['protocol'].iloc[0],delta_color="off")
             
             with col_m4:
                 if 'vcsProjectStatus' in df_proj.columns:
-                    st.metric("Status", df_proj['vcsProjectStatus'].iloc[0])
+                    st.metric("Status", df_proj['vcsProjectStatus'].iloc[0],delta_color="off")
             
             st.divider()
 
