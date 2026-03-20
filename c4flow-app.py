@@ -791,8 +791,44 @@ with tabs[3]:
             # Rankings
             st.subheader("🏆 Ranking do Projeto")
 
+            # Filtros avançados
+            estat_filtrado = estatisticas.copy()
+
+            with st.expander("🔍 Filtros Avançados"):
+                col_adv1, col_adv2 = st.columns(2)
+
+                with col_adv1:
+                    if 'protocol' in estat_filtrado.columns:
+                        protocols = sorted(estat_filtrado['protocol'].dropna().unique().tolist())
+                        selected_protocol = st.multiselect(
+                            "Protocolo:",
+                            options=protocols,
+                            default=protocols,
+                            key="rank_protocol"
+                        )
+                        if selected_protocol:
+                            estat_filtrado = estat_filtrado[estat_filtrado['protocol'].isin(selected_protocol)]
+
+                with col_adv2:
+                    if 'vcsProjectStatus' in estat_filtrado.columns:
+                        statuses = sorted(estat_filtrado['vcsProjectStatus'].dropna().unique().tolist())
+                        selected_status = st.multiselect(
+                            "Status:",
+                            options=statuses,
+                            default=statuses,
+                            key="rank_status"
+                        )
+                        if selected_status:
+                            estat_filtrado = estat_filtrado[estat_filtrado['vcsProjectStatus'].isin(selected_status)]
+
+            st.info(f"📍 **{len(estat_filtrado['resourceName_x'].unique()):,}** projetos sendo considerados no ranking")
+
             metricas_rank = ['TotalVintageQuantity', 'SumQuantity', 'Sum_Retired', 'Sum_Active']
-            metricas_rank = [m for m in metricas_rank if m in estatisticas.columns]
+            metricas_rank = [m for m in metricas_rank if m in estat_filtrado.columns]
+
+
+            #metricas_rank = ['TotalVintageQuantity', 'SumQuantity', 'Sum_Retired', 'Sum_Active']
+            #metricas_rank = [m for m in metricas_rank if m in estatisticas.columns]
 
             def badge(pos):
                 if pos == 1: return "🥇 1º"
