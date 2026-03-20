@@ -787,6 +787,97 @@ with tabs[3]:
                     use_container_width=True
                 )
 
+            #######################
+            # Rankings
+            st.subheader("🏆 Ranking do Projeto")
+
+            metricas_rank = ['TotalVintageQuantity', 'SumQuantity', 'Sum_Retired', 'Sum_Active']
+            metricas_rank = [m for m in metricas_rank if m in estatisticas.columns]
+
+            def badge(pos):
+                if pos == 1: return "🥇 1º"
+                if pos == 2: return "🥈 2º"
+                if pos == 3: return "🥉 3º"
+                return f"#{pos}º"
+
+            def build_rank_df(df_escopo, projeto_sel, metricas):
+                """Agrega totais por projeto no escopo e rankeia por TotalVintageQuantity."""
+                agg = df_escopo.groupby('resourceName_x')[metricas].sum().reset_index()
+                agg = agg.sort_values('TotalVintageQuantity', ascending=False).reset_index(drop=True)
+                agg.insert(0, 'Posição', [badge(i + 1) for i in range(len(agg))])
+                agg['Destaque'] = agg['resourceName_x'] == projeto_sel
+                return agg
+
+            col_r1, col_r2, col_r3 = st.columns(3)
+
+            # --- Rank 1: mesmo estado ---
+            with col_r1:
+                st.markdown(f"**📍 Rank — {estado_sel}**")
+                df_estado_rank = estatisticas[estatisticas['state_Recode'] == estado_sel]
+                rank_estado = build_rank_df(df_estado_rank, projeto_sel, metricas_rank)
+                pos_estado = rank_estado[rank_estado['resourceName_x'] == projeto_sel]['Posição'].values
+                st.caption(f"Posição do projeto selecionado: **{pos_estado[0] if len(pos_estado) else 'N/A'}**")
+
+                display_rank = rank_estado.drop(columns=['Destaque']).rename(columns={'resourceName_x': 'Projeto'})
+                st.dataframe(
+                    display_rank.style
+                        .apply(lambda row: [
+                            'background-color: #e6f4ea; font-weight: bold'
+                            if rank_estado.loc[row.name, 'Destaque'] else ''
+                            for _ in row
+                        ], axis=1)
+                        .format({m: "{:,.0f}" for m in metricas_rank if m in display_rank.columns}),
+                    use_container_width=True,
+                    height=300
+                )
+
+            # --- Rank 2: todos os projetos ---
+            with col_r2:
+                st.markdown("**🌎 Rank — Geral**")
+                rank_geral = build_rank_df(estatisticas, projeto_sel, metricas_rank)
+                pos_geral = rank_geral[rank_geral['resourceName_x'] == projeto_sel]['Posição'].values
+                st.caption(f"Posição do projeto selecionado: **{pos_geral[0] if len(pos_geral) else 'N/A'}**")
+
+                display_rank_g = rank_geral.drop(columns=['Destaque']).rename(columns={'resourceName_x': 'Projeto'})
+                st.dataframe(
+                    display_rank_g.style
+                        .apply(lambda row: [
+                            'background-color: #e6f4ea; font-weight: bold'
+                            if rank_geral.loc[row.name, 'Destaque'] else ''
+                            for _ in row
+                        ], axis=1)
+                        .format({m: "{:,.0f}" for m in metricas_rank if m in display_rank_g.columns}),
+                    use_container_width=True,
+                    height=300
+                )
+
+            # --- Rank 3: mesmo protocolo ---
+            with col_r3:
+                protocolo_sel = df_proj['protocol'].iloc[0] if 'protocol' in df_proj.columns else None
+                st.markdown(f"**📋 Rank — Protocolo: {protocolo_sel or 'N/A'}**")
+
+                if protocolo_sel and 'protocol' in estatisticas.columns:
+                    df_proto_rank = estatisticas[estatisticas['protocol'] == protocolo_sel]
+                    rank_proto = build_rank_df(df_proto_rank, projeto_sel, metricas_rank)
+                    pos_proto = rank_proto[rank_proto['resourceName_x'] == projeto_sel]['Posição'].values
+                    st.caption(f"Posição do projeto selecionado: **{pos_proto[0] if len(pos_proto) else 'N/A'}**")
+
+                    display_rank_p = rank_proto.drop(columns=['Destaque']).rename(columns={'resourceName_x': 'Projeto'})
+                    st.dataframe(
+                        display_rank_p.style
+                            .apply(lambda row: [
+                                'background-color: #e6f4ea; font-weight: bold'
+                                if rank_proto.loc[row.name, 'Destaque'] else ''
+                                for _ in row
+                            ], axis=1)
+                            .format({m: "{:,.0f}" for m in metricas_rank if m in display_rank_p.columns}),
+                        use_container_width=True,
+                        height=300
+                    )
+                else:
+                    st.info("Protocolo não disponível para este projeto.")
+                    
+
             # =====================================
             # ABA 5: DADOS BRUTOS
             # =====================================
