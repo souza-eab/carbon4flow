@@ -655,8 +655,8 @@ with tabs[3]:
                     st.metric("Status", df_proj['vcsProjectStatus'].iloc[0],delta_color="off")
 
             with col_m5:
-                if 'protocolSubCatetories' in df_proj.columns:
-                    st.metric("Projeto do tipo", df_proj['protocolSubCatetories'].iloc[0],delta_color="off")
+                if 'protocolSubCategories' in df_proj.columns:
+                    st.metric("Projeto do tipo", df_proj['protocolSubCategories'].iloc[0],delta_color="off")
             
             
             with col_m6:
