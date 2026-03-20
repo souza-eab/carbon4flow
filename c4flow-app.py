@@ -631,6 +631,21 @@ with tabs[3]:
         if df_proj.empty:
             st.info("Selecione um estado e projeto para visualizar a análise")
         else:
+            colunas_extra = ['resourceName_x', 'protocolSubCategories', 'proponent', 'vcsProjectStatus']
+            colunas_extra = [c for c in colunas_extra if c in df_all.columns]
+            
+            df_extra = (
+                df_all[df_all['resourceName_x'] == projeto_sel][colunas_extra]
+                .drop_duplicates('resourceName_x')
+                .reset_index(drop=True)
+            )
+            
+            # Helper seguro para buscar valor
+            def get_extra(col):
+                if col in df_extra.columns and not df_extra.empty:
+                    return df_extra[col].iloc[0]
+                return "N/A"
+
             # Métricas superiores
             #col_m1, col_m2, col_m3, col_m4 = st.columns(4)
             col_m1,  col_m3, col_m4, col_m5 , col_m6= st.columns(5)
