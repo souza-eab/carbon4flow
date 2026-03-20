@@ -633,7 +633,7 @@ with tabs[3]:
         else:
             # Métricas superiores
             #col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-            col_m1,  col_m3, col_m4 = st.columns(3)
+            col_m1,  col_m3, col_m4, col_m5 , col_m6= st.columns(5)
             
             with col_m1:
                 if 'Mean' in df_proj.columns:
@@ -653,6 +653,16 @@ with tabs[3]:
             with col_m4:
                 if 'vcsProjectStatus' in df_proj.columns:
                     st.metric("Status", df_proj['vcsProjectStatus'].iloc[0],delta_color="off")
+
+            with col_m5:
+                if 'protocolSubCatetories' in df_proj.columns:
+                    st.metric("Projeto do tipo", df_proj['protocolSubCatetories'].iloc[0],delta_color="off")
+            
+            
+            with col_m6:
+                if 'proponent' in df_proj.columns:
+                    st.metric("Proponente", df_proj['proponent'].iloc[0],delta_color="off")
+
             
             st.divider()
 
