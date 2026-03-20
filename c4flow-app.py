@@ -655,73 +655,124 @@ with tabs[3]:
                     st.metric("Status", df_proj['vcsProjectStatus'].iloc[0])
             
             st.divider()
+
+            # Gráfico interativo - layout lado a lado
+            col_graf1, col_graf2 = st.columns([3, 1.5])
+
+            with col_graf1:
             
             # Gráfico interativo
-            fig = go.Figure()
-            
-            # Barras
-            fig.add_trace(go.Bar(
-                x=df_proj['Ano_Periodo'],
-                y=df_proj['TotalVintageQuantity'],
-                name='Total Vintage',
-                marker_color='#1E800A'
-            ))
-            
-            fig.add_trace(go.Bar(
-                x=df_proj['Ano_Periodo'],
-                y=df_proj['SumQuantity'],
-                name='Sum Quantity',
-                marker_color='#6DD458'
-            ))
-            
-            fig.add_trace(go.Bar(
-                x=df_proj['Ano_Periodo'],
-                y=df_proj['Sum_Retired'],
-                name='Retired',
-                marker_color='#FFC2A3'
-            ))
-            
-            # Linha da média com IC
-            if 'Mean' in df_proj.columns:
-                fig.add_trace(go.Scatter(
+                fig = go.Figure()
+    
+                # Barras
+                fig.add_trace(go.Bar(
                     x=df_proj['Ano_Periodo'],
-                    y=df_proj['Mean'],
-                    mode='lines+markers',
-                    name='Média',
-                    line=dict(color='#1E800A', width=3),
-                    marker=dict(size=8)
-                ))
-            
-            if 'IC_Mais' in df_proj.columns and 'IC_Menos' in df_proj.columns:
-                fig.add_trace(go.Scatter(
-                    x=df_proj['Ano_Periodo'],
-                    y=df_proj['IC_Mais'],
-                    mode='lines',
-                    name='IC Superior',
-                    line=dict(color='gray', width=2, dash='dot')
+                    y=df_proj['TotalVintageQuantity'],
+                    name='Total Vintage',
+                    marker_color='#1E800A'
                 ))
                 
-                fig.add_trace(go.Scatter(
+                fig.add_trace(go.Bar(
                     x=df_proj['Ano_Periodo'],
-                    y=df_proj['IC_Menos'],
-                    mode='lines',
-                    name='IC Inferior',
-                    line=dict(color='gray', width=2, dash='dot')
+                    y=df_proj['SumQuantity'],
+                    name='Sum Quantity',
+                    marker_color='#6DD458'
                 ))
-            
-            fig.update_layout(
-                barmode='group',
-                title=f"Análise de VCUs - {projeto_sel}",
-                xaxis_title="Período (Ano)",
-                yaxis_title="Quantidade de VCUs",
-                legend_title="Métricas",
+                
+                fig.add_trace(go.Bar(
+                    x=df_proj['Ano_Periodo'],
+                    y=df_proj['Sum_Retired'],
+                    name='Retired',
+                    marker_color='#FFC2A3'
+                ))
+                
+                # Linha da média com IC
+                if 'Mean' in df_proj.columns:
+                    fig.add_trace(go.Scatter(
+                        x=df_proj['Ano_Periodo'],
+                        y=df_proj['Mean'],
+                        mode='lines+markers',
+                        name='Média',
+                        line=dict(color='#1E800A', width=3),
+                        marker=dict(size=8)
+                    ))
+                
+                if 'IC_Mais' in df_proj.columns and 'IC_Menos' in df_proj.columns:
+                    fig.add_trace(go.Scatter(
+                        x=df_proj['Ano_Periodo'],
+                        y=df_proj['IC_Mais'],
+                        mode='lines',
+                        name='IC Superior',
+                        line=dict(color='gray', width=2, dash='dot')
+                    ))
+                    
+                    fig.add_trace(go.Scatter(
+                        x=df_proj['Ano_Periodo'],
+                        y=df_proj['IC_Menos'],
+                        mode='lines',
+                        name='IC Inferior',
+                        line=dict(color='gray', width=2, dash='dot')
+                    ))
+                
+                fig.update_layout(
+                    barmode='group',
+                    title=f"Análise de VCUs - {projeto_sel}",
+                    xaxis_title="Período (Ano)",
+                    yaxis_title="Quantidade de VCUs",
+                    legend_title="Métricas",
+                    template="plotly_white",
+                    height=600,
+                    hovermode='x unified'
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+
+
+            #################################
+            with col_graf2:
+            # Soma total de todos os anos por métrica
+            metricas_totais = {
+                'TotalVintageQuantity': '#1E800A',
+                'SumQuantity':          '#6DD458',
+                'Sum_Retired':          '#FFC2A3',
+                'Sum_Active':           '#A3C4F3',
+            }
+
+            labels  = []
+            valores = []
+            cores   = []
+
+            for col_name, cor in metricas_totais.items():
+                if col_name in df_proj.columns:
+                    labels.append(col_name.replace('Sum_', '').replace('Sum', '').replace('Total', 'Total '))
+                    valores.append(pd.to_numeric(df_proj[col_name], errors='coerce').sum())
+                    cores.append(cor)
+
+            fig_tot = go.Figure()
+
+            fig_tot.add_trace(go.Bar(
+                x=labels,
+                y=valores,
+                marker_color=cores,
+                text=[f"{v:,.0f}" for v in valores],
+                textposition='outside',
+                textfont=dict(size=10),
+                showlegend=False
+            ))
+
+            fig_tot.update_layout(
+                title="Totais Acumulados",
+                xaxis_title="",
+                yaxis_title="VCUs",
                 template="plotly_white",
-                height=600,
-                hovermode='x unified'
+                height=450,
+                margin=dict(t=50, b=40, l=40, r=20),
+                yaxis=dict(showticklabels=False)   # evita poluição visual no eixo Y
             )
+
+            st.plotly_chart(fig_tot, use_container_width=True)
             
-            st.plotly_chart(fig, use_container_width=True)
-            
+            #######################
             # Tabela de dados
             with st.expander("📊 Ver Tabela de Dados Detalhada"):
                 display_cols = ['Ano_Periodo', 'TotalVintageQuantity', 'SumQuantity', 
