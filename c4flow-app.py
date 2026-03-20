@@ -631,24 +631,9 @@ with tabs[3]:
         if df_proj.empty:
             st.info("Selecione um estado e projeto para visualizar a análise")
         else:
-            colunas_extra = ['resourceName_x', 'protocolSubCategories', 'proponent', 'vcsProjectStatus']
-            colunas_extra = [c for c in colunas_extra if c in df_all.columns]
-            
-            df_extra = (
-                df_all[df_all['resourceName_x'] == projeto_sel][colunas_extra]
-                .drop_duplicates('resourceName_x')
-                .reset_index(drop=True)
-            )
-            
-            # Helper seguro para buscar valor
-            def get_extra(col):
-                if col in df_extra.columns and not df_extra.empty:
-                    return df_extra[col].iloc[0]
-                return "N/A"
-
             # Métricas superiores
             #col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-            col_m1,  col_m3, col_m4, col_m5 , col_m6= st.columns(5)
+            col_m1,  col_m3, col_m4 = st.columns(3)
             
             with col_m1:
                 if 'Mean' in df_proj.columns:
@@ -662,23 +647,16 @@ with tabs[3]:
             #        st.metric("EAER", f"{eaer_value:,.0f}" if not np.isnan(eaer_value) else "N/A")
 
             with col_m3:
-                if 'protocol' in df_proj.columns:
-                    st.metric("Protocolo", df_proj['protocol'].iloc[0],delta_color="off")
+                if 'protocol' in df_overview.columns.columns:
+                    st.metric("Protocolo", df_overview['protocol'].iloc[0],delta_color="off")
             
             with col_m4:
-                if 'vcsProjectStatus' in df_proj.columns:
-                    st.metric("Status", df_proj['vcsProjectStatus'].iloc[0],delta_color="off")
+                if 'vcsProjectStatus' in df_overview.columns:
+                    st.metric("Status", df_overview['vcsProjectStatus'].iloc[0],delta_color="off")
+            
+            
+            
 
-            with col_m5:
-                if 'protocolSubCategories' in df_proj.columns:
-                    st.metric("Projeto do tipo", df_proj['protocolSubCategories'].iloc[0],delta_color="off")
-            
-            
-            with col_m6:
-                if 'proponent' in df_proj.columns:
-                    st.metric("Proponente", df_proj['proponent'].iloc[0],delta_color="off")
-
-            
             st.divider()
 
             # Gráfico interativo - layout lado a lado
