@@ -962,7 +962,9 @@ with tabs[4]:
                     # ===================================
                     # LAYOUT: MAPA + INFO
                     # ===================================
-                    col_mapa, col_info = st.columns([6, 4])
+                    #col_mapa, col_info = st.columns([6, 4])
+                    col_mapa, col_info = st.columns([8, 2])
+    
     
                     with col_mapa:
                         st.markdown("### 🗺️ Mapa")
@@ -1044,7 +1046,10 @@ with tabs[4]:
                             st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
                             st.markdown(f"**Proponente:** {row_proj.get('proponent', 'N/A')}")
                             st.markdown(f"**Categoria:** {row_proj.get('protocolSubCategories', 'N/A')}")
-    
+                            st.markdown(f"**Certificações adicionais:** {row_proj.get('additionalCertifications', 'N/A')}")
+                            st.markdown(f"**Resumo:** {row_proj.get('description', 'N/A')}")
+
+
                     # ===================================
                     # GRÁFICOS — 3 colunas abaixo do mapa
                     # ===================================
@@ -1132,15 +1137,15 @@ with tabs[4]:
                                     st.plotly_chart(fig_radd, use_container_width=True)
     
                             st.divider()
-                            st.markdown("### 💾 Export")
-                            if not df_loss.empty:
-                                csv = df_loss.to_csv(index=False).encode('utf-8')
-                                st.download_button(
-                                    label="⬇️ Download Perda Florestal (CSV)",
-                                    data=csv,
-                                    file_name=f"perda_{row_proj.get('resourceIdentifier', 'projeto')}.csv",
-                                    mime='text/csv'
-                                )
+                            #st.markdown("### 💾 Export")
+                            #if not df_loss.empty:
+                            #    csv = df_loss.to_csv(index=False).encode('utf-8')
+                            #    st.download_button(
+                            #        label="⬇️ Download Perda Florestal (CSV)",
+                            #        data=csv,
+                            #        file_name=f"perda_{row_proj.get('resourceIdentifier', 'projeto')}.csv",
+                            #        mime='text/csv'
+                            #    )
                         else:
                             st.warning("⚠️ Geometria inválida para consulta GFW.")
     
