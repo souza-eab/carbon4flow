@@ -127,8 +127,8 @@ def analise_vcu_por_vintage(df_full):
 # =====================================
 # FUNÇÕES GFW — escopo global
 # =====================================
-st.write(f"GEOJSON TYPE: {geojson_poly.get('type')}")
-st.write(f"API KEY (primeiros 8 chars): {GFW_API_KEY[:8]}")
+#st.write(f"GEOJSON TYPE: {geojson_poly.get('type')}")
+#st.write(f"API KEY (primeiros 8 chars): {GFW_API_KEY[:8]}")
 
 @st.cache_data(show_spinner=True)
 def carregar_geometrias(df_all, kml_dir: str):
