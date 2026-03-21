@@ -677,7 +677,7 @@ with tabs[4]:
 
     story_tabs = st.tabs([
         "🌍 Panorama Geral",       # index 0
-        "🗺️ Perda Florestal",      # index 1
+        "🗺️ Dados AOI ",      # index 1
         "🌿 MapBiomas",            # index 2
         "📊 Evolução Temporal",    # index 3
         "🎯 Impacto Regional",     # index 4
@@ -765,7 +765,7 @@ with tabs[4]:
     # =====================================
 
     with story_tabs[1]:
-        st.markdown("## 🔥 Perda Florestal nos Projetos de Carbono")
+        st.markdown("## 📍Projetos de Carbono")
 
         GFW_API_KEY = st.secrets["GFW_API_KEY"].strip()
 
@@ -906,7 +906,7 @@ with tabs[4]:
                         col_g1, col_g2, col_g3 = st.columns(3)
 
                         with col_g1:
-                            st.markdown("### 📊 Perda Florestal Anual")
+                            st.markdown("### 📊 Eventos de perda de cobertura arbórea Anual")
                             with st.spinner("Consultando GFW..."):
                                 df_loss = gfw_tree_cover_loss(geojson_poly, GFW_API_KEY)
                             if df_loss.empty:
