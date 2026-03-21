@@ -181,34 +181,7 @@ def carregar_geometrias(df_all, kml_dir: str):
 
 # Substituir temporariamente a função gfw_tree_cover_loss por essa versão com debug
 
-from shapely.geometry import shape, mapping
-from shapely.ops import unary_union
 
-# Garantir Polygon/MultiPolygon
-geom = selected_gdf.geometry.iloc[0]
-
-# Se for GeometryCollection, extrai só os polígonos
-if geom.geom_type == 'GeometryCollection':
-    polys = [g for g in geom.geoms if g.geom_type in ['Polygon', 'MultiPolygon']]
-    if polys:
-        geom = unary_union(polys)
-    else:
-        st.warning("Geometria do projeto não é um polígono válido.")
-        geom = None
-
-if geom and geom.geom_type in ['Polygon', 'MultiPolygon']:
-    geojson_poly = mapping(geom)
-    st.write(f"DEBUG geom type: {geojson_poly['type']}")  # remover depois
-
-    # ---- Perda Florestal Anual ----
-    st.markdown("### 📊 Perda Florestal Anual")
-    with st.spinner("Consultando GFW..."):
-        df_loss = gfw_tree_cover_loss(geojson_poly, GFW_API_KEY)
-    # ... resto do código
-else:
-    st.warning("⚠️ Geometria inválida para consulta GFW.")
-
-    
 @st.cache_data(show_spinner=False)
 def gfw_tree_cover_loss(geojson, api_key):
     url = "https://data-api.globalforestwatch.org/dataset/umd_tree_cover_loss/v1.11/query"
