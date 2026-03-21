@@ -181,32 +181,58 @@ def carregar_geometrias(df_all, kml_dir: str):
 
 # Substituir temporariamente a função gfw_tree_cover_loss por essa versão com debug
 
+from shapely.geometry import shape, mapping
+from shapely.ops import unary_union
+
+# Garantir Polygon/MultiPolygon
+geom = selected_gdf.geometry.iloc[0]
+
+# Se for GeometryCollection, extrai só os polígonos
+if geom.geom_type == 'GeometryCollection':
+    polys = [g for g in geom.geoms if g.geom_type in ['Polygon', 'MultiPolygon']]
+    if polys:
+        geom = unary_union(polys)
+    else:
+        st.warning("Geometria do projeto não é um polígono válido.")
+        geom = None
+
+if geom and geom.geom_type in ['Polygon', 'MultiPolygon']:
+    geojson_poly = mapping(geom)
+    st.write(f"DEBUG geom type: {geojson_poly['type']}")  # remover depois
+
+    # ---- Perda Florestal Anual ----
+    st.markdown("### 📊 Perda Florestal Anual")
+    with st.spinner("Consultando GFW..."):
+        df_loss = gfw_tree_cover_loss(geojson_poly, GFW_API_KEY)
+    # ... resto do código
+else:
+    st.warning("⚠️ Geometria inválida para consulta GFW.")
+
+    
 @st.cache_data(show_spinner=False)
 def gfw_tree_cover_loss(geojson, api_key):
     url = "https://data-api.globalforestwatch.org/dataset/umd_tree_cover_loss/v1.11/query"
-    headers = {"x-api-key": api_key, "Content-Type": "application/json"}
+    headers = {"x-api-key": api_key.strip(), "Content-Type": "application/json"}
     payload = {
         "geometry": geojson,
         "sql": "SELECT umd_tree_cover_loss__year, SUM(umd_tree_cover_loss__ha) as loss_ha FROM data GROUP BY umd_tree_cover_loss__year ORDER BY umd_tree_cover_loss__year"
     }
     try:
         r = requests.post(url, headers=headers, json=payload, timeout=30)
-        st.write(f"STATUS: {r.status_code}")
-        st.write(f"RESPONSE: {r.json()}")
+        st.write(f"DEBUG loss: {r.status_code} — {r.json()}")  # remover depois
         if r.status_code == 200:
             return pd.DataFrame(r.json().get("data", []))
         return pd.DataFrame()
     except Exception as e:
         st.write(f"ERRO: {e}")
         return pd.DataFrame()
-    
 
 
 @st.cache_data(show_spinner=False)
 def gfw_glad_alerts(geojson, api_key):
     """Consulta alertas GLAD por polígono via GFW Data API."""
     url = "https://data-api.globalforestwatch.org/dataset/umd_glad_landsat_alerts/v20220723/query"
-    headers = {"x-api-key": api_key, "Content-Type": "application/json"}
+    headers = {"x-api-key": api_key.strip(), "Content-Type": "application/json"}
     payload = {
         "geometry": geojson,
         "sql": "SELECT alert__year, COUNT(*) as alert_count FROM data GROUP BY alert__year ORDER BY alert__year"
@@ -223,7 +249,7 @@ def gfw_glad_alerts(geojson, api_key):
 def gfw_radd_alerts(geojson, api_key):
     """Consulta alertas RADD por polígono via GFW Data API."""
     url = "https://data-api.globalforestwatch.org/dataset/wur_radd_alerts/v20221031/query"
-    headers = {"x-api-key": api_key, "Content-Type": "application/json"}
+    headers = {"x-api-key": api_key.strip(), "Content-Type": "application/json"}
     payload = {
         "geometry": geojson,
         "sql": "SELECT alert__year, COUNT(*) as alert_count FROM data GROUP BY alert__year ORDER BY alert__year"
@@ -890,7 +916,7 @@ with tabs[4]:
     with story_tabs[1]:
         st.markdown("## 🔥 Perda Florestal nos Projetos de Carbono")
 
-        GFW_API_KEY = st.secrets["GFW_API_KEY"]
+        GFW_API_KEY = st.secrets["GFW_API_KEY"].strip()
 
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         KML_DIR  = os.path.join(BASE_DIR, "kml")
