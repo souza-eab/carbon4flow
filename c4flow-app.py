@@ -240,12 +240,20 @@ def gfw_glad_alerts(geojson, api_key):
     headers = {"x-api-key": api_key.strip(), "Content-Type": "application/json"}
     payload = {
         "geometry": geojson,
-        "sql": "SELECT alert__year, COUNT(*) as alert_count FROM data GROUP BY alert__year ORDER BY alert__year"
+        "sql": "SELECT umd_glad_landsat_alerts__date, umd_glad_landsat_alerts__confidence FROM data LIMIT 50000"
     }
     try:
-        r = requests.post(url, headers=headers, json=payload, timeout=30)
+        r = requests.post(url, headers=headers, json=payload, timeout=60)
         if r.status_code == 200:
-            return pd.DataFrame(r.json().get("data", []))
+            data = r.json().get("data", [])
+            if not data:
+                return pd.DataFrame()
+            df = pd.DataFrame(data)
+            df['alert__year'] = pd.to_datetime(df['umd_glad_landsat_alerts__date']).dt.year
+            df_grouped = df.groupby('alert__year').agg(
+                alert_count=('alert__year', 'count')
+            ).reset_index()
+            return df_grouped
         return pd.DataFrame()
     except Exception:
         return pd.DataFrame()
@@ -257,16 +265,24 @@ def gfw_radd_alerts(geojson, api_key):
     headers = {"x-api-key": api_key.strip(), "Content-Type": "application/json"}
     payload = {
         "geometry": geojson,
-        "sql": "SELECT alert__year, COUNT(*) as alert_count FROM data GROUP BY alert__year ORDER BY alert__year"
+        "sql": "SELECT wur_radd_alerts__date, wur_radd_alerts__confidence FROM data LIMIT 50000"
     }
     try:
-        r = requests.post(url, headers=headers, json=payload, timeout=30)
+        r = requests.post(url, headers=headers, json=payload, timeout=60)
         if r.status_code == 200:
-            return pd.DataFrame(r.json().get("data", []))
+            data = r.json().get("data", [])
+            if not data:
+                return pd.DataFrame()
+            df = pd.DataFrame(data)
+            df['alert__year'] = pd.to_datetime(df['wur_radd_alerts__date']).dt.year
+            df_grouped = df.groupby('alert__year').agg(
+                alert_count=('alert__year', 'count')
+            ).reset_index()
+            return df_grouped
         return pd.DataFrame()
     except Exception:
         return pd.DataFrame()
-    
+        
 # =====================================
 # CONFIGURAÇÃO DE CORES E ESTILOS
 # =====================================
