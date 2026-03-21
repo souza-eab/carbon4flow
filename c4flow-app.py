@@ -647,7 +647,7 @@ with tabs[3]:
             #        st.metric("EAER", f"{eaer_value:,.0f}" if not np.isnan(eaer_value) else "N/A")
 
             with col_m3:
-                if 'protocol' in df_proj.columns.columns:
+                if 'protocol' in df_proj.columns:
                     st.metric("Protocolo", df_proj['protocol'].iloc[0],delta_color="off")
             
             with col_m4:
