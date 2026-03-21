@@ -1041,18 +1041,6 @@ with tabs[4]:
     #    st.info("🚧 Em construção - Insights")
 
 
-# =====================================
-# SUBSTITUIR AS LINHAS DAS SUB-ABAS PLACEHOLDER
-# =====================================
-# Localize onde está:
-#     with story_tabs[1]:
-#         st.info("🚧 Em construção - Perda Florestal")
-#     with story_tabs[2]:
-#         st.info("🚧 Em construção - Evolução Temporal")
-#     ...
-# 
-# E SUBSTITUA por este código completo:
-# =====================================
 
     # =====================================
     # STORYTELLING 2: PERDA FLORESTAL
@@ -1535,108 +1523,91 @@ with tabs[4]:
         
         📊 **Explore as outras abas** para análises mais detalhadas e dados brutos.
         """)
-
 # =====================================
-# FIM DO CÓDIGO DO STORYTELLING
-# A aba Dados Brutos (tabs[5]) deve vir DEPOIS deste bloco
+# FUNÇÕES GFW
 # =====================================
 
-import os
-import geopandas as gpd
-import pandas as pd
-import folium
-from shapely.geometry import mapping
-from shapely.errors import TopologicalError
-from folium.plugins import HeatMap
-from streamlit_folium import st_folium
-
-# =====================================
-# FUNÇÃO: CARREGAR GEOMETRIAS KML
-# =====================================
-@st.cache_data(show_spinner=True)
-def carregar_geometrias(df_all, kml_dir: str):
-    """
-    Carrega os KMLs da pasta local, cruza com df_all via resourceIdentifier e retorna um GeoDataFrame combinado.
-    """
-    lista_gdfs = []
-    erros = []
-
-    for file in os.listdir(kml_dir):
-        if file.lower().endswith(".kml"):
-            resource_id = file.split("_")[0]
-            try:
-                gdf = gpd.read_file(os.path.join(kml_dir, file), driver="KML")
-                gdf["resourceIdentifier"] = str(resource_id)
-                lista_gdfs.append(gdf)
-            except Exception as e:
-                erros.append((file, str(e)))
-
-    if not lista_gdfs:
-        return gpd.GeoDataFrame(), erros
-
-    # Concatenar todos os KMLs
-    gdf_all = pd.concat(lista_gdfs, ignore_index=True)
-
-    # Converter CRS
-    if gdf_all.crs is None:
-        gdf_all.set_crs("EPSG:4326", inplace=True)
-    else:
-        gdf_all = gdf_all.to_crs("EPSG:4326")
-
-    # Garantir tipos compatíveis antes do merge
-    df_all["resourceIdentifier"] = df_all["resourceIdentifier"].astype(str)
-    gdf_all["resourceIdentifier"] = gdf_all["resourceIdentifier"].astype(str)
-
-    # Corrigir geometrias inválidas
-    gdf_all["geometry"] = gdf_all["geometry"].buffer(0)
-
-    # Dissolver geometrias duplicadas
+@st.cache_data(show_spinner=False)
+def gfw_tree_cover_loss(geojson, api_key):
+    """Consulta perda florestal anual por polígono via GFW Data API."""
+    url = "https://data-api.globalforestwatch.org/dataset/umd_tree_cover_loss/v1.11/query"
+    headers = {
+        "x-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "geometry": geojson,
+        "sql": "SELECT umd_tree_cover_loss__year, SUM(umd_tree_cover_loss__ha) as loss_ha FROM data GROUP BY umd_tree_cover_loss__year ORDER BY umd_tree_cover_loss__year"
+    }
     try:
-        gdf_all = gdf_all.dissolve(by="resourceIdentifier")
-    except TopologicalError:
-        gdf_all["geometry"] = gdf_all["geometry"].buffer(0)
-        gdf_all = gdf_all.dissolve(by="resourceIdentifier")
+        r = requests.post(url, headers=headers, json=payload, timeout=30)
+        if r.status_code == 200:
+            data = r.json().get("data", [])
+            return pd.DataFrame(data)
+        else:
+            return pd.DataFrame()
+    except Exception:
+        return pd.DataFrame()
 
-    # Merge com df_all
-    gdf_all = gdf_all.merge(df_all, on="resourceIdentifier", how="left")
 
-    return gdf_all, erros
+@st.cache_data(show_spinner=False)
+def gfw_glad_alerts(geojson, api_key):
+    """Consulta alertas GLAD por polígono via GFW Data API."""
+    url = "https://data-api.globalforestwatch.org/dataset/umd_glad_landsat_alerts/v20220723/query"
+    headers = {
+        "x-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "geometry": geojson,
+        "sql": "SELECT alert__year, COUNT(*) as alert_count FROM data GROUP BY alert__year ORDER BY alert__year"
+    }
+    try:
+        r = requests.post(url, headers=headers, json=payload, timeout=30)
+        if r.status_code == 200:
+            data = r.json().get("data", [])
+            return pd.DataFrame(data)
+        else:
+            return pd.DataFrame()
+    except Exception:
+        return pd.DataFrame()
 
-    # =====================================
-# STORYTELLING 2: PERDA FLORESTAL + VISUALIZADOR GFW COMPLETO
+
+@st.cache_data(show_spinner=False)
+def gfw_radd_alerts(geojson, api_key):
+    """Consulta alertas RADD por polígono via GFW Data API."""
+    url = "https://data-api.globalforestwatch.org/dataset/wur_radd_alerts/v20221031/query"
+    headers = {
+        "x-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "geometry": geojson,
+        "sql": "SELECT alert__year, COUNT(*) as alert_count FROM data GROUP BY alert__year ORDER BY alert__year"
+    }
+    try:
+        r = requests.post(url, headers=headers, json=payload, timeout=30)
+        if r.status_code == 200:
+            data = r.json().get("data", [])
+            return pd.DataFrame(data)
+        else:
+            return pd.DataFrame()
+    except Exception:
+        return pd.DataFrame()
+
+
 # =====================================
-import streamlit as st
-import folium
-from streamlit_folium import st_folium
-from folium import plugins
-import geopandas as gpd
-from shapely.geometry import mapping
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-import pandas as pd
+# STORYTELLING 2: PERDA FLORESTAL
+# =====================================
 
 with story_tabs[1]:
-    st.markdown("## 🔥 O Contexto da Perda Florestal")
+    st.markdown("## 🔥 Perda Florestal nos Projetos de Carbono")
 
-    st.markdown("""
-    Os projetos de carbono muitas vezes são estabelecidos em áreas com **histórico de 
-    desmatamento** ou sob **pressão de desmatamento**. Entender esse contexto é crucial 
-    para avaliar o impacto real desses projetos.
-    """)
-
-    # Carregar geometrias dos KMLs
-    #KML_DIR = r"D:\OneDrive - IPAM-Amazonia\1_BKP_Git\2024\0_Demanda_Espacializar_proj_priv\2025\kml"
-    #KML_DIR = r"kml"
-    
+    GFW_API_KEY = st.secrets["GFW_API_KEY"]
 
     import os
-
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    KML_DIR = os.path.join(BASE_DIR, "kml")
-
-    print("BASE_DIR:", BASE_DIR)
-    print("KML_DIR:", KML_DIR)
-    print("Exists?", os.path.exists(KML_DIR))
+    KML_DIR  = os.path.join(BASE_DIR, "kml")
 
     gdf_combined, erros = carregar_geometrias(df_all, KML_DIR)
 
@@ -1646,12 +1617,11 @@ with story_tabs[1]:
                 st.text(f"{f}: {e}")
 
     if gdf_combined.empty:
-        st.warning("Nenhum KML válido encontrado na pasta especificada.")
+        st.warning("Nenhum KML válido encontrado.")
     else:
-        st.success(f"✅ {len(gdf_combined)} geometrias carregadas com sucesso!")
-
-        # Filtrar geometrias válidas
-        gdf_plot = gdf_combined[~gdf_combined["geometry"].is_empty & gdf_combined["geometry"].notnull()].copy()
+        gdf_plot = gdf_combined[
+            ~gdf_combined["geometry"].is_empty & gdf_combined["geometry"].notnull()
+        ].copy()
         gdf_plot = gdf_plot[gdf_plot.is_valid]
 
         if gdf_plot.empty:
@@ -1660,879 +1630,232 @@ with story_tabs[1]:
             # ===================================
             # SELETOR DE PROJETO
             # ===================================
-            st.markdown("### 📍 Selecione um Projeto para Análise GFW")
-            
-            # Criar lista de projetos com informações
-            project_options = ["Visão Geral (Todos os Projetos)"] + [
-                f"{row.get('resourceName_x', 'Sem nome')} - {row.get('state_Recode', 'N/A')}" 
+            project_options = ["🌎 Visão Geral (Todos os Projetos)"] + [
+                f"{row.get('resourceName_x', 'Sem nome')} — {row.get('state_Recode', 'N/A')}"
                 for _, row in gdf_plot.iterrows()
             ]
-            
+
             selected_project = st.selectbox(
-                "Escolha um projeto:",
+                "📍 Selecione um projeto para análise:",
                 options=project_options,
-                key="project_selector"
+                key="project_selector_v2"
             )
 
-            # ===================================
-            # CONFIGURAÇÃO AVANÇADA GFW
-            # ===================================
-            
-            # Determinar centro e zoom baseado na seleção
-            if selected_project == "Visão Geral (Todos os Projetos)":
-                centroid = gdf_plot.geometry.centroid
-                center = [centroid.y.mean(), centroid.x.mean()]
+            is_overview = selected_project == "🌎 Visão Geral (Todos os Projetos)"
+
+            if is_overview:
+                centroid   = gdf_plot.geometry.centroid
+                center     = [centroid.y.mean(), centroid.x.mean()]
                 zoom_start = 5
                 selected_gdf = gdf_plot
-                show_gfw = False
             else:
-                project_name = selected_project.split(" - ")[0]
+                project_name = selected_project.split(" — ")[0]
                 selected_gdf = gdf_plot[gdf_plot["resourceName_x"] == project_name]
-                
                 if not selected_gdf.empty:
-                    bounds = selected_gdf.total_bounds
-                    center = [(bounds[1] + bounds[3]) / 2, (bounds[0] + bounds[2]) / 2]
+                    bounds     = selected_gdf.total_bounds
+                    center     = [(bounds[1]+bounds[3])/2, (bounds[0]+bounds[2])/2]
                     zoom_start = 10
-                    show_gfw = True
                 else:
                     selected_gdf = gdf_plot
-                    centroid = gdf_plot.geometry.centroid
-                    center = [centroid.y.mean(), centroid.x.mean()]
-                    zoom_start = 5
-                    show_gfw = False
+                    centroid     = gdf_plot.geometry.centroid
+                    center       = [centroid.y.mean(), centroid.x.mean()]
+                    zoom_start   = 5
+
+            st.divider()
 
             # ===================================
-            # PAINEL DE CONTROLE GFW
+            # LAYOUT: MAPA + PAINEL LATERAL
             # ===================================
-            
-            if show_gfw:
-                st.markdown("---")
-                st.markdown("### 🎛️ Painel de Controle - Análise Temporal GFW")
-                
-                # Tabs para diferentes análises
-                analysis_tabs = st.tabs([
-                    "📊 Comparação Temporal", 
-                    "🌳 Altura da Vegetação", 
-                    "📈 Ganho Florestal",
-                    "🔥 Perda Anual",
-                    "🎬 Timeline Animada"
-                ])
-                
-                # ===================================
-                # TAB 1: COMPARAÇÃO TEMPORAL
-                # ===================================
-                with analysis_tabs[0]:
-                    st.markdown("#### 🔄 Compare Dois Anos Diferentes")
-                    
-                    col1, col2 = st.columns(2)
-                    
-                    with col1:
-                        year_left = st.selectbox(
-                            "Ano Esquerdo:",
-                            options=[2000, 2005, 2010, 2015, 2020],
-                            index=0,
-                            key="year_left"
-                        )
-                    
-                    with col2:
-                        year_right = st.selectbox(
-                            "Ano Direito:",
-                            options=[2000, 2005, 2010, 2015, 2020, "Perda até 2024"],
-                            index=5,
-                            key="year_right"
-                        )
-                    
-                    # Opções de visualização
-                    st.markdown("**Tipo de Dado:**")
-                    data_type = st.radio(
-                        "Selecione o tipo de dado:",
-                        options=["Cobertura Florestal", "Altura da Vegetação", "Densidade (%)"],
-                        horizontal=True,
-                        key="data_type"
-                    )
-                    
-                    # Criar mapa com split
-                    st.markdown("---")
-                    st.markdown(f"### 🗺️ {year_left} vs {year_right} - {data_type}")
-                    
-                    bounds = selected_gdf.total_bounds
-                    
-                    m = folium.Map(
-                        location=center,
-                        zoom_start=zoom_start,
-                        tiles=None
-                    )
-                    
-                    folium.TileLayer('Esri.WorldImagery', name='Base', control=False).add_to(m)
-                    
-                    # URLs das camadas GFW baseadas na seleção (URLs CORRETOS - 2024)
-                    # Padrão GFW: https://tiles.globalforestwatch.org/{dataset}/{version}/dynamic/{z}/{x}/{y}.png
-                    # Versão atual Tree Cover Loss: v1.12 (2024 data)
-                    # Referência: https://data-api.globalforestwatch.org/
-                    
-                    #Caminhos corretos
-                    
-                    # URLs CORRETAS DO GFW (Janeiro 2025)
-                    #GFW_URLS = {
-                    #    #'tree_cover_loss': 'https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png',
-                    #    #'tree_cover_density_2000': 'https://tiles.globalforestwatch.org/umd_tree_cover_density_2000/v1.7/tcd_30/{z}/{x}/{y}.png',
-                    #    #'tree_cover_gain': 'https://tiles.globalforestwatch.org/umd_tree_cover_gain/v1.7/tcd_30/{z}/{x}/{y}.png',
-                    #    'carbon_density': 'https://tiles.globalforestwatch.org/gfw_forest_carbon_net_flux/v20210819/tcd_30/{z}/{x}/{y}.png',
-                    #    'glad_alerts': 'https://tiles.globalforestwatch.org/umd_glad_landsat_alerts/v20220223/alert_date/{z}/{x}/{y}.png',
-                    #    'radd_alerts': 'https://tiles.globalforestwatch.org/wur_radd_alerts/v20220126/alert_date/{z}/{x}/{y}.png'
-                    #}
-                    
-                    if data_type == "Altura da Vegetação":
-                        # Tree Cover Height - Anos disponíveis: 2000, 2005, 2010, 2015, 2020
-                        # Nota: Altura usa endpoint diferente (não tem /dynamic/)
-                        layer_left_url = f'https://tiles.globalforestwatch.org/gfw_forest_height_{year_left}/v202409/tcd_30/{{z}}/{{x}}/{{y}}.png'
-                        
-                        if year_right == "Perda até 2024":
-                            # Hansen Tree Cover Loss v1.12 - atualizado para 2024
-                            layer_right_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png'
-                        else:
-                            layer_right_url = f'https://tiles.globalforestwatch.org/gfw_forest_height_{year_right}/v202409/tcd_30/{{z}}/{{x}}/{{y}}.png'
-                    
-                    elif data_type == "Densidade (%)":
-                        # Tree Canopy Cover 2000 - baseline
-                        layer_left_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_density/v1.7/dynamic/{z}/{x}/{y}.png'
-                        
-                        if year_right == "Perda até 2024":
-                            layer_right_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png'
-                        else:
-                            # Densidade só está disponível para 2000
-                            layer_right_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_density/v1.7/dynamic/{z}/{x}/{y}.png'
-                    
-                    else:  # Cobertura Florestal
-                        # Usar Tree Cover Density como proxy para cobertura
-                        layer_left_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_density/v1.7/dynamic/{z}/{x}/{y}.png'
-                        
-                        if year_right == "Perda até 2024":
-                            layer_right_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png'
-                        else:
-                            layer_right_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_density/v1.7/dynamic/{z}/{x}/{y}.png'
-                    
-                    layer_left = folium.TileLayer(
-                        tiles=layer_left_url,
-                        name=f'{data_type} {year_left}',
+            col_mapa, col_painel = st.columns([6, 4])
+
+            with col_mapa:
+                st.markdown("### 🗺️ Mapa")
+
+                # Controles de camada
+                c1, c2, c3 = st.columns(3)
+                with c1:
+                    show_loss = st.toggle("🔴 Tree Cover Loss", value=True, key="toggle_loss")
+                with c2:
+                    show_glad = st.toggle("🟡 GLAD Alerts",     value=False, key="toggle_glad")
+                with c3:
+                    show_radd = st.toggle("🟠 RADD Alerts",     value=False, key="toggle_radd")
+
+                m = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
+                folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m)
+
+                # Camada Tree Cover Loss
+                if show_loss:
+                    folium.TileLayer(
+                        tiles='https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png',
+                        name='Tree Cover Loss',
                         attr='Global Forest Watch',
                         overlay=True,
                         opacity=0.8
-                    )
-                    
-                    layer_right = folium.TileLayer(
-                        tiles=layer_right_url,
-                        name=f'{data_type} {year_right}',
+                    ).add_to(m)
+
+                # Camada GLAD Alerts
+                if show_glad:
+                    folium.TileLayer(
+                        tiles='https://tiles.globalforestwatch.org/umd_glad_landsat_alerts/v20220723/default/{z}/{x}/{y}.png',
+                        name='GLAD Alerts',
                         attr='Global Forest Watch',
                         overlay=True,
                         opacity=0.8
-                    )
-                    
-                    sbs = plugins.SideBySideLayers(layer_left=layer_left, layer_right=layer_right)
-                    layer_left.add_to(m)
-                    layer_right.add_to(m)
-                    sbs.add_to(m)
-                    
-                    # Adicionar polígono do projeto
-                    def safe_geojson(row):
-                        try:
-                            return mapping(row["geometry"])
-                        except Exception:
-                            return None
-                    
-                    for _, row in selected_gdf.iterrows():
-                        geojson_data = safe_geojson(row)
-                        if geojson_data:
-                            folium.GeoJson(
-                                data=geojson_data,
-                                name=row.get("resourceName_x", "Projeto"),
-                                tooltip=folium.Tooltip(f"""
-                                    <div style="font-family: Arial; font-size: 12px;">
-                                        <b style="font-size: 14px;">{row.get('resourceName_x', 'Sem nome')}</b><br>
-                                        <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
-                                        <b>Comparação:</b> {year_left} vs {year_right}<br>
-                                        <hr style="margin: 5px 0;">
-                                        <i>🌳 Arraste o controle para comparar</i>
-                                    </div>
-                                """, sticky=True),
-                                style_function=lambda x: {
-                                    "fillColor": "transparent",
-                                    "color": "#FF0000",
-                                    "weight": 3,
-                                    "fillOpacity": 0.1,
-                                    "dashArray": "5, 5"
-                                }
-                            ).add_to(m)
-                    
-                    m.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
-                    folium.LayerControl().add_to(m)
-                    
-                    st_folium(m, width=900, height=600, key="map_comparison")
-                
-                # ===================================
-                # TAB 2: ALTURA DA VEGETAÇÃO
-                # ===================================
-                with analysis_tabs[1]:
-                    st.markdown("#### 🌲 Evolução da Altura da Vegetação (2000-2020)")
-                    
-                    height_year = st.select_slider(
-                        "Selecione o ano:",
-                        options=[2000, 2005, 2010, 2015, 2020],
-                        value=2020,
-                        key="height_year"
-                    )
-                    
-                    st.info(f"""
-                    📏 **Dados de Altura para {height_year}**
-                    - Resolução: 30 metros
-                    - Vegetação ≥ 3 metros de altura
-                    - Baseado em GEDI LiDAR + Landsat
-                    """)
-                    
-                    bounds = selected_gdf.total_bounds
-                    
-                    m_height = folium.Map(
-                        location=center,
-                        zoom_start=zoom_start,
-                        tiles='Esri.WorldImagery'
-                    )
-                    
-                    # Camada de altura (versão corrigida)
-                    height_url = f'https://tiles.globalforestwatch.org/gfw_forest_height_{height_year}/v202409/tcd_30/{{z}}/{{x}}/{{y}}.png'
-                    
+                    ).add_to(m)
+
+                # Camada RADD Alerts
+                if show_radd:
                     folium.TileLayer(
-                        tiles=height_url,
-                        name=f'Altura da Vegetação {height_year}',
+                        tiles='https://tiles.globalforestwatch.org/wur_radd_alerts/v20221031/default/{z}/{x}/{y}.png',
+                        name='RADD Alerts',
                         attr='Global Forest Watch',
                         overlay=True,
                         opacity=0.8
-                    ).add_to(m_height)
-                    
-                    # Adicionar polígono
-                    for _, row in selected_gdf.iterrows():
-                        geojson_data = safe_geojson(row)
-                        if geojson_data:
-                            folium.GeoJson(
-                                data=geojson_data,
-                                name=row.get("resourceName_x", "Projeto"),
-                                style_function=lambda x: {
-                                    "fillColor": "transparent",
-                                    "color": "#00FF00",
-                                    "weight": 3,
-                                    "fillOpacity": 0.1
-                                }
-                            ).add_to(m_height)
-                    
-                    m_height.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
-                    
-                    # Legenda de altura
-                    legend_height = '''
-                    <div style="position: fixed; bottom: 50px; right: 50px; width: 250px; 
-                                background-color: white; border:2px solid grey; z-index:9999; 
-                                font-size:12px; padding: 10px; border-radius: 5px;">
-                        <h4 style="margin-top:0;">Altura da Vegetação</h4>
-                        <div style="background: linear-gradient(to right, #fff5eb, #006400); 
-                                    height: 20px; border: 1px solid #ccc;"></div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 5px;">
-                            <span>0m</span>
-                            <span>15m</span>
-                            <span>30m+</span>
-                        </div>
-                    </div>
-                    '''
-                    m_height.get_root().html.add_child(folium.Element(legend_height))
-                    
-                    folium.LayerControl().add_to(m_height)
-                    st_folium(m_height, width=900, height=600, key="map_height")
-                
-                # ===================================
-                # TAB 3: GANHO FLORESTAL
-                # ===================================
-                with analysis_tabs[2]:
-                    st.markdown("#### 🌱 Ganho de Cobertura Florestal")
-                    
-                    col1, col2 = st.columns(2)
-                    
-                    with col1:
-                        gain_start = st.selectbox(
-                            "Ano Inicial:",
-                            options=[2000, 2005, 2010, 2015],
-                            index=0,
-                            key="gain_start"
-                        )
-                    
-                    with col2:
-                        gain_end = st.selectbox(
-                            "Ano Final:",
-                            options=[2020],
-                            index=0,
-                            key="gain_end"
-                        )
-                    
-                    st.success(f"""
-                    🌳 **Ganho Florestal {gain_start}-{gain_end}**
-                    - Áreas que cresceram de <5m para ≥5m de altura
-                    - Inclui reflorestamento natural e plantações
-                    """)
-                    
-                    bounds = selected_gdf.total_bounds
-                    
-                    m_gain = folium.Map(
-                        location=center,
-                        zoom_start=zoom_start,
-                        tiles='Esri.WorldImagery'
-                    )
-                    
-                    # Camada de ganho (2000-2020) - URL CORRIGIDO
-                    # Tree Cover Gain do Hansen/UMD v1.7
-                    gain_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_gain/v1.7/tcd_30/{z}/{x}/{y}.png'
-                    
-                    folium.TileLayer(
-                        tiles=gain_url,
-                        name=f'Ganho Florestal {gain_start}-{gain_end}',
-                        attr='Global Forest Watch - Hansen/UMD v1.7',
-                        overlay=True,
-                        opacity=0.8
-                    ).add_to(m_gain)
-                    
-                    # Camada de perda para contexto (v1.12 - 2024)
-                    loss_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png'
-                    
-                    folium.TileLayer(
-                        tiles=loss_url,
-                        name='Perda Florestal (contexto)',
-                        attr='Global Forest Watch',
-                        overlay=True,
-                        opacity=0.5,
-                        show=False
-                    ).add_to(m_gain)
-                    
-                    # Adicionar polígono
-                    for _, row in selected_gdf.iterrows():
-                        geojson_data = safe_geojson(row)
-                        if geojson_data:
-                            folium.GeoJson(
-                                data=geojson_data,
-                                name=row.get("resourceName_x", "Projeto"),
-                                style_function=lambda x: {
-                                    "fillColor": "transparent",
-                                    "color": "#0000FF",
-                                    "weight": 3,
-                                    "fillOpacity": 0.1
-                                }
-                            ).add_to(m_gain)
-                    
-                    m_gain.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
-                    
-                    # Legenda
-                    legend_gain = '''
-                    <div style="position: fixed; bottom: 50px; right: 50px; width: 250px; 
-                                background-color: white; border:2px solid grey; z-index:9999; 
-                                font-size:12px; padding: 10px; border-radius: 5px;">
-                        <h4 style="margin-top:0;">Legenda</h4>
-                        <p><span style="color:#0000FF;">█</span> <b>Azul:</b> Ganho florestal</p>
-                        <p><span style="color:#FF0000;">█</span> <b>Vermelho:</b> Perda florestal</p>
-                        <p style="font-size: 10px; color: #666; margin-top: 10px;">
-                            Ative/desative camadas no controle superior direito
-                        </p>
-                    </div>
-                    '''
-                    m_gain.get_root().html.add_child(folium.Element(legend_gain))
-                    
-                    folium.LayerControl().add_to(m_gain)
-                    st_folium(m_gain, width=900, height=600, key="map_gain")
-                
-                # ===================================
-                # TAB 4: PERDA ANUAL
-                # ===================================
-                with analysis_tabs[3]:
-                    st.markdown("#### 🔥 Análise de Perda Florestal por Ano")
-                    
-                    # Slider de anos
-                    year_range = st.slider(
-                        "Selecione o período de análise:",
-                        min_value=2001,
-                        max_value=2024,
-                        value=(2001, 2024),
-                        key="loss_range"
-                    )
-                    
-                    st.warning(f"""
-                    ⚠️ **Período Selecionado: {year_range[0]}-{year_range[1]}**
-                    - Dados de perda anual do Hansen/UMD
-                    - Resolução: 30 metros (Landsat)
-                    - Inclui todos os tipos de perda (incêndio, corte raso, degradação)
-                    """)
-                    
-                    bounds = selected_gdf.total_bounds
-                    
-                    m_loss = folium.Map(
-                        location=center,
-                        zoom_start=zoom_start,
-                        tiles='Esri.WorldImagery'
-                    )
-                    
-                    # Camada de perda (v1.12 - 2024)
-                    loss_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png'
-                    
-                    folium.TileLayer(
-                        tiles=loss_url,
-                        name=f'Perda Florestal {year_range[0]}-{year_range[1]}',
-                        attr='Global Forest Watch - Hansen/UMD v1.12',
-                        overlay=True,
-                        opacity=0.8
-                    ).add_to(m_loss)
-                    
-                    # Camada de cobertura 2000 para contexto
-                    cover_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_density/v1.7/dynamic/{z}/{x}/{y}.png'
-                    
-                    folium.TileLayer(
-                        tiles=cover_url,
-                        name='Cobertura 2000 (contexto)',
-                        attr='Global Forest Watch',
-                        overlay=True,
-                        opacity=0.4,
-                        show=False
-                    ).add_to(m_loss)
-                    
-                    # Adicionar polígono
-                    for _, row in selected_gdf.iterrows():
-                        geojson_data = safe_geojson(row)
-                        if geojson_data:
-                            folium.GeoJson(
-                                data=geojson_data,
-                                name=row.get("resourceName_x", "Projeto"),
-                                style_function=lambda x: {
-                                    "fillColor": "transparent",
-                                    "color": "#FF6600",
-                                    "weight": 3,
-                                    "fillOpacity": 0.1
-                                }
-                            ).add_to(m_loss)
-                    
-                    m_loss.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
-                    
-                    folium.LayerControl().add_to(m_loss)
-                    st_folium(m_loss, width=900, height=600, key="map_loss")
-                    
-                    # Gráfico simulado de perda anual
-                    st.markdown("---")
-                    st.markdown("#### 📊 Perda Anual Estimada (Exemplo)")
-                    
-                    # Dados fictícios para demonstração
-                    years = list(range(year_range[0], year_range[1] + 1))
-                    loss_ha = [100 + i*10 + (i%3)*50 for i in range(len(years))]
-                    
-                    fig = go.Figure()
-                    fig.add_trace(go.Bar(
-                        x=years,
-                        y=loss_ha,
-                        name='Perda (ha)',
-                        marker_color='#ff4444'
-                    ))
-                    
-                    fig.update_layout(
-                        title=f'Perda Florestal Anual - {selected_project.split(" - ")[0]}',
-                        xaxis_title='Ano',
-                        yaxis_title='Área Perdida (hectares)',
-                        hovermode='x unified',
-                        height=400
-                    )
-                    
-                    st.plotly_chart(fig, use_container_width=True)
-                    
-                    st.info("💡 **Nota**: Este é um gráfico de exemplo. Para dados reais, seria necessário integrar com a API do GFW.")
-                
-                # ===================================
-                # TAB 5: TIMELINE ANIMADA
-                # ===================================
-                with analysis_tabs[4]:
-                    st.markdown("#### 🎬 Timeline Animada - Evolução Temporal")
-                    
-                    st.markdown("""
-                    Esta visualização permite navegar pela linha do tempo e ver como a 
-                    cobertura florestal evoluiu ao longo dos anos disponíveis.
-                    """)
-                    
-                    # Slider temporal
-                    timeline_year = st.select_slider(
-                        "🎥 Navegue pela linha do tempo:",
-                        options=[2000, 2005, 2010, 2015, 2020, 2024],
-                        value=2000,
-                        key="timeline_year"
-                    )
-                    
-                    # Botões de controle
-                    col1, col2, col3, col4 = st.columns(4)
-                    with col1:
-                        if st.button("⏮️ Início", key="timeline_start"):
-                            st.session_state.timeline_year = 2000
-                    with col2:
-                        if st.button("⏪ Anterior", key="timeline_prev"):
-                            pass
-                    with col3:
-                        if st.button("⏩ Próximo", key="timeline_next"):
-                            pass
-                    with col4:
-                        if st.button("⏭️ Atual", key="timeline_end"):
-                            st.session_state.timeline_year = 2024
-                    
-                    # Info do ano selecionado
-                    if timeline_year == 2024:
-                        st.error(f"📅 **Ano {timeline_year}**: Perda acumulada até 2024")
-                    else:
-                        st.success(f"📅 **Ano {timeline_year}**: Cobertura florestal baseline")
-                    
-                    bounds = selected_gdf.total_bounds
-                    
-                    m_timeline = folium.Map(
-                        location=center,
-                        zoom_start=zoom_start,
-                        tiles='Esri.WorldImagery'
-                    )
-                    
-                    # Selecionar camada apropriada baseada no ano (URLs CORRIGIDOS)
-                    if timeline_year == 2024:
-                        # Perda acumulada até 2024 (v1.12)
-                        layer_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png'
-                        layer_name = 'Perda até 2024'
-                    elif timeline_year in [2000, 2005, 2010, 2015, 2020, 2021, 202]:
-                        # Altura da vegetação para anos disponíveis (v202409)
-                        layer_url = f'https://tiles.globalforestwatch.org/gfw_forest_height_{timeline_year}/v202409/tcd_30/{{z}}/{{x}}/{{y}}.png'
-                        layer_name = f'Altura Vegetação {timeline_year}'
-                    else:
-                        # Densidade de cobertura 2000 como fallback
-                        layer_url = 'https://tiles.globalforestwatch.org/umd_tree_cover_density/v1.7/dynamic/{z}/{x}/{y}.png'
-                        layer_name = 'Cobertura 2000'
-                    
-                    folium.TileLayer(
-                        tiles=layer_url,
-                        name=layer_name,
-                        attr='Global Forest Watch',
-                        overlay=True,
-                        opacity=0.8
-                    ).add_to(m_timeline)
-                    
-                    # Adicionar polígono
-                    for _, row in selected_gdf.iterrows():
-                        geojson_data = safe_geojson(row)
-                        if geojson_data:
-                            folium.GeoJson(
-                                data=geojson_data,
-                                name=row.get("resourceName_x", "Projeto"),
-                                tooltip=folium.Tooltip(f"""
-                                    <div style="font-family: Arial; font-size: 12px;">
-                                        <b style="font-size: 14px;">{row.get('resourceName_x', 'Sem nome')}</b><br>
-                                        <b>Ano:</b> {timeline_year}<br>
-                                        <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
-                                    </div>
-                                """, sticky=True),
-                                style_function=lambda x: {
-                                    "fillColor": "transparent",
-                                    "color": "#FFFF00",
-                                    "weight": 3,
-                                    "fillOpacity": 0.1
-                                }
-                            ).add_to(m_timeline)
-                    
-                    m_timeline.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
-                    
-                    # Adicionar marcador de ano no mapa
-                    year_marker = f'''
-                    <div style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); 
-                                background-color: rgba(0,0,0,0.8); color: white; 
-                                z-index:9999; font-size: 32px; padding: 20px 40px; 
-                                border-radius: 10px; font-weight: bold; 
-                                box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
-                        📅 {timeline_year}
-                    </div>
-                    '''
-                    m_timeline.get_root().html.add_child(folium.Element(year_marker))
-                    
-                    folium.LayerControl().add_to(m_timeline)
-                    st_folium(m_timeline, width=900, height=600, key="map_timeline")
-                    
-                    # Timeline visual
-                    st.markdown("---")
-                    st.markdown("#### 📈 Linha do Tempo Completa")
-                    
-                    timeline_data = pd.DataFrame({
-                        'Ano': [2000, 2005, 2010, 2015, 2020, 2024],
-                        'Eventos': [
-                            'Baseline inicial',
-                            'Primeira medição',
-                            'Segunda medição',
-                            'Terceira medição',
-                            'Última medição direta',
-                            'Perda acumulada'
-                        ]
-                    })
-                    
-                    fig_timeline = go.Figure()
-                    
-                    fig_timeline.add_trace(go.Scatter(
-                        x=timeline_data['Ano'],
-                        y=[1]*len(timeline_data),
-                        mode='markers+text',
-                        marker=dict(
-                            size=[30 if y == timeline_year else 15 for y in timeline_data['Ano']],
-                            color=['#ff0000' if y == timeline_year else '#3186cc' for y in timeline_data['Ano']]
-                        ),
-                        text=timeline_data['Eventos'],
-                        textposition='top center',
-                        textfont=dict(size=10),
-                        hovertemplate='<b>%{x}</b><br>%{text}<extra></extra>'
-                    ))
-                    
-                    fig_timeline.update_layout(
-                        title='Evolução Temporal dos Dados GFW',
-                        xaxis_title='Ano',
-                        yaxis=dict(visible=False),
-                        showlegend=False,
-                        height=200,
-                        margin=dict(t=80, b=40)
-                    )
-                    
-                    st.plotly_chart(fig_timeline, use_container_width=True)
-            
-            else:
-                # ===================================
-                # MAPA DE VISÃO GERAL
-                # ===================================
-                st.markdown("### 🗺️ Visão Geral dos Projetos")
-                st.info("💡 **Dica**: Selecione um projeto específico acima para acessar as análises avançadas do Global Forest Watch")
-                
-                m = folium.Map(
-                    location=center,
-                    zoom_start=zoom_start,
-                    tiles="Esri.WorldImagery"
-                )
-                
-                def safe_geojson(row):
+                    ).add_to(m)
+
+                # Polígonos dos projetos
+                for _, row in selected_gdf.iterrows():
                     try:
-                        return mapping(row["geometry"])
-                    except Exception:
-                        return None
-                
-                # Adicionar todos os polígonos
-                for _, row in gdf_plot.iterrows():
-                    try:
-                        geojson_data = safe_geojson(row)
-                        if geojson_data:
-                            folium.GeoJson(
-                                data=geojson_data,
-                                name=row.get("resourceName_x", "Projeto"),
-                                tooltip=folium.Tooltip(f"""
+                        geojson_data = mapping(row["geometry"])
+                        folium.GeoJson(
+                            data=geojson_data,
+                            name=row.get("resourceName_x", "Projeto"),
+                            tooltip=folium.Tooltip(f"""
+                                <div style="font-family:Arial; font-size:12px;">
                                     <b>{row.get('resourceName_x', 'Sem nome')}</b><br>
                                     Estado: {row.get('state_Recode', 'N/A')}<br>
-                                    ID: {row.get('resourceIdentifier', 'N/A')}<br>
-                                    <hr>
-                                    <i>Selecione este projeto para análise GFW</i>
-                                """),
-                                style_function=lambda x: {
-                                    "fillColor": "#3186cc",
-                                    "color": "#225577",
-                                    "weight": 2,
-                                    "fillOpacity": 0.4,
-                                },
-                            ).add_to(m)
-                    except Exception as e:
-                        st.error(f"Erro ao adicionar {row.get('resourceName_x', 'Projeto')}: {e}")
-                
-                folium.LayerControl().add_to(m)
-                st_folium(m, width=900, height=600, key="map_overview")
-            
-            # ===================================
-            # PAINEL DE INFORMAÇÕES FINAIS
-            # ===================================
-            
-            st.markdown("---")
-            st.markdown("### 📚 Sobre os Dados do Global Forest Watch")
-            
-            col1, col2, col3 = st.columns(3)
-            
-            with col1:
-                st.markdown("""
-                #### 🌳 Cobertura Florestal
-                **Anos disponíveis:**
-                - 2000 (Baseline)
-                - 2005, 2010, 2015, 2020
-                
-                **Resolução:** 30m (Landsat)
-                
-                **Definição:** Vegetação ≥ 5m de altura com >30% de cobertura do dossel
-                """)
-            
-            with col2:
-                st.markdown("""
-                #### 📏 Altura da Vegetação
-                **Anos disponíveis:**
-                - 2000, 2005, 2010, 2015, 2020
-                
-                **Resolução:** 30m
-                
-                **Fonte:** GEDI LiDAR + Landsat
-                
-                **Definição:** Altura média da vegetação ≥ 3m
-                """)
-            
-            with col3:
-                st.markdown("""
-                #### 🔥 Perda Florestal
-                **Período:** 2001-2024 (anual)
-                
-                **Resolução:** 30m
-                
-                **Inclui:** Desmatamento, degradação, incêndios
-                
-                **Atualização:** Anual
-                """)
-            
-            # ===================================
-            # EXPORT E ANÁLISE ESTATÍSTICA
-            # ===================================
-            
-            if show_gfw:
-                st.markdown("---")
-                st.markdown("### 📊 Análise Estatística e Exportação")
-                
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    if st.button("📈 Gerar Relatório Estatístico", key="generate_report"):
-                        with st.spinner("Calculando estatísticas..."):
-                            st.success("✅ Relatório gerado com sucesso!")
-                            
-                            # Criar dados fictícios para demonstração
-                            stats_data = {
-                                'Métrica': [
-                                    'Área Total do Projeto',
-                                    'Cobertura Florestal 2000',
-                                    'Cobertura Florestal 2020',
-                                    'Perda Total 2001-2024',
-                                    'Taxa de Perda Anual',
-                                    'Ganho Florestal 2000-2020'
-                                ],
-                                'Valor': [
-                                    '10,500 ha',
-                                    '9,800 ha (93.3%)',
-                                    '8,900 ha (84.8%)',
-                                    '900 ha',
-                                    '37.5 ha/ano',
-                                    '150 ha'
-                                ]
+                                    ID: {row.get('resourceIdentifier', 'N/A')}
+                                </div>
+                            """, sticky=True),
+                            style_function=lambda x: {
+                                "fillColor": "transparent",
+                                "color": "#FF0000",
+                                "weight": 3,
+                                "fillOpacity": 0.1,
+                                "dashArray": "5, 5"
                             }
-                            
-                            df_stats = pd.DataFrame(stats_data)
-                            st.dataframe(df_stats, use_container_width=True)
-                            
-                            st.info("💡 **Nota**: Estes são dados simulados. A integração completa com a API do GFW forneceria valores reais.")
-                
-                with col2:
-                    if st.button("💾 Exportar Dados (CSV)", key="export_csv"):
-                        st.info("""
-                        📥 **Funcionalidade de Export**
-                        
-                        Em produção, este botão geraria um arquivo CSV com:
-                        - Estatísticas anuais de perda/ganho
-                        - Coordenadas das geometrias
-                        - Dados de altura da vegetação
-                        - Análise temporal completa
-                        """)
-                
-                # Gráfico comparativo final
-                st.markdown("---")
-                st.markdown("#### 📊 Resumo Visual - Mudanças na Cobertura Florestal")
-                
-                years_summary = [2000, 2005, 2010, 2015, 2020, 2024]
-                coverage_pct = [93.3, 91.5, 89.2, 87.1, 84.8, 82.5]
-                loss_cumulative = [0, 200, 425, 680, 900, 1125]
-                
-                fig_summary = make_subplots(
-                    rows=1, cols=2,
-                    subplot_titles=('Cobertura Florestal (%)', 'Perda Acumulada (ha)'),
-                    specs=[[{"secondary_y": False}, {"secondary_y": False}]]
-                )
-                
-                fig_summary.add_trace(
-                    go.Scatter(
-                        x=years_summary,
-                        y=coverage_pct,
-                        mode='lines+markers',
-                        name='Cobertura %',
-                        line=dict(color='#00aa00', width=3),
-                        marker=dict(size=10),
-                        fill='tozeroy',
-                        fillcolor='rgba(0,170,0,0.2)'
-                    ),
-                    row=1, col=1
-                )
-                
-                fig_summary.add_trace(
-                    go.Bar(
-                        x=years_summary,
-                        y=loss_cumulative,
-                        name='Perda (ha)',
-                        marker_color='#ff4444'
-                    ),
-                    row=1, col=2
-                )
-                
-                fig_summary.update_xaxes(title_text="Ano", row=1, col=1)
-                fig_summary.update_xaxes(title_text="Ano", row=1, col=2)
-                fig_summary.update_yaxes(title_text="Cobertura (%)", row=1, col=1)
-                fig_summary.update_yaxes(title_text="Área Perdida (ha)", row=1, col=2)
-                
-                fig_summary.update_layout(
-                    height=400,
-                    showlegend=False,
-                    hovermode='x unified'
-                )
-                
-                st.plotly_chart(fig_summary, use_container_width=True)
-                
-                # Alertas e recomendações
-                st.markdown("---")
-                st.markdown("### ⚠️ Alertas e Recomendações")
-                
-                alert_col1, alert_col2 = st.columns(2)
-                
-                with alert_col1:
-                    st.error("""
-                    **🚨 Alertas Críticos**
-                    - Taxa de perda acima da média regional
-                    - Aceleração do desmatamento em 2022-2024
-                    - Hotspots de perda próximos às bordas
-                    """)
-                
-                with alert_col2:
-                    st.success("""
-                    **✅ Pontos Positivos**
-                    - Ganho florestal detectado em áreas específicas
-                    - Densidade da vegetação mantida no núcleo
-                    - Redução da perda em 2021 vs 2020
-                    """)
-    # ==========================================================
-    # Gráfico: Projetos REDD+ por estado (mantido do seu original)
-    # ==========================================================
-    #st.divider()
-    #st.markdown("### 📊 Pressão de Desmatamento por Estado")
-#
-    #if 'state_Recode' in df_all.columns and 'vcsAFOLUActivity' in df_all.columns:
-    #    df_redd_state = df_all[
-    #        df_all['vcsAFOLUActivity'].str.contains('REDD', na=False)
-    #    ].groupby('state_Recode').size().reset_index(name='Projetos_REDD')
-#
-    #    df_redd_state = df_redd_state.sort_values('Projetos_REDD', ascending=True).tail(15)
-#
-    #    fig_redd_state = px.bar(
-    #        df_redd_state,
-    #        x='Projetos_REDD',
-    #        y='state_Recode',
-    #        orientation='h',
-    #        title='Estados com Mais Projetos REDD+ (Proteção contra Desmatamento)',
-    #        color='Projetos_REDD',
-    #        color_continuous_scale='RdYlGn_r'
-    #    )
-    #    fig_redd_state.update_layout(height=500, showlegend=False)
-    #    #st.plotly_chart(fig_redd_state, use_container_width=True)
+                        ).add_to(m)
+                    except Exception:
+                        pass
+
+                if not is_overview:
+                    bounds = selected_gdf.total_bounds
+                    m.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
+
+                folium.LayerControl().add_to(m)
+                st_folium(m, width=None, height=600, key="map_spatial")
+
+            # ===================================
+            # PAINEL LATERAL
+            # ===================================
+            with col_painel:
+                if is_overview:
+                    st.info("💡 Selecione um projeto para ver análises detalhadas.")
+                    st.metric("Total de Projetos", f"{len(gdf_plot):,}")
+                    st.metric("Estados cobertos", f"{gdf_plot['state_Recode'].nunique():,}" if 'state_Recode' in gdf_plot.columns else "N/A")
+
+                else:
+                    row_proj = selected_gdf.iloc[0]
+
+                    # Info do projeto
+                    st.markdown("### 📋 Informações")
+                    st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
+                    st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
+                    st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
+
+                    st.divider()
+
+                    # Extrair GeoJSON do polígono para consultas API
+                    geojson_poly = mapping(selected_gdf.geometry.iloc[0])
+
+                    # ---- Perda Florestal Anual ----
+                    st.markdown("### 📊 Perda Florestal Anual")
+                    with st.spinner("Consultando GFW..."):
+                        df_loss = gfw_tree_cover_loss(geojson_poly, GFW_API_KEY)
+
+                    if df_loss.empty:
+                        st.warning("Sem dados de perda para este projeto.")
+                    else:
+                        fig_loss = go.Figure()
+                        fig_loss.add_trace(go.Bar(
+                            x=df_loss['umd_tree_cover_loss__year'],
+                            y=df_loss['loss_ha'],
+                            marker_color='#ff4444',
+                            name='Perda (ha)'
+                        ))
+                        fig_loss.update_layout(
+                            xaxis_title="Ano",
+                            yaxis_title="ha",
+                            height=280,
+                            margin=dict(t=10, b=40, l=40, r=10),
+                            template="plotly_white",
+                            hovermode='x unified'
+                        )
+                        st.plotly_chart(fig_loss, use_container_width=True)
+
+                    st.divider()
+
+                    # ---- Alertas GLAD ----
+                    st.markdown("### 🟡 Alertas GLAD")
+                    with st.spinner("Consultando GLAD..."):
+                        df_glad = gfw_glad_alerts(geojson_poly, GFW_API_KEY)
+
+                    if df_glad.empty:
+                        st.warning("Sem alertas GLAD para este projeto.")
+                    else:
+                        fig_glad = go.Figure()
+                        fig_glad.add_trace(go.Bar(
+                            x=df_glad['alert__year'],
+                            y=df_glad['alert_count'],
+                            marker_color='#FFC300',
+                            name='Alertas GLAD'
+                        ))
+                        fig_glad.update_layout(
+                            xaxis_title="Ano",
+                            yaxis_title="Alertas",
+                            height=220,
+                            margin=dict(t=10, b=40, l=40, r=10),
+                            template="plotly_white",
+                            hovermode='x unified'
+                        )
+                        st.plotly_chart(fig_glad, use_container_width=True)
+
+                    st.divider()
+
+                    # ---- Alertas RADD ----
+                    st.markdown("### 🟠 Alertas RADD")
+                    with st.spinner("Consultando RADD..."):
+                        df_radd = gfw_radd_alerts(geojson_poly, GFW_API_KEY)
+
+                    if df_radd.empty:
+                        st.warning("Sem alertas RADD para este projeto.")
+                    else:
+                        fig_radd = go.Figure()
+                        fig_radd.add_trace(go.Bar(
+                            x=df_radd['alert__year'],
+                            y=df_radd['alert_count'],
+                            marker_color='#FF7900',
+                            name='Alertas RADD'
+                        ))
+                        fig_radd.update_layout(
+                            xaxis_title="Ano",
+                            yaxis_title="Alertas",
+                            height=220,
+                            margin=dict(t=10, b=40, l=40, r=10),
+                            template="plotly_white",
+                            hovermode='x unified'
+                        )
+                        st.plotly_chart(fig_radd, use_container_width=True)
+
+                    st.divider()
+
+                    # ---- Export ----
+                    st.markdown("### 💾 Export")
+                    if not df_loss.empty:
+                        csv = df_loss.to_csv(index=False).encode('utf-8')
+                        st.download_button(
+                            label="⬇️ Download Perda Florestal (CSV)",
+                            data=csv,
+                            file_name=f"perda_{row_proj.get('resourceIdentifier', 'projeto')}.csv",
+                            mime='text/csv'
+                        )
