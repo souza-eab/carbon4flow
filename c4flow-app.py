@@ -249,7 +249,96 @@ def gfw_radd_alerts(geojson, api_key):
         return pd.DataFrame()
     except Exception:
         return pd.DataFrame()
-        
+
+
+# =====================================
+# FUNÇÕES MAPBIOMAS — escopo global
+# =====================================
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def mapbiomas_get_token(email, password):
+    """Obtém token de acesso ao MapBiomas Alerta."""
+    mutation = """
+    mutation($email: String!, $password: String!) {
+      signIn(email: $email, password: $password) {
+        token
+      }
+    }
+    """
+    try:
+        r = requests.post(
+            "https://plataforma.alerta.mapbiomas.org/api/v2/graphql",
+            json={"query": mutation, "variables": {"email": email, "password": password}},
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        return r.json()['data']['signIn']['token']
+    except Exception:
+        return None
+
+
+@st.cache_data(show_spinner=False)
+def mapbiomas_alerts(bbox, token, start_date="2019-01-01", end_date="2024-12-31"):
+    """Consulta alertas MapBiomas por bounding box."""
+    query = """
+    query($boundingBox: [Float!], $startDate: BaseDate, $endDate: BaseDate, $limit: Int, $page: Int) {
+      alerts(
+        boundingBox: $boundingBox
+        startDate: $startDate
+        endDate: $endDate
+        limit: $limit
+        page: $page
+      ) {
+        metadata {
+          totalCount
+          totalPages
+          currentPage
+          limitValue
+        }
+        summary {
+          total
+          area
+          alertsByYear { year value }
+          deforestationAreaByYear { year value }
+        }
+        collection {
+          alertCode
+          areaHa
+          detectedAt
+          publishedAt
+          sources
+          deforestationClasses
+          statusName
+          crossedBiomes
+          crossedStates
+        }
+      }
+    }
+    """
+    variables = {
+        "boundingBox": bbox,
+        "startDate": start_date,
+        "endDate": end_date,
+        "limit": 1000,
+        "page": 1
+    }
+    try:
+        r = requests.post(
+            "https://plataforma.alerta.mapbiomas.org/api/v2/graphql",
+            json={"query": query, "variables": variables},
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {token}"
+            },
+            timeout=60
+        )
+        if r.status_code == 200 and r.json().get('data'):
+            return r.json()['data']['alerts']
+        return None
+    except Exception:
+        return None
+    
+
 # =====================================
 # CONFIGURAÇÃO DE CORES E ESTILOS
 # =====================================
@@ -782,6 +871,163 @@ with tabs[3]:
                     use_container_width=True
                 )
 
+with story_tabs[2]:
+        st.markdown("## 🌿 Alertas MapBiomas")
+
+        MAPBIOMAS_EMAIL    = st.secrets["MAPBIOMAS_EMAIL"]
+        MAPBIOMAS_PASSWORD = st.secrets["MAPBIOMAS_PASSWORD"]
+
+        # Token com cache de 1h
+        mb_token = mapbiomas_get_token(MAPBIOMAS_EMAIL, MAPBIOMAS_PASSWORD)
+
+        if not mb_token:
+            st.error("❌ Não foi possível autenticar no MapBiomas.")
+        else:
+            # Reutiliza KML carregado na aba GFW
+            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+            KML_DIR  = os.path.join(BASE_DIR, "kml")
+            gdf_mb, _ = carregar_geometrias(df_all, KML_DIR)
+
+            if gdf_mb.empty:
+                st.warning("Nenhum KML válido encontrado.")
+            else:
+                gdf_mb_plot = gdf_mb[
+                    ~gdf_mb["geometry"].is_empty & gdf_mb["geometry"].notnull()
+                ].copy()
+                gdf_mb_plot = gdf_mb_plot[gdf_mb_plot.is_valid]
+
+                # Seletor de projeto
+                mb_options = ["🌎 Visão Geral (Todos os Projetos)"] + [
+                    f"{row.get('resourceName_x', 'Sem nome')} — {row.get('state_Recode', 'N/A')}"
+                    for _, row in gdf_mb_plot.iterrows()
+                ]
+                mb_selected = st.selectbox(
+                    "📍 Selecione um projeto:",
+                    options=mb_options,
+                    key="mb_project_selector"
+                )
+
+                mb_is_overview = mb_selected == "🌎 Visão Geral (Todos os Projetos)"
+
+                if mb_is_overview:
+                    st.info("💡 Selecione um projeto para ver os alertas MapBiomas.")
+                else:
+                    mb_project_name = mb_selected.split(" — ")[0]
+                    mb_gdf = gdf_mb_plot[gdf_mb_plot["resourceName_x"] == mb_project_name]
+
+                    if mb_gdf.empty:
+                        st.warning("Projeto não encontrado.")
+                    else:
+                        # Bounding box do projeto
+                        bounds = mb_gdf.total_bounds  # [minx, miny, maxx, maxy]
+                        bbox   = [bounds[0], bounds[1], bounds[2], bounds[3]]
+
+                        with st.spinner("Consultando MapBiomas Alerta..."):
+                            mb_data = mapbiomas_alerts(bbox, mb_token)
+
+                        if not mb_data:
+                            st.warning("Sem dados disponíveis para este projeto.")
+                        else:
+                            summary    = mb_data.get('summary', {})
+                            collection = mb_data.get('collection', [])
+                            metadata   = mb_data.get('metadata', {})
+
+                            # Métricas
+                            col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+                            with col_m1:
+                                st.metric("Total de Alertas", f"{summary.get('total', 0):,}")
+                            with col_m2:
+                                st.metric("Área Total (ha)", f"{summary.get('area', 0):,.1f}")
+                            with col_m3:
+                                st.metric("Páginas", f"{metadata.get('totalPages', 1)}")
+                            with col_m4:
+                                anos = len(summary.get('alertsByYear', []))
+                                st.metric("Anos com alertas", f"{anos}")
+
+                            st.divider()
+
+                            # Gráficos
+                            col_g1, col_g2 = st.columns(2)
+
+                            with col_g1:
+                                st.markdown("### 📊 Alertas por Ano")
+                                df_by_year = pd.DataFrame(summary.get('alertsByYear', []))
+                                if not df_by_year.empty:
+                                    fig_ay = go.Figure()
+                                    fig_ay.add_trace(go.Bar(
+                                        x=df_by_year['year'],
+                                        y=df_by_year['value'],
+                                        marker_color='#E67E22',
+                                        name='Alertas'
+                                    ))
+                                    fig_ay.update_layout(
+                                        xaxis_title="Ano", yaxis_title="Alertas",
+                                        height=300, template="plotly_white",
+                                        margin=dict(t=10, b=40, l=40, r=10),
+                                        hovermode='x unified'
+                                    )
+                                    st.plotly_chart(fig_ay, use_container_width=True)
+
+                            with col_g2:
+                                st.markdown("### 🌳 Área Desmatada por Ano (ha)")
+                                df_area_year = pd.DataFrame(summary.get('deforestationAreaByYear', []))
+                                if not df_area_year.empty:
+                                    fig_area = go.Figure()
+                                    fig_area.add_trace(go.Bar(
+                                        x=df_area_year['year'],
+                                        y=df_area_year['value'],
+                                        marker_color='#C0392B',
+                                        name='Área (ha)'
+                                    ))
+                                    fig_area.update_layout(
+                                        xaxis_title="Ano", yaxis_title="ha",
+                                        height=300, template="plotly_white",
+                                        margin=dict(t=10, b=40, l=40, r=10),
+                                        hovermode='x unified'
+                                    )
+                                    st.plotly_chart(fig_area, use_container_width=True)
+
+                            st.divider()
+
+                            # Tabela de alertas
+                            if collection:
+                                st.markdown("### 📋 Lista de Alertas")
+                                df_col = pd.DataFrame(collection)
+
+                                # Formatar colunas de lista
+                                for col_list in ['sources', 'deforestationClasses', 'crossedBiomes', 'crossedStates']:
+                                    if col_list in df_col.columns:
+                                        df_col[col_list] = df_col[col_list].apply(
+                                            lambda x: ', '.join(x) if isinstance(x, list) else x
+                                        )
+
+                                df_col = df_col.rename(columns={
+                                    'alertCode':          'Código',
+                                    'areaHa':             'Área (ha)',
+                                    'detectedAt':         'Detectado em',
+                                    'publishedAt':        'Publicado em',
+                                    'sources':            'Fontes',
+                                    'deforestationClasses': 'Classe',
+                                    'statusName':         'Status',
+                                    'crossedBiomes':      'Bioma',
+                                    'crossedStates':      'Estado'
+                                })
+
+                                st.dataframe(
+                                    df_col.style.format({'Área (ha)': '{:,.2f}'}),
+                                    use_container_width=True,
+                                    height=400
+                                )
+
+                                ## Export
+                                #csv = df_col.to_csv(index=False).encode('utf-8')
+                                #st.download_button(
+                                #    label="⬇️ Download Alertas (CSV)",
+                                #    data=csv,
+                                #    file_name=f"alertas_mapbiomas_{mb_project_name[:30]}.csv",
+                                #    mime='text/csv'
+                                #)
+                                
 # =====================================
 # ABA 5: STORYTELLING
 # =====================================
@@ -792,6 +1038,7 @@ with tabs[4]:
     story_tabs = st.tabs([
         "🌍 Panorama Geral",
         "🗺️ Perda Florestal",
+        "🌿 MapBiomas",        # <-- nova
         "📊 Evolução Temporal",
         "🎯 Impacto Regional",
         "💡 Insights"
