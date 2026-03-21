@@ -1013,22 +1013,22 @@ with tabs[4]:
                         ).add_to(m)
                     
                     if show_glad:
-                    folium.TileLayer(
-                        tiles='https://tiles.globalforestwatch.org/umd_glad_landsat_alerts/v20260320/default/{z}/{x}/{y}.png',
-                        name='GLAD Alerts',
-                        attr='Global Forest Watch',
-                        overlay=True,
-                        opacity=0.8
-                    ).add_to(m)
+                        folium.TileLayer(
+                            tiles='https://tiles.globalforestwatch.org/umd_glad_landsat_alerts/v20260320/default/{z}/{x}/{y}.png',
+                            name='GLAD Alerts',
+                            attr='Global Forest Watch',
+                            overlay=True,
+                            opacity=0.8
+                        ).add_to(m)
 
                     if show_radd:
-                    folium.TileLayer(
-                        tiles='https://tiles.globalforestwatch.org/wur_radd_alerts/v20260315/default/{z}/{x}/{y}.png',
-                        name='RADD Alerts',
-                        attr='Global Forest Watch',
-                        overlay=True,
-                        opacity=0.8
-                    ).add_to(m)
+                        folium.TileLayer(
+                            tiles='https://tiles.globalforestwatch.org/wur_radd_alerts/v20260315/default/{z}/{x}/{y}.png',
+                            name='RADD Alerts',
+                            attr='Global Forest Watch',
+                            overlay=True,
+                            opacity=0.8
+                        ).add_to(m)
 
                     for _, row in selected_gdf.iterrows():
                         try:
