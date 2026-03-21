@@ -1073,6 +1073,9 @@ with tabs[4]:
                         st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
                         st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
                         st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
+                        st.markdown(f"**Proponente':** {row_proj.get('proponent', 'N/A')}")
+                        st.markdown(f"**Categoria:** {row_proj.get('protocolSubCategories', 'N/A')}")
+                        st.markdown(f"**Resumo:** {row_proj.get('description', 'N/A')}")
 
                         st.divider()
 
@@ -1156,15 +1159,15 @@ with tabs[4]:
 
                         st.divider()
 
-                        st.markdown("### 💾 Export")
-                        if not df_loss.empty:
-                            csv = df_loss.to_csv(index=False).encode('utf-8')
-                            st.download_button(
-                                label="⬇️ Download Perda Florestal (CSV)",
-                                data=csv,
-                                file_name=f"perda_{row_proj.get('resourceIdentifier', 'projeto')}.csv",
-                                mime='text/csv'
-                            )
+                        #st.markdown("### 💾 Export")
+                        #if not df_loss.empty:
+                        #    csv = df_loss.to_csv(index=False).encode('utf-8')
+                        #    st.download_button(
+                        #        label="⬇️ Download Perda Florestal (CSV)",
+                        #        data=csv,
+                        #        file_name=f"perda_{row_proj.get('resourceIdentifier', 'projeto')}.csv",
+                        #        mime='text/csv'
+                        #    )
 
     # =====================================
     # STORYTELLING 3: EVOLUÇÃO TEMPORAL
