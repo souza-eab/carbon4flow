@@ -192,7 +192,7 @@ def gfw_tree_cover_loss(geojson, api_key):
     }
     try:
         r = requests.post(url, headers=headers, json=payload, timeout=30)
-        st.write(f"DEBUG loss: {r.status_code} — {r.json()}")  # remover depois
+        #st.write(f"DEBUG loss: {r.status_code} — {r.json()}")  # remover depois
         if r.status_code == 200:
             return pd.DataFrame(r.json().get("data", []))
         return pd.DataFrame()
