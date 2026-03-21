@@ -201,39 +201,6 @@ def gfw_tree_cover_loss(geojson, api_key):
         return pd.DataFrame()
 
 
-#@st.cache_data(show_spinner=False)
-#def gfw_glad_alerts(geojson, api_key):
-#    """Consulta alertas GLAD por polígono via GFW Data API."""
-#    url = "https://data-api.globalforestwatch.org/dataset/umd_glad_landsat_alerts/v20220723/query"
-#    headers = {"x-api-key": api_key.strip(), "Content-Type": "application/json"}
-#    payload = {
-#        "geometry": geojson,
-#        "sql": "SELECT alert__year, COUNT(*) as alert_count FROM data GROUP BY alert__year ORDER BY alert__year"
-#    }
-#    try:
-#        r = requests.post(url, headers=headers, json=payload, timeout=30)
-#        if r.status_code == 200:
-#            return pd.DataFrame(r.json().get("data", []))
-#        return pd.DataFrame()
-#    except Exception:
-#        return pd.DataFrame()
-#
-#@st.cache_data(show_spinner=False)
-#def gfw_radd_alerts(geojson, api_key):
-#    """Consulta alertas RADD por polígono via GFW Data API."""
-#    url = "https://data-api.globalforestwatch.org/dataset/wur_radd_alerts/v20221031/query"
-#    headers = {"x-api-key": api_key.strip(), "Content-Type": "application/json"}
-#    payload = {
-#        "geometry": geojson,
-#        "sql": "SELECT alert__year, COUNT(*) as alert_count FROM data GROUP BY alert__year ORDER BY alert__year"
-#    }
-#    try:
-#        r = requests.post(url, headers=headers, json=payload, timeout=30)
-#        if r.status_code == 200:
-#            return pd.DataFrame(r.json().get("data", []))
-#        return pd.DataFrame()
-#    except Exception:
-#        return pd.DataFrame()
 @st.cache_data(show_spinner=False)
 def gfw_glad_alerts(geojson, api_key):
     url = "https://data-api.globalforestwatch.org/dataset/umd_glad_landsat_alerts/v20260320/query"
@@ -1009,6 +976,33 @@ with tabs[4]:
                     m = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
                     folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m)
 
+                    #if show_loss:
+                    #    folium.TileLayer(
+                    #        tiles='https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png',
+                    #        name='Tree Cover Loss',
+                    #        attr='Global Forest Watch',
+                    #        overlay=True,
+                    #        opacity=0.8
+                    #    ).add_to(m)
+#
+                    #if show_glad:
+                    #    folium.TileLayer(
+                    #        tiles='https://tiles.globalforestwatch.org/umd_glad_landsat_alerts/v20220723/default/{z}/{x}/{y}.png',
+                    #        name='GLAD Alerts',
+                    #        attr='Global Forest Watch',
+                    #        overlay=True,
+                    #        opacity=0.8
+                    #    ).add_to(m)
+#
+                    #if show_radd:
+                    #    folium.TileLayer(
+                    #        tiles='https://tiles.globalforestwatch.org/wur_radd_alerts/v20221031/default/{z}/{x}/{y}.png',
+                    #        name='RADD Alerts',
+                    #        attr='Global Forest Watch',
+                    #        overlay=True,
+                    #        opacity=0.8
+                    #    ).add_to(m)
+                    
                     if show_loss:
                         folium.TileLayer(
                             tiles='https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png',
@@ -1017,24 +1011,24 @@ with tabs[4]:
                             overlay=True,
                             opacity=0.8
                         ).add_to(m)
-
+                    
                     if show_glad:
-                        folium.TileLayer(
-                            tiles='https://tiles.globalforestwatch.org/umd_glad_landsat_alerts/v20220723/default/{z}/{x}/{y}.png',
-                            name='GLAD Alerts',
-                            attr='Global Forest Watch',
-                            overlay=True,
-                            opacity=0.8
-                        ).add_to(m)
+                    folium.TileLayer(
+                        tiles='https://tiles.globalforestwatch.org/umd_glad_landsat_alerts/v20260320/default/{z}/{x}/{y}.png',
+                        name='GLAD Alerts',
+                        attr='Global Forest Watch',
+                        overlay=True,
+                        opacity=0.8
+                    ).add_to(m)
 
                     if show_radd:
-                        folium.TileLayer(
-                            tiles='https://tiles.globalforestwatch.org/wur_radd_alerts/v20221031/default/{z}/{x}/{y}.png',
-                            name='RADD Alerts',
-                            attr='Global Forest Watch',
-                            overlay=True,
-                            opacity=0.8
-                        ).add_to(m)
+                    folium.TileLayer(
+                        tiles='https://tiles.globalforestwatch.org/wur_radd_alerts/v20260315/default/{z}/{x}/{y}.png',
+                        name='RADD Alerts',
+                        attr='Global Forest Watch',
+                        overlay=True,
+                        opacity=0.8
+                    ).add_to(m)
 
                     for _, row in selected_gdf.iterrows():
                         try:
