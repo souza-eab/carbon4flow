@@ -127,6 +127,8 @@ def analise_vcu_por_vintage(df_full):
 # =====================================
 # FUNÇÕES GFW — escopo global
 # =====================================
+st.write(f"GEOJSON TYPE: {geojson_poly.get('type')}")
+st.write(f"API KEY (primeiros 8 chars): {GFW_API_KEY[:8]}")
 
 @st.cache_data(show_spinner=True)
 def carregar_geometrias(df_all, kml_dir: str):
@@ -160,9 +162,27 @@ def carregar_geometrias(df_all, kml_dir: str):
     gdf_all = gdf_all.merge(df_all, on="resourceIdentifier", how="left")
     return gdf_all, erros
 
+#@st.cache_data(show_spinner=False)
+#def gfw_tree_cover_loss(geojson, api_key):
+#    """Consulta perda florestal anual por polígono via GFW Data API."""
+#    url = "https://data-api.globalforestwatch.org/dataset/umd_tree_cover_loss/v1.11/query"
+#    headers = {"x-api-key": api_key, "Content-Type": "application/json"}
+#    payload = {
+#        "geometry": geojson,
+#        "sql": "SELECT umd_tree_cover_loss__year, SUM(umd_tree_cover_loss__ha) as loss_ha FROM data GROUP BY umd_tree_cover_loss__year ORDER BY umd_tree_cover_loss__year"
+#    }
+#    try:
+#        r = requests.post(url, headers=headers, json=payload, timeout=30)
+#        if r.status_code == 200:
+#            return pd.DataFrame(r.json().get("data", []))
+#        return pd.DataFrame()
+#    except Exception:
+#        return pd.DataFrame()
+
+# Substituir temporariamente a função gfw_tree_cover_loss por essa versão com debug
+
 @st.cache_data(show_spinner=False)
 def gfw_tree_cover_loss(geojson, api_key):
-    """Consulta perda florestal anual por polígono via GFW Data API."""
     url = "https://data-api.globalforestwatch.org/dataset/umd_tree_cover_loss/v1.11/query"
     headers = {"x-api-key": api_key, "Content-Type": "application/json"}
     payload = {
@@ -171,11 +191,16 @@ def gfw_tree_cover_loss(geojson, api_key):
     }
     try:
         r = requests.post(url, headers=headers, json=payload, timeout=30)
+        st.write(f"STATUS: {r.status_code}")
+        st.write(f"RESPONSE: {r.json()}")
         if r.status_code == 200:
             return pd.DataFrame(r.json().get("data", []))
         return pd.DataFrame()
-    except Exception:
+    except Exception as e:
+        st.write(f"ERRO: {e}")
         return pd.DataFrame()
+    
+
 
 @st.cache_data(show_spinner=False)
 def gfw_glad_alerts(geojson, api_key):
