@@ -1100,53 +1100,7 @@ with tabs[4]:
                             b = selected_gdf.total_bounds
                             m_prodes.fit_bounds([[b[1], b[0]], [b[3], b[2]]])
                         
-                        # Adicione logo após o st_folium do mapa PRODES
-                        # ---- Legenda fixa PRODES ----
-                        st.markdown("""
-                        <style>
-                        .prodes-legenda {
-                            background: white;
-                            padding: 12px 16px;
-                            border-radius: 8px;
-                            border: 1px solid #ddd;
-                            margin-top: 8px;
-                            font-size: 13px;
-                        }
-                        .prodes-legenda h4 { margin: 0 0 8px 0; font-size: 14px; }
-                        .prodes-item { display: flex; align-items: center; margin: 4px 0; }
-                        .prodes-box { width: 18px; height: 18px; border-radius: 3px; margin-right: 8px; flex-shrink: 0; }
-                        </style>
-                        <div class='prodes-legenda'>
-                            <h4>🗺️ Legenda PRODES</h4>
-                            <div class='prodes-item'><div class='prodes-box' style='background:#e60000'></div>Desmatamento recente (último ano)</div>
-                            <div class='prodes-item'><div class='prodes-box' style='background:#ff7f00'></div>Desmatamento anterior (acumulado)</div>
-                            <div class='prodes-item'><div class='prodes-box' style='background:#267300'></div>Floresta (vegetação nativa)</div>
-                            <div class='prodes-item'><div class='prodes-box' style='background:#aad3df'></div>Hidrografia</div>
-                            <div class='prodes-item'><div class='prodes-box' style='background:#e8e8e8; border: 1px solid #aaa'></div>Não floresta / Cerrado</div>
-                            <div class='prodes-item'><div class='prodes-box' style='background:#ffff00; border: 1px solid #aaa'></div>AOI do projeto (KML)</div>
-                            <p style='margin: 8px 0 0 0; font-size: 11px; color: #666;'>Fonte: INPE/TerraBrasilis</p>
-                        </div>
-                        """, unsafe_allow_html=True)
                         
-                        # ---- Legenda dinâmica baseada no WFS (classes retornadas) ----
-                        if not is_overview and bbox_str and not df_prodes.empty:
-                            col_classe = 'class_name' if 'class_name' in df_prodes.columns else \
-                                         'main_class'  if 'main_class'  in df_prodes.columns else None
-                            if col_classe:
-                                classes_unicas = df_prodes[col_classe].dropna().unique().tolist()
-                                if classes_unicas:
-                                    st.markdown("**Classes encontradas na AOI:**")
-                                    cols_leg = st.columns(min(len(classes_unicas), 4))
-                                    cores_dinamicas = ['#e60000', '#ff7f00', '#ffaa00', '#c8641e',
-                                                       '#7a3e00', '#9e9e9e', '#1a6600', '#0070c0']
-                                    for i, cls in enumerate(classes_unicas):
-                                        cor = cores_dinamicas[i % len(cores_dinamicas)]
-                                        with cols_leg[i % len(cols_leg)]:
-                                            st.markdown(
-                                                f"<span style='display:inline-block;width:14px;height:14px;"
-                                                f"background:{cor};margin-right:6px;border-radius:2px;'></span>{cls}",
-                                                unsafe_allow_html=True
-                                            )
 
                         folium.LayerControl().add_to(m_prodes)
                         st_folium(m_prodes, width=None, height=600, key="map_prodes")
