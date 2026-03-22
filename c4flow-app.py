@@ -317,6 +317,61 @@ def mapbiomas_alerts(bbox, token, start_date="2019-01-01", end_date="2024-12-31"
         return None
 
 # =====================================
+# FUNÇÕES PRODES GPKG — escopo global
+# =====================================
+
+@st.cache_data(ttl=86400, show_spinner=False)
+def baixar_gpkg_drive(file_id: str, dest_path: str) -> str:
+    """Baixa GPKG do Google Drive para arquivo temporário. Cache de 24h."""
+    if os.path.exists(dest_path):
+        return dest_path
+    try:
+        # Tenta download direto
+        url = f"https://drive.google.com/uc?export=download&id={file_id}"
+        session = requests.Session()
+        r = session.get(url, stream=True, timeout=120)
+
+        # Arquivo grande — precisa confirmar o aviso do Drive
+        for key, value in r.cookies.items():
+            if 'download_warning' in key:
+                params = {'id': file_id, 'confirm': value}
+                r = session.get(url, params=params, stream=True, timeout=120)
+                break
+
+        with open(dest_path, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=32768):
+                if chunk:
+                    f.write(chunk)
+        return dest_path
+    except Exception as e:
+        return None
+
+
+@st.cache_data(show_spinner=False)
+def carregar_prodes_bbox(file_id: str, bbox_tuple: tuple) -> pd.DataFrame:
+    """Carrega PRODES layer yearly_deforestation filtrado por bbox."""
+    import tempfile
+
+    dest_path = os.path.join(tempfile.gettempdir(), "prodes_amazonia_legal.gpkg")
+
+    with st.spinner("📥 Baixando GPKG PRODES (primeira vez pode demorar)..."):
+        gpkg_path = baixar_gpkg_drive(file_id, dest_path)
+
+    if not gpkg_path:
+        return gpd.GeoDataFrame()
+
+    try:
+        gdf = gpd.read_file(
+            gpkg_path,
+            layer="yearly_deforestation",
+            bbox=bbox_tuple  # (minx, miny, maxx, maxy)
+        )
+        return gdf
+    except Exception as e:
+        return gpd.GeoDataFrame()
+    
+
+# =====================================
 # CONFIGURAÇÃO DE CORES E ESTILOS
 # =====================================
 
@@ -992,6 +1047,7 @@ with tabs[4]:
                 # ===================================
                 # TAB PRODES
                 # ===================================
+
                 with tab_prodes:
                     col_mapa_p, col_info_p = st.columns([8, 2])
 
@@ -1057,24 +1113,31 @@ with tabs[4]:
                         else:
                             st.info("💡 Selecione um projeto.")
 
+                    # Gráfico PRODES via GPKG dentro da AOI
                     if not is_overview and bbox_str:
                         st.divider()
-                        col_g1, col_g2 = st.columns(2)
 
-                        with col_g1:
-                            st.markdown("### 📊 PRODES Legal AMZ — Incremento Anual na AOI")
-                            with st.spinner("Consultando TerraBrasilis WFS..."):
-                                df_prodes = terrabrasilis_wfs(
-                                    "https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/yearly_deforestation/ows",
-                                    "prodes-legal-amz:yearly_deforestation",
-                                    bbox_str
-                                )
-                            if df_prodes.empty:
-                                st.warning("Sem dados PRODES para esta AOI.")
-                            else:
-                                if 'year' in df_prodes.columns:
-                                    df_prodes['year'] = pd.to_numeric(df_prodes['year'], errors='coerce')
-                                    df_prodes_year = df_prodes.groupby('year').size().reset_index(name='poligonos')
+                        b = selected_gdf.total_bounds
+                        bbox_tuple = (float(b[0]), float(b[1]), float(b[2]), float(b[3]))
+
+                        with st.spinner("Carregando PRODES para esta AOI..."):
+                            gdf_prodes = carregar_prodes_bbox(
+                                "1_DUzeFOJcBPQXUrOgTHBnKTIRPdw-ZYC",
+                                bbox_tuple
+                            )
+
+                        if gdf_prodes.empty:
+                            st.warning("Sem dados PRODES para esta AOI.")
+                        else:
+                            st.success(f"✅ {len(gdf_prodes):,} polígonos PRODES encontrados na AOI")
+
+                            col_g1, col_g2 = st.columns(2)
+
+                            with col_g1:
+                                st.markdown("### 📊 Incremento Anual na AOI")
+                                if 'year' in gdf_prodes.columns:
+                                    gdf_prodes['year'] = pd.to_numeric(gdf_prodes['year'], errors='coerce')
+                                    df_prodes_year = gdf_prodes.groupby('year').size().reset_index(name='poligonos')
                                     fig_p = go.Figure()
                                     fig_p.add_trace(go.Bar(
                                         x=df_prodes_year['year'],
@@ -1090,29 +1153,155 @@ with tabs[4]:
                                     )
                                     st.plotly_chart(fig_p, use_container_width=True)
 
-                                with st.expander("📋 Tabela PRODES"):
-                                    st.dataframe(df_prodes, use_container_width=True, height=300)
-                                    csv = df_prodes.to_csv(index=False).encode('utf-8')
-                                    st.download_button("⬇️ Download CSV", data=csv,
-                                                       file_name="prodes_aoi.csv", mime="text/csv")
+                            with col_g2:
+                                st.markdown("### 📊 Classe de Desmatamento")
+                                # tenta class_name, depois main_class
+                                col_classe = 'class_name' if 'class_name' in gdf_prodes.columns else \
+                                             'main_class'  if 'main_class'  in gdf_prodes.columns else None
+                                if col_classe:
+                                    class_counts = gdf_prodes[col_classe].value_counts().reset_index()
+                                    class_counts.columns = ['Classe', 'Count']
+                                    fig_cls = go.Figure()
+                                    fig_cls.add_trace(go.Bar(
+                                        x=class_counts['Classe'],
+                                        y=class_counts['Count'],
+                                        marker_color='#E74C3C'
+                                    ))
+                                    fig_cls.update_layout(
+                                        xaxis_title="Classe", yaxis_title="Nº Polígonos",
+                                        height=300, template="plotly_white",
+                                        margin=dict(t=10, b=40, l=40, r=10)
+                                    )
+                                    st.plotly_chart(fig_cls, use_container_width=True)
 
-                        with col_g2:
-                            st.markdown("### 📊 Classe de Desmatamento")
-                            if not df_prodes.empty and 'class_name' in df_prodes.columns:
-                                class_counts = df_prodes['class_name'].value_counts().reset_index()
-                                class_counts.columns = ['Classe', 'Count']
-                                fig_cls = go.Figure()
-                                fig_cls.add_trace(go.Bar(
-                                    x=class_counts['Classe'],
-                                    y=class_counts['Count'],
-                                    marker_color='#E74C3C'
-                                ))
-                                fig_cls.update_layout(
-                                    xaxis_title="Classe", yaxis_title="Nº Polígonos",
-                                    height=300, template="plotly_white",
-                                    margin=dict(t=10, b=40, l=40, r=10)
-                                )
-                                st.plotly_chart(fig_cls, use_container_width=True)
+                            with st.expander("📋 Tabela PRODES"):
+                                # Remove coluna geometry para exibição
+                                df_show = gdf_prodes.drop(columns=['geometry'], errors='ignore')
+                                st.dataframe(df_show, use_container_width=True, height=300)
+                                csv = df_show.to_csv(index=False).encode('utf-8')
+                                st.download_button("⬇️ Download CSV", data=csv,
+                                                   file_name="prodes_aoi.csv", mime="text/csv")
+                #with tab_prodes:
+                #    col_mapa_p, col_info_p = st.columns([8, 2])
+#
+                #    with col_mapa_p:
+                #        st.markdown("### 🗺️ Mapa PRODES")
+#
+                #        c1, c2 = st.columns(2)
+                #        with c1:
+                #            show_prodes_br  = st.toggle("🔴 PRODES Brasil",    value=True,  key="toggle_prodes_br")
+                #        with c2:
+                #            show_prodes_amz = st.toggle("🟥 PRODES Legal AMZ", value=False, key="toggle_prodes_amz")
+#
+                #        m_prodes = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
+                #        folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m_prodes)
+#
+                #        if show_prodes_br:
+                #            folium.WmsTileLayer(
+                #                url="https://terrabrasilis.dpi.inpe.br/geoserver/prodes-brasil-nb/prodes_brasil/ows",
+                #                layers="prodes_brasil",
+                #                fmt="image/png",
+                #                transparent=True,
+                #                name="PRODES Brasil",
+                #                overlay=True,
+                #                opacity=0.8
+                #            ).add_to(m_prodes)
+#
+                #        if show_prodes_amz:
+                #            folium.WmsTileLayer(
+                #                url="https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/yearly_deforestation/ows",
+                #                layers="yearly_deforestation",
+                #                fmt="image/png",
+                #                transparent=True,
+                #                name="PRODES Legal AMZ",
+                #                overlay=True,
+                #                opacity=0.8
+                #            ).add_to(m_prodes)
+#
+                #        for _, row in selected_gdf.iterrows():
+                #            try:
+                #                folium.GeoJson(
+                #                    data=mapping(row["geometry"]),
+                #                    style_function=lambda x: {
+                #                        "fillColor": "transparent", "color": "#FFFF00",
+                #                        "weight": 3, "fillOpacity": 0.1, "dashArray": "5, 5"
+                #                    }
+                #                ).add_to(m_prodes)
+                #            except Exception:
+                #                pass
+#
+                #        if not is_overview:
+                #            b = selected_gdf.total_bounds
+                #            m_prodes.fit_bounds([[b[1], b[0]], [b[3], b[2]]])
+#
+                #        folium.LayerControl().add_to(m_prodes)
+                #        st_folium(m_prodes, width=None, height=600, key="map_prodes")
+#
+                #    with col_info_p:
+                #        if not is_overview:
+                #            row_proj = selected_gdf.iloc[0]
+                #            st.markdown("### 📋 Info")
+                #            st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
+                #            st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
+                #        else:
+                #            st.info("💡 Selecione um projeto.")
+#
+                #    if not is_overview and bbox_str:
+                #        st.divider()
+                #        col_g1, col_g2 = st.columns(2)
+#
+                #        with col_g1:
+                #            st.markdown("### 📊 PRODES Legal AMZ — Incremento Anual na AOI")
+                #            with st.spinner("Consultando TerraBrasilis WFS..."):
+                #                df_prodes = terrabrasilis_wfs(
+                #                    "https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/yearly_deforestation/ows",
+                #                    "prodes-legal-amz:yearly_deforestation",
+                #                    bbox_str
+                #                )
+                #            if df_prodes.empty:
+                #                st.warning("Sem dados PRODES para esta AOI.")
+                #            else:
+                #                if 'year' in df_prodes.columns:
+                #                    df_prodes['year'] = pd.to_numeric(df_prodes['year'], errors='coerce')
+                #                    df_prodes_year = df_prodes.groupby('year').size().reset_index(name='poligonos')
+                #                    fig_p = go.Figure()
+                #                    fig_p.add_trace(go.Bar(
+                #                        x=df_prodes_year['year'],
+                #                        y=df_prodes_year['poligonos'],
+                #                        marker_color='#C0392B',
+                #                        name='Polígonos PRODES'
+                #                    ))
+                #                    fig_p.update_layout(
+                #                        xaxis_title="Ano", yaxis_title="Nº Polígonos",
+                #                        height=300, template="plotly_white",
+                #                        margin=dict(t=10, b=40, l=40, r=10),
+                #                        hovermode='x unified'
+                #                    )
+                #                    st.plotly_chart(fig_p, use_container_width=True)
+#
+                #                with st.expander("📋 Tabela PRODES"):
+                #                    st.dataframe(df_prodes, use_container_width=True, height=300)
+                #                    csv = df_prodes.to_csv(index=False).encode('utf-8')
+                #                    st.download_button("⬇️ Download CSV", data=csv,
+                #                                       file_name="prodes_aoi.csv", mime="text/csv")
+#
+                #        with col_g2:
+                #            st.markdown("### 📊 Classe de Desmatamento")
+                #            if not df_prodes.empty and 'class_name' in df_prodes.columns:
+                #                class_counts = df_prodes['class_name'].value_counts().reset_index()
+                #                class_counts.columns = ['Classe', 'Count']
+                #                fig_cls = go.Figure()
+                #                fig_cls.add_trace(go.Bar(
+                #                    x=class_counts['Classe'],
+                #                    y=class_counts['Count'],
+                #                    marker_color='#E74C3C'
+                #                ))
+                #                fig_cls.update_layout(
+                #                    xaxis_title="Classe", yaxis_title="Nº Polígonos",
+                #                    height=300, template="plotly_white",
+                #                    margin=dict(t=10, b=40, l=40, r=10)
+                #                )
+                #                st.plotly_chart(fig_cls, use_container_width=True)
 
                 # ===================================
                 # TAB DETER AMAZÔNIA
