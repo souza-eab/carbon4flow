@@ -1298,7 +1298,9 @@ with tabs[4]:
                         if df_deter.empty:
                             st.warning("Sem alertas DETER para esta AOI.")
                         else:
-                            col_g1, col_g2, col_g3 = st.columns(3)
+                            #col_g1, col_g2, col_g3 = st.columns(3)
+                            
+                            col_g1, col_g2 = st.columns([2, 3])
 
                             with col_g1:
                                 st.markdown("### 📊 Alertas por Ano")
@@ -1323,79 +1325,21 @@ with tabs[4]:
                                     )
                                     st.plotly_chart(fig_d, use_container_width=True)
 
-                            #with col_g2:
-                            #    st.markdown("### 📊 Área por Ano (km²)")
-                            #    if 'view_date' in df_deter.columns and 'areauckm' in df_deter.columns:
-                            #        df_deter['areauckm'] = pd.to_numeric(df_deter['areauckm'], errors='coerce')
-                            #        df_deter_area = df_deter.groupby('year').agg(
-                            #            area_total=('areauckm', 'sum')
-                            #        ).reset_index()
-                            #        fig_da = go.Figure()
-                            #        fig_da.add_trace(go.Bar(
-                            #            x=df_deter_area['year'],
-                            #            y=df_deter_area['area_total'],
-                            #            marker_color='#CA6F1E', name='Área (km²)'
-                            #        ))
-                            #        fig_da.update_layout(
-                            #            xaxis_title="Ano", yaxis_title="km²",
-                            #            height=300, template="plotly_white",
-                            #            margin=dict(t=10, b=40, l=40, r=10),
-                            #            hovermode='x unified'
-                            #        )
-                            #        st.plotly_chart(fig_da, use_container_width=True)
-                            #    else:
-                            #        st.warning("Coluna `areauckm` não encontrada.")
-
-                            #with col_g2:
-                            #    st.markdown("### 📊 Área por Classe (km²)")
-                            #    if 'classname' in df_deter.columns and 'areamunkm' in df_deter.columns:
-                            #        df_deter['areamunkm'] = pd.to_numeric(df_deter['areamunkm'], errors='coerce')
-                            #        df_area_classe = df_deter.groupby('classname').agg(
-                            #            area_total=('areamunkm', 'sum')
-                            #        ).reset_index().sort_values('area_total', ascending=False)
-                            #        fig_da = go.Figure()
-                            #        fig_da.add_trace(go.Bar(
-                            #            x=df_area_classe['classname'],
-                            #            y=df_area_classe['area_total'],
-                            #            marker_color='#CA6F1E', name='Área (km²)'
-                            #        ))
-                            #        fig_da.update_layout(
-                            #            xaxis_title="Classe", yaxis_title="km²",
-                            #            height=300, template="plotly_white",
-                            #            margin=dict(t=10, b=40, l=40, r=10),
-                            #            hovermode='x unified'
-                            #        )
-                            #        st.plotly_chart(fig_da, use_container_width=True)
-                            #    else:
-                            #        st.warning("Colunas `classname` ou `areamunkm` não encontradas.")
-                            #with col_g2:
-                            #    st.markdown("### 📊 Área por Classe ao Longo do Tempo (km²)")
-                            #    if 'classname' in df_deter.columns and 'areamunkm' in df_deter.columns and 'year' in df_deter.columns:
-                            #        df_deter['areamunkm'] = pd.to_numeric(df_deter['areamunkm'], errors='coerce')
-                            #        df_area_linha = df_deter.groupby(['year', 'classname']).agg(
-                            #            area_total=('areamunkm', 'sum')
-                            #        ).reset_index()
-                            #        fig_da = go.Figure()
-                            #        for classe in df_area_linha['classname'].unique():
-                            #            df_cls = df_area_linha[df_area_linha['classname'] == classe]
-                            #            fig_da.add_trace(go.Scatter(
-                            #                x=df_cls['year'],
-                            #                y=df_cls['area_total'],
-                            #                mode='lines+markers',
-                            #                name=classe,
-                            #                line=dict(width=2),
-                            #                marker=dict(size=6)
-                            #            ))
-                            #        fig_da.update_layout(
-                            #            xaxis_title="Ano", yaxis_title="km²",
-                            #            height=300, template="plotly_white",
-                            #            margin=dict(t=10, b=40, l=40, r=10),
-                            #            hovermode='x unified',
-                            #            legend=dict(font=dict(size=10), orientation='v')
-                            #        )
-                            #        st.plotly_chart(fig_da, use_container_width=True)
-                            #    else:
-                            #        st.warning("Colunas necessárias não encontradas.")
+                                st.markdown("### 📊 Classe de Alerta")
+                                if 'classname' in df_deter.columns:
+                                    class_d = df_deter['classname'].value_counts().reset_index()
+                                    class_d.columns = ['Classe', 'Count']
+                                    fig_cd = go.Figure()
+                                    fig_cd.add_trace(go.Bar(
+                                        x=class_d['Classe'], y=class_d['Count'],
+                                        marker_color='#D35400'
+                                    ))
+                                    fig_cd.update_layout(
+                                        xaxis_title="Classe", yaxis_title="Alertas",
+                                        height=300, template="plotly_white",
+                                        margin=dict(t=10, b=40, l=40, r=10)
+                                    )
+                                    st.plotly_chart(fig_cd, use_container_width=True)
 
                             with col_g2:
                                 st.markdown("### 📊 Área por Classe ao Longo do Tempo (km²)")
@@ -1406,14 +1350,14 @@ with tabs[4]:
                                     ).reset_index()
 
                                     DETER_COLORS = {
-                                        'CICATRIZ_DE_QUEIMADA':           '#d7191c',
-                                        'CORTE_SELETIVO':                 '#868686',
-                                        'CS_DESORDENADO':                 '#db83ff',
-                                        'CS_GEOMETRICO':                  '#ff7e00',
-                                        'DEGRADACAO':                     '#ffffbf',
-                                        'DESMATAMENTO_CR':                '#8a5f4b',
-                                        'DESMATAMENTO_VEG':               '#abdda4',
-                                        'MINERACAO':                      '#4223e5',
+                                        'CICATRIZ_DE_QUEIMADA':       '#d7191c',
+                                        'CORTE_SELETIVO':             '#868686',
+                                        'CORTE_SELETIVO_DESORDENADO': '#db83ff',
+                                        'CORTE_SELETIVO_GEOMETRICO':  '#ff7e00',
+                                        'DEGRADACAO':                 '#ffffbf',
+                                        'DESMATAMENTO_CORTE_RASO':    '#8a5f4b',
+                                        'DESMATAMENTO_VEG':           '#abdda4',
+                                        'MINERACAO':                  '#4223e5',
                                     }
 
                                     fig_da = go.Figure()
@@ -1431,7 +1375,7 @@ with tabs[4]:
 
                                     fig_da.update_layout(
                                         xaxis_title="Ano", yaxis_title="km²",
-                                        height=300, template="plotly_white",
+                                        height=640, template="plotly_white",
                                         margin=dict(t=10, b=40, l=40, r=10),
                                         hovermode='x unified',
                                         legend=dict(font=dict(size=10), orientation='v')
@@ -1439,24 +1383,7 @@ with tabs[4]:
                                     st.plotly_chart(fig_da, use_container_width=True)
                                 else:
                                     st.warning("Colunas necessárias não encontradas.")
-
-                            with col_g3:
-                                st.markdown("### 📊 Classe de Alerta")
-                                if 'classname' in df_deter.columns:
-                                    class_d = df_deter['classname'].value_counts().reset_index()
-                                    class_d.columns = ['Classe', 'Count']
-                                    fig_cd = go.Figure()
-                                    fig_cd.add_trace(go.Bar(
-                                        x=class_d['Classe'], y=class_d['Count'],
-                                        marker_color='#D35400'
-                                    ))
-                                    fig_cd.update_layout(
-                                        xaxis_title="Classe", yaxis_title="Alertas",
-                                        height=300, template="plotly_white",
-                                        margin=dict(t=10, b=40, l=40, r=10)
-                                    )
-                                    st.plotly_chart(fig_cd, use_container_width=True)
-
+                                    
                             with st.expander("📋 Tabela DETER AMZ"):
                                 st.dataframe(df_deter, use_container_width=True, height=300)
                                 csv = df_deter.to_csv(index=False).encode('utf-8')
