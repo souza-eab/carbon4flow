@@ -787,11 +787,11 @@ with tabs[4]:
                 if feats:
                     return pd.DataFrame([f['properties'] for f in feats])
             return pd.DataFrame()
-        except Exception:
-        return pd.DataFrame()
+        #except Exception:
+        #return pd.DataFrame()
         
         with story_tabs[1]:
-                st.markdown("## 🔥 Perda Florestal nos Projetos de Carbono")
+                st.markdown("## 📍 Projetos de Carbono")
         
                 GFW_API_KEY = st.secrets["GFW_API_KEY"].strip()
         
