@@ -1225,6 +1225,25 @@ with tabs[4]:
 
                         m_deter = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
                         folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m_deter)
+                        
+                        # Bounding box da AOI
+                        if not is_overview:
+                            b = selected_gdf.total_bounds  # (minx, miny, maxx, maxy)
+                            bbox_coords = [
+                                [b[1], b[0]],  # SW
+                                [b[1], b[2]],  # SE
+                                [b[3], b[2]],  # NE
+                                [b[3], b[0]],  # NW
+                                [b[1], b[0]],  # fecha
+                            ]
+                            folium.PolyLine(
+                                locations=bbox_coords,
+                                color="#00FFFF",
+                                weight=2,
+                                dash_array="6 4",
+                                tooltip="Bounding Box (área de consulta WFS)",
+                                opacity=0.8
+                            ).add_to(m_deter)
 
                         folium.WmsTileLayer(
                             url="https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/deter_amz/ows",
