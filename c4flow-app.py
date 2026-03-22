@@ -1099,7 +1099,6 @@ with tabs[4]:
                                 opacity=0.8
                             ).add_to(m_deter)
                             
-
                         if show_prodes_br:
                             folium.WmsTileLayer(
                                 url="https://terrabrasilis.dpi.inpe.br/geoserver/prodes-brasil-nb/prodes_brasil/ows",
