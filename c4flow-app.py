@@ -347,29 +347,47 @@ def baixar_gpkg_drive(file_id: str, dest_path: str) -> str:
         return None
 
 
+#@st.cache_data(show_spinner=False)
+#def carregar_prodes_bbox(file_id: str, bbox_tuple: tuple) -> pd.DataFrame:
+#    """Carrega PRODES layer yearly_deforestation filtrado por bbox."""
+#    import tempfile
+#
+#    dest_path = os.path.join(tempfile.gettempdir(), "prodes_amazonia_legal.gpkg")
+#
+#    with st.spinner("📥 Baixando GPKG PRODES (primeira vez pode demorar)..."):
+#        gpkg_path = baixar_gpkg_drive(file_id, dest_path)
+#
+#    if not gpkg_path:
+#        return gpd.GeoDataFrame()
+#
+#    try:
+#        gdf = gpd.read_file(
+#            gpkg_path,
+#            layer="yearly_deforestation",
+#            bbox=bbox_tuple  # (minx, miny, maxx, maxy)
+#        )
+#        return gdf
+#    except Exception as e:
+#        return gpd.GeoDataFrame()
+
+# Na função carregar_prodes_bbox, forçar limpeza após uso
 @st.cache_data(show_spinner=False)
-def carregar_prodes_bbox(file_id: str, bbox_tuple: tuple) -> pd.DataFrame:
-    """Carrega PRODES layer yearly_deforestation filtrado por bbox."""
-    import tempfile
-
+def carregar_prodes_bbox(file_id: str, bbox_tuple: tuple):
+    import tempfile, gc
     dest_path = os.path.join(tempfile.gettempdir(), "prodes_amazonia_legal.gpkg")
-
-    with st.spinner("📥 Baixando GPKG PRODES (primeira vez pode demorar)..."):
-        gpkg_path = baixar_gpkg_drive(file_id, dest_path)
-
+    gpkg_path = baixar_gpkg_drive(file_id, dest_path)
     if not gpkg_path:
         return gpd.GeoDataFrame()
-
     try:
-        gdf = gpd.read_file(
-            gpkg_path,
-            layer="yearly_deforestation",
-            bbox=bbox_tuple  # (minx, miny, maxx, maxy)
-        )
+        gdf = gpd.read_file(gpkg_path, layer="yearly_deforestation", bbox=bbox_tuple)
+        # Manter só colunas necessárias — reduz memória
+        cols_keep = ['year', 'area_km', 'class_name', 'main_class', 'state', 'geometry']
+        cols_keep = [c for c in cols_keep if c in gdf.columns]
+        gdf = gdf[cols_keep]
+        gc.collect()
         return gdf
-    except Exception as e:
-        return gpd.GeoDataFrame()
-    
+    except Exception:
+        return gpd.GeoDataFrame()    
     
 # =====================================
 # CONFIGURAÇÃO DE CORES E ESTILOS
