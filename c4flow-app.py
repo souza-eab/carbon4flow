@@ -1097,8 +1097,9 @@ with tabs[4]:
                                 dash_array="6 4",
                                 tooltip="Bounding Box (área de consulta WFS)",
                                 opacity=0.8
-                            ).add_to(m_deter)
-                            
+                            ).add_to(m_prodes)
+
+
                         if show_prodes_br:
                             folium.WmsTileLayer(
                                 url="https://terrabrasilis.dpi.inpe.br/geoserver/prodes-brasil-nb/prodes_brasil/ows",
