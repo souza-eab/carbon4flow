@@ -566,21 +566,7 @@ with tabs[0]:
 # FUNÇÃO PARA CRIAR MAPAS
 # =====================================
 
-# =====================================
-# FUNÇÕES AUXILIARES
-# =====================================
 
-def safe_get(row, col, fmt=None):
-    try:
-        val = row[col]
-        if pd.isna(val):
-            return 'N/A'
-        if fmt == 'num':
-            return f"{pd.to_numeric(val, errors='coerce'):,.0f}"
-        return str(val)
-    except:
-        return 'N/A'
-    
 def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
     st.header(title)
     df_map = prepare_map_data(df)
@@ -683,36 +669,34 @@ with tabs[2]:
     create_interactive_map(df_credit_unique, "Projetos com lastro de Créditos", "credit_unique")
 
 
-popup_html = f"""
-<div style="font-family: Arial; font-size: 12px; width: 300px;">
-    <h4 style="margin: 0 0 8px 0; color: #2c3e50;">
-        {safe_get(row, 'resourceName_x')}
-    </h4>
-    <hr style="margin: 4px 0 8px 0;">
-    <table style="width:100%; border-collapse: collapse;">
-        <tr><td style="color:#888; width:45%">🏷️ Status</td>
-            <td><b>{safe_get(row, 'vcsProjectStatus')}</b></td></tr>
-        <tr><td style="color:#888">📍 Estado</td>
-            <td><b>{safe_get(row, 'state_Recode')}</b></td></tr>
-        <tr><td style="color:#888">🌳 Atividade</td>
-            <td><b>{safe_get(row, 'vcsAFOLUActivity')}</b></td></tr>
-        <tr><td style="color:#888">📋 Protocolo</td>
-            <td><b>{safe_get(row, 'protocol')}</b></td></tr>
-        <tr><td style="color:#888">📅 Registro</td>
-            <td><b>{safe_get(row, 'vcsRegistrationDate')}</b></td></tr>
-        <tr><td style="color:#888">📐 Área (ha)</td>
-            <td><b>{safe_get(row, 'vcsAcresHectares')}</b></td></tr>
-        <tr><td style="color:#888">💨 EAER</td>
-            <td><b>{safe_get(row, 'vcsEstimatedAnnualEmissionReductions', fmt='num')}</b></td></tr>
-        <tr><td style="color:#888">💰 VCUs Emitidos</td>
-            <td><b>{safe_get(row, 'totalVintageQuantity', fmt='num')}</b></td></tr>
-        <tr><td style="color:#888">🔄 Aposentados</td>
-            <td><b>{safe_get(row, 'quantity', fmt='num')}</b></td></tr>
-    </table>
-    <hr style="margin: 8px 0 4px 0;">
-    <p style="margin:0; font-size:10px; color:#aaa;">ID: {safe_get(row, 'resourceIdentifier')}</p>
-</div>
-"""
+popup_html = (
+                "<div style='font-family: Arial; font-size: 12px; width: 300px;'>"
+                "<h4 style='margin: 0 0 8px 0; color: #2c3e50;'>" + safe_get(row, 'resourceName_x') + "</h4>"
+                "<hr style='margin: 4px 0 8px 0;'>"
+                "<table style='width:100%; border-collapse: collapse;'>"
+                "<tr><td style='color:#888; width:45%'>🏷️ Status</td>"
+                    "<td><b>" + safe_get(row, 'vcsProjectStatus') + "</b></td></tr>"
+                "<tr><td style='color:#888'>📍 Estado</td>"
+                    "<td><b>" + safe_get(row, 'state_Recode') + "</b></td></tr>"
+                "<tr><td style='color:#888'>🌳 Atividade</td>"
+                    "<td><b>" + safe_get(row, 'vcsAFOLUActivity') + "</b></td></tr>"
+                "<tr><td style='color:#888'>📋 Protocolo</td>"
+                    "<td><b>" + safe_get(row, 'protocol') + "</b></td></tr>"
+                "<tr><td style='color:#888'>📅 Registro</td>"
+                    "<td><b>" + safe_get(row, 'vcsRegistrationDate') + "</b></td></tr>"
+                "<tr><td style='color:#888'>📐 Área (ha)</td>"
+                    "<td><b>" + safe_get(row, 'vcsAcresHectares') + "</b></td></tr>"
+                "<tr><td style='color:#888'>💨 EAER</td>"
+                    "<td><b>" + safe_get(row, 'vcsEstimatedAnnualEmissionReductions', fmt='num') + "</b></td></tr>"
+                "<tr><td style='color:#888'>💰 VCUs Emitidos</td>"
+                    "<td><b>" + safe_get(row, 'totalVintageQuantity', fmt='num') + "</b></td></tr>"
+                "<tr><td style='color:#888'>🔄 Aposentados</td>"
+                    "<td><b>" + safe_get(row, 'quantity', fmt='num') + "</b></td></tr>"
+                "</table>"
+                "<hr style='margin: 8px 0 4px 0;'>"
+                "<p style='margin:0; font-size:10px; color:#aaa;'>ID: " + safe_get(row, 'resourceIdentifier') + "</p>"
+                "</div>"
+            )
 
 # =====================================
 # ABA 4: ANÁLISE DE VINTAGE
