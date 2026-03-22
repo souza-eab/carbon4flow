@@ -566,6 +566,21 @@ with tabs[0]:
 # FUNÇÃO PARA CRIAR MAPAS
 # =====================================
 
+# =====================================
+# FUNÇÕES AUXILIARES
+# =====================================
+
+def safe_get(row, col, fmt=None):
+    try:
+        val = row[col]
+        if pd.isna(val):
+            return 'N/A'
+        if fmt == 'num':
+            return f"{pd.to_numeric(val, errors='coerce'):,.0f}"
+        return str(val)
+    except:
+        return 'N/A'
+    
 
 def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
     st.header(title)
