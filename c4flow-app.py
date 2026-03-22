@@ -1344,7 +1344,7 @@ with tabs[4]:
                             with col_g2:
                                 st.markdown("### 📊 Área por Classe ao Longo do Tempo (km²)")
                                 if 'classname' in df_deter.columns and 'areamunkm' in df_deter.columns and 'year' in df_deter.columns:
-                                    df_deter['areamunkm'] = pd.to_numeric(df_deter['areamunkm'], errors='coerce')
+                                    df_deter['areamunkm'] = pd.to_numeric(df_deter['areamunkm'], errors='coerce')*100
                                     df_area_linha = df_deter.groupby(['year', 'classname']).agg(
                                         area_total=('areamunkm', 'sum')
                                     ).reset_index()
@@ -1374,7 +1374,7 @@ with tabs[4]:
                                         ))
 
                                     fig_da.update_layout(
-                                        xaxis_title="Ano", yaxis_title="km²",
+                                        xaxis_title="Ano", yaxis_title="ha",
                                         height=640, template="plotly_white",
                                         margin=dict(t=10, b=40, l=40, r=10),
                                         hovermode='x unified',
