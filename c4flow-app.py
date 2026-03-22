@@ -1368,14 +1368,13 @@ with tabs[4]:
                             #        st.plotly_chart(fig_da, use_container_width=True)
                             #    else:
                             #        st.warning("Colunas `classname` ou `areamunkm` não encontradas.")
-                                with col_g2:
+                            with col_g2:
                                 st.markdown("### 📊 Área por Classe ao Longo do Tempo (km²)")
                                 if 'classname' in df_deter.columns and 'areamunkm' in df_deter.columns and 'year' in df_deter.columns:
                                     df_deter['areamunkm'] = pd.to_numeric(df_deter['areamunkm'], errors='coerce')
                                     df_area_linha = df_deter.groupby(['year', 'classname']).agg(
                                         area_total=('areamunkm', 'sum')
                                     ).reset_index()
-
                                     fig_da = go.Figure()
                                     for classe in df_area_linha['classname'].unique():
                                         df_cls = df_area_linha[df_area_linha['classname'] == classe]
@@ -1387,7 +1386,6 @@ with tabs[4]:
                                             line=dict(width=2),
                                             marker=dict(size=6)
                                         ))
-
                                     fig_da.update_layout(
                                         xaxis_title="Ano", yaxis_title="km²",
                                         height=300, template="plotly_white",
@@ -1398,6 +1396,7 @@ with tabs[4]:
                                     st.plotly_chart(fig_da, use_container_width=True)
                                 else:
                                     st.warning("Colunas necessárias não encontradas.")
+
                             with col_g3:
                                 st.markdown("### 📊 Classe de Alerta")
                                 if 'classname' in df_deter.columns:
