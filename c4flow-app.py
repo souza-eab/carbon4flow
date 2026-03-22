@@ -1263,6 +1263,26 @@ with tabs[4]:
                             st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
                         else:
                             st.info("💡 Selecione um projeto.")
+                    st.divider()
+                    st.markdown("""
+                            <style>
+                            .deter-leg { font-size: 12px; line-height: 1.8; }
+                            .deter-item { display: flex; align-items: center; margin: 3px 0; }
+                            .deter-box { width: 16px; height: 16px; border-radius: 2px; margin-right: 8px; 
+                                         flex-shrink: 0; border: 1px solid #aaa; }
+                            </style>
+                            <div class='deter-leg'>
+                            <b>Avisos de Desmatamento<br>a partir de 2016</b><br><br>
+                            <div class='deter-item'><div class='deter-box' style='background:#e31a1c'></div>Cicatriz de queimada</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#b15928'></div>Corte seletivo</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#f781bf'></div>Corte seletivo desordenado</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#ff7f00'></div>Corte seletivo geométrico</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#ffff99'></div>Degradação</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#a0522d'></div>Desmatamento corte raso</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#b2df8a'></div>Desmatamento vegetação</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#1f78b4'></div>Mineração</div>
+                            </div>
+                            """, unsafe_allow_html=True)
 
                     if not is_overview and bbox_str:
                         st.divider()
