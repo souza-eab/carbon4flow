@@ -320,31 +320,31 @@ def mapbiomas_alerts(bbox, token, start_date="2019-01-01", end_date="2024-12-31"
 # FUNÇÕES PRODES GPKG — escopo global
 # =====================================
 
-@st.cache_data(ttl=86400, show_spinner=False)
-def baixar_gpkg_drive(file_id: str, dest_path: str) -> str:
-    """Baixa GPKG do Google Drive para arquivo temporário. Cache de 24h."""
-    if os.path.exists(dest_path):
-        return dest_path
-    try:
-        # Tenta download direto
-        url = f"https://drive.google.com/uc?export=download&id={file_id}"
-        session = requests.Session()
-        r = session.get(url, stream=True, timeout=120)
-
-        # Arquivo grande — precisa confirmar o aviso do Drive
-        for key, value in r.cookies.items():
-            if 'download_warning' in key:
-                params = {'id': file_id, 'confirm': value}
-                r = session.get(url, params=params, stream=True, timeout=120)
-                break
-
-        with open(dest_path, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=32768):
-                if chunk:
-                    f.write(chunk)
-        return dest_path
-    except Exception as e:
-        return None
+#@st.cache_data(ttl=86400, show_spinner=False)
+#def baixar_gpkg_drive(file_id: str, dest_path: str) -> str:
+#    """Baixa GPKG do Google Drive para arquivo temporário. Cache de 24h."""
+#    if os.path.exists(dest_path):
+#        return dest_path
+#    try:
+#        # Tenta download direto
+#        url = f"https://drive.google.com/uc?export=download&id={file_id}"
+#        session = requests.Session()
+#        r = session.get(url, stream=True, timeout=120)
+#
+#        # Arquivo grande — precisa confirmar o aviso do Drive
+#        for key, value in r.cookies.items():
+#            if 'download_warning' in key:
+#                params = {'id': file_id, 'confirm': value}
+#                r = session.get(url, params=params, stream=True, timeout=120)
+#                break
+#
+#        with open(dest_path, 'wb') as f:
+#            for chunk in r.iter_content(chunk_size=32768):
+#                if chunk:
+#                    f.write(chunk)
+#        return dest_path
+#    except Exception as e:
+#        return None
 
 
 #@st.cache_data(show_spinner=False)
@@ -371,23 +371,23 @@ def baixar_gpkg_drive(file_id: str, dest_path: str) -> str:
 #        return gpd.GeoDataFrame()
 
 # Na função carregar_prodes_bbox, forçar limpeza após uso
-@st.cache_data(show_spinner=False)
-def carregar_prodes_bbox(file_id: str, bbox_tuple: tuple):
-    import tempfile, gc
-    dest_path = os.path.join(tempfile.gettempdir(), "prodes_amazonia_legal.gpkg")
-    gpkg_path = baixar_gpkg_drive(file_id, dest_path)
-    if not gpkg_path:
-        return gpd.GeoDataFrame()
-    try:
-        gdf = gpd.read_file(gpkg_path, layer="yearly_deforestation", bbox=bbox_tuple)
-        # Manter só colunas necessárias — reduz memória
-        cols_keep = ['year', 'area_km', 'class_name', 'main_class', 'state', 'geometry']
-        cols_keep = [c for c in cols_keep if c in gdf.columns]
-        gdf = gdf[cols_keep]
-        gc.collect()
-        return gdf
-    except Exception:
-        return gpd.GeoDataFrame()    
+#@st.cache_data(show_spinner=False)
+#def carregar_prodes_bbox(file_id: str, bbox_tuple: tuple):
+#    import tempfile, gc
+#    dest_path = os.path.join(tempfile.gettempdir(), "prodes_amazonia_legal.gpkg")
+#    gpkg_path = baixar_gpkg_drive(file_id, dest_path)
+#    if not gpkg_path:
+#        return gpd.GeoDataFrame()
+#    try:
+#        gdf = gpd.read_file(gpkg_path, layer="yearly_deforestation", bbox=bbox_tuple)
+#        # Manter só colunas necessárias — reduz memória
+#        cols_keep = ['year', 'area_km', 'class_name', 'main_class', 'state', 'geometry']
+#        cols_keep = [c for c in cols_keep if c in gdf.columns]
+#        gdf = gdf[cols_keep]
+#        gc.collect()
+#        return gdf
+#    except Exception:
+#        return gpd.GeoDataFrame()    
     
 # =====================================
 # CONFIGURAÇÃO DE CORES E ESTILOS
