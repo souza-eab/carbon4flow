@@ -1116,7 +1116,8 @@ with tabs[4]:
 
                     if not is_overview and bbox_str:
                         st.divider()
-                        col_g1, col_g2 = st.columns(2)
+                        #col_g1, col_g2 = st.columns(2)
+                        col_g1, col_g2, col_g3 = st.columns(3)
 
                         with col_g1:
                             st.markdown("### 📊 PRODES Legal AMZ — Incremento Anual na AOI")
@@ -1152,8 +1153,32 @@ with tabs[4]:
                                     csv = df_prodes.to_csv(index=False).encode('utf-8')
                                     st.download_button("⬇️ Download CSV", data=csv,
                                                        file_name="prodes_aoi.csv", mime="text/csv")
-
+                                    
                         with col_g2:
+                            st.markdown("### 📊 Incremento Anual — Área (km²)")
+                            if 'year' in df_prodes.columns and 'area_km' in df_prodes.columns:
+                                df_prodes['area_km'] = pd.to_numeric(df_prodes['area_km'], errors='coerce')
+                                df_prodes_area = df_prodes.groupby('year').agg(
+                                    area_total=('area_km', 'sum')
+                                ).reset_index()
+                                fig_a = go.Figure()
+                                fig_a.add_trace(go.Bar(
+                                    x=df_prodes_area['year'],
+                                    y=df_prodes_area['area_total'],
+                                    marker_color='#922B21',
+                                    name='Área (km²)'
+                                ))
+                                fig_a.update_layout(
+                                    xaxis_title="Ano", yaxis_title="km²",
+                                    height=300, template="plotly_white",
+                                    margin=dict(t=10, b=40, l=40, r=10),
+                                    hovermode='x unified'
+                                )
+                                st.plotly_chart(fig_a, use_container_width=True)
+                            else:
+                                st.warning("Coluna `area_km` não encontrada.")
+
+                        with col_g3:
                             st.markdown("### 📊 Classe de Desmatamento")
                             if not df_prodes.empty and 'class_name' in df_prodes.columns:
                                 class_counts = df_prodes['class_name'].value_counts().reset_index()
