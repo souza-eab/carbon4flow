@@ -656,6 +656,17 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
 with tabs[1]:
     create_interactive_map(df_all, "🌎 Mapa - Todos os Projetos BR", "all")
 
+
+# =====================================
+# ABA 3: MAPA - PROJETOS COM CRÉDITOS
+# =====================================
+
+with tabs[2]:
+    st.header("💰 Mapa - Projetos já emitiram Créditos")
+    df_credit_unique = df_credit.groupby('resourceName_x').first().reset_index()
+    st.info(f"📊 Exibindo **{len(df_credit_unique):,}** projetos únicos (de {len(df_credit):,} registros totais)")
+    create_interactive_map(df_credit_unique, "Projetos com lastro de Créditos", "credit_unique")
+
 popup_html = f"""
             <div style="font-family: Arial; font-size: 12px; width: 300px;">
                 <h4 style="margin: 0 0 8px 0; color: #2c3e50;">
@@ -686,15 +697,6 @@ popup_html = f"""
                 <p style="margin:0; font-size:10px; color:#aaa;">ID: {row.get('resourceIdentifier', 'N/A')}</p>
             </div>
             """
-# =====================================
-# ABA 3: MAPA - PROJETOS COM CRÉDITOS
-# =====================================
-
-with tabs[2]:
-    st.header("💰 Mapa - Projetos já emitiram Créditos")
-    df_credit_unique = df_credit.groupby('resourceName_x').first().reset_index()
-    st.info(f"📊 Exibindo **{len(df_credit_unique):,}** projetos únicos (de {len(df_credit):,} registros totais)")
-    create_interactive_map(df_credit_unique, "Projetos com lastro de Créditos", "credit_unique")
 
 # =====================================
 # ABA 4: ANÁLISE DE VINTAGE
