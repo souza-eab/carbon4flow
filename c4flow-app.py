@@ -1107,7 +1107,7 @@ with tabs[4]:
                                 folium.GeoJson(
                                     data=mapping(row["geometry"]),
                                     style_function=lambda x: {
-                                        "fillColor": "transparent", "color": "#FFFF00",
+                                        "fillColor": "transparent", "color": "#49006a",
                                         "weight": 3, "fillOpacity": 0.1, "dashArray": "5, 5"
                                     }
                                 ).add_to(m_prodes)
