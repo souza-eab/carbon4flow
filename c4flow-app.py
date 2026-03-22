@@ -1263,7 +1263,7 @@ with tabs[4]:
                             st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
                         else:
                             st.info("💡 Selecione um projeto.")
-                    st.divider()
+                    #st.divider()
                     st.markdown("""
                             <style>
                             .deter-leg { font-size: 12px; line-height: 1.8; }
