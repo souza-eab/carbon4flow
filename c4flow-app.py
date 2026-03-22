@@ -1261,10 +1261,7 @@ with tabs[4]:
                             st.markdown("### 📋 Info")
                             st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
                             st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
-                        else:
-                            st.info("💡 Selecione um projeto.")
-                    #st.divider()
-                    st.markdown("""
+                            st.markdown("""
                             <style>
                             .deter-leg { font-size: 12px; line-height: 1.8; }
                             .deter-item { display: flex; align-items: center; margin: 3px 0; }
@@ -1283,7 +1280,11 @@ with tabs[4]:
                             <div class='deter-item'><div class='deter-box' style='background:#1f78b4'></div>Mineração</div>
                             </div>
                             """, unsafe_allow_html=True)
-
+                    
+                        else:
+                            st.info("💡 Selecione um projeto.")
+                    #st.divider()
+                    
                     if not is_overview and bbox_str:
                         st.divider()
                         st.markdown("### 📊 DETER AMZ — Alertas na AOI")
