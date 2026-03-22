@@ -858,7 +858,8 @@ with tabs[4]:
             st.plotly_chart(fig_timeline, use_container_width=True)
 
         st.markdown("### 🎯 Números que Contam Histórias")
-        col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+        #col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+        col_m1, col_m3,  = st.columns(2)
 
         with col_m1:
             if 'vcsAcresHectares' in df_all.columns:
@@ -871,13 +872,13 @@ with tabs[4]:
                 except Exception:
                     st.metric("Área Total Protegida", "N/A")
 
-        with col_m2:
-            if 'vcsEstimatedAnnualEmissionReductions' in df_all.columns:
-                try:
-                    total_eaer = pd.to_numeric(df_all['vcsEstimatedAnnualEmissionReductions'], errors='coerce').sum()
-                    st.metric("Reduções Anuais (tCO2e)", f"{total_eaer/1000000:.1f}M")
-                except Exception:
-                    st.metric("Reduções Anuais", "N/A")
+        #with col_m2:
+        #    if 'vcsEstimatedAnnualEmissionReductions' in df_all.columns:
+        #        try:
+        #            total_eaer = pd.to_numeric(df_all['vcsEstimatedAnnualEmissionReductions'], errors='coerce').sum()
+        #            st.metric("Reduções Anuais (tCO2e)", f"{total_eaer/1000000:.1f}M")
+        #        except Exception:
+        #            st.metric("Reduções Anuais", "N/A")
 
         with col_m3:
             try:
@@ -886,9 +887,9 @@ with tabs[4]:
             except Exception:
                 st.metric("Projetos REDD+", "N/A")
 
-        with col_m4:
-            if 'state_Recode' in df_all.columns:
-                st.metric("Estados Alcançados", f"{df_all['state_Recode'].nunique()}")
+        #with col_m4:
+        #    if 'state_Recode' in df_all.columns:
+        #        st.metric("Estados Alcançados", f"{df_all['state_Recode'].nunique()}")
 
     # =====================================
     # STORYTELLING 1: DADOS AOI (GFW + PRODES + DETER)
