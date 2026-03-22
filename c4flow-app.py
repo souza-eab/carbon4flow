@@ -644,7 +644,8 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
             </div>
             """
             folium.CircleMarker(location=[row["new_latitude"], row["new_longitude"]], radius=5,
-                                color=color, fill=True, fill_color=color, fill_opacity=0.6, popup=folium.Popup(popup_html, max_width=300)).add_to(m)
+                                color=color, fill=True, fill_color=color, fill_opacity=0.6,
+                                popup=folium.Popup(popup_html, max_width=300)).add_to(m)
 
     st_folium(m, width=None, height=600, key=f"map_{map_key}")
 
