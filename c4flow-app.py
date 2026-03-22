@@ -1352,10 +1352,10 @@ with tabs[4]:
                                     DETER_COLORS = {
                                         'CICATRIZ_DE_QUEIMADA':       '#d7191c',
                                         'CORTE_SELETIVO':             '#868686',
-                                        'CORTE_SELETIVO_DESORDENADO': '#db83ff',
-                                        'CORTE_SELETIVO_GEOMETRICO':  '#ff7e00',
+                                        'CS_DESORDENADO':             '#db83ff',
+                                        'CS_GEOMETRICO':              '#ff7e00',
                                         'DEGRADACAO':                 '#ffffbf',
-                                        'DESMATAMENTO_CORTE_RASO':    '#8a5f4b',
+                                        'DESMATAMENTO_CR':            '#8a5f4b',
                                         'DESMATAMENTO_VEG':           '#abdda4',
                                         'MINERACAO':                  '#4223e5',
                                     }
@@ -1383,7 +1383,7 @@ with tabs[4]:
                                     st.plotly_chart(fig_da, use_container_width=True)
                                 else:
                                     st.warning("Colunas necessárias não encontradas.")
-                                    
+
                             with st.expander("📋 Tabela DETER AMZ"):
                                 st.dataframe(df_deter, use_container_width=True, height=300)
                                 csv = df_deter.to_csv(index=False).encode('utf-8')
