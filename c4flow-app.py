@@ -628,8 +628,6 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
             #    <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
             #</div>
             #"""
-            desc = row.get('description', 'N/A')
-            desc = desc if desc == 'N/A' else desc[:250] + ('...' if len(desc) > 250 else '')
             popup_html = f"""
             <div style="font-family: Arial; font-size: 11px; width: 250px;">
                 <h4 style="margin: 0 0 15px 0;">{row.get('resourceName_x', 'N/A')}</h4>            
@@ -639,11 +637,11 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
                 <b>Tipo:</b> {row.get('vcsAFOLUActivity', 'N/A')}<br>
                 <b>Acreditação:</b> {row.get('vcsCreditingPeriodTerm', 'N/A')}<br>
                 <b>Area:</b> {row.get('vcsAcresHectares', 'N/A')}<br>
-                <b>Resumo:</b> {desc}<br>
+                <b>Resumo:</b> {row.get('description', 'N/A')}<br>
                 <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
             </div>
             """
-            #<b>Resumo:</b> {row.get('description', 'N/A')}<br>
+
             folium.CircleMarker(location=[lat, lon], radius=6, color=color, fill=True,
                                 fill_color=color, fill_opacity=0.7,
                                 popup=folium.Popup(popup_html, max_width=300)).add_to(marker_cluster)
@@ -653,9 +651,6 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
         for idx, row in df_map.iterrows():
             activity = row.get("vcsAFOLUActivity", "Unknown")
             color = ACTIVITY_COLORS.get(activity, "#808080")
-            desc = row.get('description', 'N/A')
-            desc = desc if desc == 'N/A' else desc[:250] + ('...' if len(desc) > 250 else '')
-
             popup_html = f"""
             <div style="font-family: Arial; font-size: 11px; width: 250px;">
                 <h4 style="margin: 0 0 15px 0;">{row.get('resourceName_x', 'N/A')}</h4>
@@ -665,11 +660,10 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
                 <b>Tipo:</b> {row.get('vcsAFOLUActivity', 'N/A')}<br>
                 <b>Acreditação:</b> {row.get('vcsCreditingPeriodTerm', 'N/A')}<br>
                 <b>Area:</b> {row.get('vcsAcresHectares', 'N/A')}<br>
-                <b>Resumo:</b> {desc}<br>
+                <b>Resumo:</b> {row.get('description', 'N/A')}<br>
                 <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
             </div>
             """
-            #<b>Resumo:</b> {row.get('description', 'N/A')}<br>
             folium.CircleMarker(location=[row["new_latitude"], row["new_longitude"]], radius=5,
                                 color=color, fill=True, fill_color=color, fill_opacity=0.6,
                                 popup=folium.Popup(popup_html, max_width=300)).add_to(m)
