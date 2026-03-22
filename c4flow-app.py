@@ -763,9 +763,34 @@ with tabs[4]:
     # =====================================
     # STORYTELLING 1: PERDA FLORESTAL
     # =====================================
+    
+    # =====================================
+    # FUNÇÕES TERRABRASILIS — escopo global
+    # =====================================
 
-    with story_tabs[1]:
-        st.markdown("## 📍Projetos de Carbono")
+    @st.cache_data(show_spinner=False)
+    def terrabrasilis_wfs(url, type_name, bbox, max_features=5000):
+        """Consulta WFS do TerraBrasilis filtrado por bbox."""
+        try:
+            r = requests.get(url, params={
+                "SERVICE":      "WFS",
+                "VERSION":      "1.0.0",
+                "REQUEST":      "GetFeature",
+                "typeName":     type_name,
+                "BBOX":         bbox,
+                "outputFormat": "application/json",
+                "maxFeatures":  str(max_features)
+            }, timeout=60)
+            if r.status_code == 200:
+                data = r.json()
+                feats = data.get('features', [])
+                if feats:
+                    return pd.DataFrame([f['properties'] for f in feats])
+            return pd.DataFrame()
+        except Exception:
+        return pd.DataFrame()
+with story_tabs[1]:
+        st.markdown("## 🔥 Perda Florestal nos Projetos de Carbono")
 
         GFW_API_KEY = st.secrets["GFW_API_KEY"].strip()
 
@@ -782,7 +807,9 @@ with tabs[4]:
         if gdf_combined.empty:
             st.warning("Nenhum KML válido encontrado.")
         else:
-            gdf_plot = gdf_combined[~gdf_combined["geometry"].is_empty & gdf_combined["geometry"].notnull()].copy()
+            gdf_plot = gdf_combined[
+                ~gdf_combined["geometry"].is_empty & gdf_combined["geometry"].notnull()
+            ].copy()
             gdf_plot = gdf_plot[gdf_plot.is_valid]
 
             if gdf_plot.empty:
@@ -793,8 +820,11 @@ with tabs[4]:
                     for _, row in gdf_plot.iterrows()
                 ]
 
-                selected_project = st.selectbox("📍 Selecione um projeto para análise:",
-                                                 options=project_options, key="project_selector_v2")
+                selected_project = st.selectbox(
+                    "📍 Selecione um projeto para análise:",
+                    options=project_options,
+                    key="project_selector_v2"
+                )
 
                 is_overview = selected_project == "🌎 Visão Geral (Todos os Projetos)"
 
@@ -816,141 +846,453 @@ with tabs[4]:
                         center       = [centroid.y.mean(), centroid.x.mean()]
                         zoom_start   = 5
 
+                # bbox string para WFS
+                if not is_overview:
+                    b = selected_gdf.total_bounds
+                    bbox_str = f"{b[0]},{b[1]},{b[2]},{b[3]}"
+                else:
+                    bbox_str = None
+
                 st.divider()
 
-                col_mapa, col_info = st.columns([8, 2])
+                # ===================================
+                # TABS INTERNAS: GFW | PRODES | DETER
+                # ===================================
+                tab_gfw, tab_prodes, tab_deter_amz, tab_deter_cer = st.tabs([
+                    "🌳 GFW", "🔴 PRODES", "🟠 DETER Amazônia", "🟡 DETER Cerrado"
+                ])
 
-                with col_mapa:
-                    st.markdown("### 🗺️ Mapa")
+                # ===================================
+                # TAB GFW
+                # ===================================
+                with tab_gfw:
+                    col_mapa, col_info = st.columns([8, 2])
 
-                    c1, c2, c3 = st.columns(3)
-                    with c1:
-                        show_loss = st.toggle("🔴 Tree Cover Loss", value=True,  key="toggle_loss")
-                    with c2:
-                        show_glad = st.toggle("🟡 GLAD Alerts",     value=False, key="toggle_glad")
-                    with c3:
-                        show_radd = st.toggle("🟠 RADD Alerts",     value=False, key="toggle_radd")
+                    with col_mapa:
+                        st.markdown("### 🗺️ Mapa")
 
-                    m = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
-                    folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m)
+                        c1, c2, c3 = st.columns(3)
+                        with c1:
+                            show_loss = st.toggle("🔴 Tree Cover Loss", value=True,  key="toggle_loss")
+                        with c2:
+                            show_glad = st.toggle("🟡 GLAD Alerts",     value=False, key="toggle_glad")
+                        with c3:
+                            show_radd = st.toggle("🟠 RADD Alerts",     value=False, key="toggle_radd")
 
-                    if show_loss:
-                        folium.TileLayer(
-                            tiles='https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png',
-                            name='Tree Cover Loss', attr='Global Forest Watch', overlay=True, opacity=0.8
-                        ).add_to(m)
-                    if show_glad:
-                        folium.TileLayer(
-                            tiles='https://tiles.globalforestwatch.org/umd_glad_landsat_alerts/v20260320/default/{z}/{x}/{y}.png',
-                            name='GLAD Alerts', attr='Global Forest Watch', overlay=True, opacity=0.8
-                        ).add_to(m)
-                    if show_radd:
-                        folium.TileLayer(
-                            tiles='https://tiles.globalforestwatch.org/wur_radd_alerts/v20260315/default/{z}/{x}/{y}.png',
-                            name='RADD Alerts', attr='Global Forest Watch', overlay=True, opacity=0.8
-                        ).add_to(m)
+                        m_gfw = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
+                        folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m_gfw)
 
-                    for _, row in selected_gdf.iterrows():
-                        try:
-                            folium.GeoJson(
-                                data=mapping(row["geometry"]),
-                                name=row.get("resourceName_x", "Projeto"),
-                                tooltip=folium.Tooltip(f"""
-                                    <div style="font-family:Arial; font-size:12px;">
-                                        <b>{row.get('resourceName_x', 'Sem nome')}</b><br>
-                                        Estado: {row.get('state_Recode', 'N/A')}<br>
-                                        ID: {row.get('resourceIdentifier', 'N/A')}
-                                    </div>
-                                """, sticky=True),
-                                style_function=lambda x: {
-                                    "fillColor": "transparent", "color": "#FF0000",
-                                    "weight": 3, "fillOpacity": 0.1, "dashArray": "5, 5"
-                                }
-                            ).add_to(m)
-                        except Exception:
-                            pass
+                        if show_loss:
+                            folium.TileLayer(
+                                tiles='https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png',
+                                name='Tree Cover Loss', attr='GFW', overlay=True, opacity=0.8
+                            ).add_to(m_gfw)
+                        if show_glad:
+                            folium.TileLayer(
+                                tiles='https://tiles.globalforestwatch.org/umd_glad_landsat_alerts/v20260320/default/{z}/{x}/{y}.png',
+                                name='GLAD Alerts', attr='GFW', overlay=True, opacity=0.8
+                            ).add_to(m_gfw)
+                        if show_radd:
+                            folium.TileLayer(
+                                tiles='https://tiles.globalforestwatch.org/wur_radd_alerts/v20260315/default/{z}/{x}/{y}.png',
+                                name='RADD Alerts', attr='GFW', overlay=True, opacity=0.8
+                            ).add_to(m_gfw)
+
+                        for _, row in selected_gdf.iterrows():
+                            try:
+                                folium.GeoJson(
+                                    data=mapping(row["geometry"]),
+                                    style_function=lambda x: {
+                                        "fillColor": "transparent", "color": "#FF0000",
+                                        "weight": 3, "fillOpacity": 0.1, "dashArray": "5, 5"
+                                    }
+                                ).add_to(m_gfw)
+                            except Exception:
+                                pass
+
+                        if not is_overview:
+                            b = selected_gdf.total_bounds
+                            m_gfw.fit_bounds([[b[1], b[0]], [b[3], b[2]]])
+
+                        folium.LayerControl().add_to(m_gfw)
+                        st_folium(m_gfw, width=None, height=600, key="map_gfw")
+
+                    with col_info:
+                        if is_overview:
+                            st.info("💡 Selecione um projeto.")
+                            st.metric("Total de Projetos", f"{len(gdf_plot):,}")
+                        else:
+                            row_proj = selected_gdf.iloc[0]
+                            st.markdown("### 📋 Info")
+                            st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
+                            st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
+                            st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
 
                     if not is_overview:
-                        bounds = selected_gdf.total_bounds
-                        m.fit_bounds([[bounds[1], bounds[0]], [bounds[3], bounds[2]]])
+                        from shapely.ops import unary_union
+                        geom = selected_gdf.geometry.iloc[0]
+                        if geom.geom_type == 'GeometryCollection':
+                            polys = [g for g in geom.geoms if g.geom_type in ['Polygon', 'MultiPolygon']]
+                            geom  = unary_union(polys) if polys else None
 
-                    folium.LayerControl().add_to(m)
-                    st_folium(m, width=None, height=600, key="map_spatial")
+                        if geom and geom.geom_type in ['Polygon', 'MultiPolygon']:
+                            geojson_poly = mapping(geom)
+                            st.divider()
+                            col_g1, col_g2, col_g3 = st.columns(3)
 
-                with col_info:
-                    if is_overview:
-                        st.info("💡 Selecione um projeto.")
-                        st.metric("Total de Projetos", f"{len(gdf_plot):,}")
-                        st.metric("Estados cobertos", f"{gdf_plot['state_Recode'].nunique():,}" if 'state_Recode' in gdf_plot.columns else "N/A")
-                    else:
-                        row_proj = selected_gdf.iloc[0]
-                        st.markdown("### 📋 Informações")
-                        st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
-                        st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
-                        st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
-                        st.markdown(f"**Proponente:** {row_proj.get('proponent', 'N/A')}")
-                        st.markdown(f"**Categoria:** {row_proj.get('protocolSubCategories', 'N/A')}")
+                            with col_g1:
+                                st.markdown("### 📊 Tree Cover Loss")
+                                with st.spinner("Consultando GFW..."):
+                                    df_loss = gfw_tree_cover_loss(geojson_poly, GFW_API_KEY)
+                                if df_loss.empty:
+                                    st.warning("Sem dados.")
+                                else:
+                                    fig = go.Figure()
+                                    fig.add_trace(go.Bar(x=df_loss['umd_tree_cover_loss__year'],
+                                                         y=df_loss['loss_ha'], marker_color='#ff4444'))
+                                    fig.update_layout(height=300, template="plotly_white",
+                                                      margin=dict(t=10, b=40, l=40, r=10),
+                                                      xaxis_title="Ano", yaxis_title="ha",
+                                                      hovermode='x unified')
+                                    st.plotly_chart(fig, use_container_width=True)
 
-                if not is_overview:
-                    from shapely.ops import unary_union
+                            with col_g2:
+                                st.markdown("### 🟡 GLAD")
+                                with st.spinner("Consultando GLAD..."):
+                                    df_glad = gfw_glad_alerts(geojson_poly, GFW_API_KEY)
+                                if df_glad.empty:
+                                    st.warning("Sem dados.")
+                                else:
+                                    fig = go.Figure()
+                                    fig.add_trace(go.Bar(x=df_glad['alert__year'],
+                                                         y=df_glad['alert_count'], marker_color='#FFC300'))
+                                    fig.update_layout(height=300, template="plotly_white",
+                                                      margin=dict(t=10, b=40, l=40, r=10),
+                                                      xaxis_title="Ano", yaxis_title="Alertas",
+                                                      hovermode='x unified')
+                                    st.plotly_chart(fig, use_container_width=True)
 
-                    geom = selected_gdf.geometry.iloc[0]
-                    if geom.geom_type == 'GeometryCollection':
-                        polys = [g for g in geom.geoms if g.geom_type in ['Polygon', 'MultiPolygon']]
-                        geom  = unary_union(polys) if polys else None
+                            with col_g3:
+                                st.markdown("### 🟠 RADD")
+                                with st.spinner("Consultando RADD..."):
+                                    df_radd = gfw_radd_alerts(geojson_poly, GFW_API_KEY)
+                                if df_radd.empty:
+                                    st.warning("Sem dados.")
+                                else:
+                                    fig = go.Figure()
+                                    fig.add_trace(go.Bar(x=df_radd['alert__year'],
+                                                         y=df_radd['alert_count'], marker_color='#FF7900'))
+                                    fig.update_layout(height=300, template="plotly_white",
+                                                      margin=dict(t=10, b=40, l=40, r=10),
+                                                      xaxis_title="Ano", yaxis_title="Alertas",
+                                                      hovermode='x unified')
+                                    st.plotly_chart(fig, use_container_width=True)
 
-                    if geom and geom.geom_type in ['Polygon', 'MultiPolygon']:
-                        geojson_poly = mapping(geom)
+                # ===================================
+                # TAB PRODES
+                # ===================================
+                with tab_prodes:
+                    col_mapa_p, col_info_p = st.columns([8, 2])
 
+                    with col_mapa_p:
+                        st.markdown("### 🗺️ Mapa PRODES")
+
+                        c1, c2 = st.columns(2)
+                        with c1:
+                            show_prodes_br  = st.toggle("🔴 PRODES Brasil",    value=True,  key="toggle_prodes_br")
+                        with c2:
+                            show_prodes_amz = st.toggle("🟥 PRODES Legal AMZ", value=False, key="toggle_prodes_amz")
+
+                        m_prodes = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
+                        folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m_prodes)
+
+                        if show_prodes_br:
+                            folium.WmsTileLayer(
+                                url="https://terrabrasilis.dpi.inpe.br/geoserver/prodes-brasil-nb/prodes_brasil/ows",
+                                layers="prodes_brasil",
+                                fmt="image/png",
+                                transparent=True,
+                                name="PRODES Brasil",
+                                overlay=True,
+                                opacity=0.8
+                            ).add_to(m_prodes)
+
+                        if show_prodes_amz:
+                            folium.WmsTileLayer(
+                                url="https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/yearly_deforestation/ows",
+                                layers="yearly_deforestation",
+                                fmt="image/png",
+                                transparent=True,
+                                name="PRODES Legal AMZ",
+                                overlay=True,
+                                opacity=0.8
+                            ).add_to(m_prodes)
+
+                        for _, row in selected_gdf.iterrows():
+                            try:
+                                folium.GeoJson(
+                                    data=mapping(row["geometry"]),
+                                    style_function=lambda x: {
+                                        "fillColor": "transparent", "color": "#FFFF00",
+                                        "weight": 3, "fillOpacity": 0.1, "dashArray": "5, 5"
+                                    }
+                                ).add_to(m_prodes)
+                            except Exception:
+                                pass
+
+                        if not is_overview:
+                            b = selected_gdf.total_bounds
+                            m_prodes.fit_bounds([[b[1], b[0]], [b[3], b[2]]])
+
+                        folium.LayerControl().add_to(m_prodes)
+                        st_folium(m_prodes, width=None, height=600, key="map_prodes")
+
+                    with col_info_p:
+                        if not is_overview:
+                            row_proj = selected_gdf.iloc[0]
+                            st.markdown("### 📋 Info")
+                            st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
+                            st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
+                        else:
+                            st.info("💡 Selecione um projeto.")
+
+                    # Gráfico PRODES via WFS dentro da AOI
+                    if not is_overview and bbox_str:
                         st.divider()
-                        col_g1, col_g2, col_g3 = st.columns(3)
+                        col_g1, col_g2 = st.columns(2)
 
                         with col_g1:
-                            st.markdown("### 📊 Eventos de perda de cobertura arbórea Anual")
-                            with st.spinner("Consultando GFW..."):
-                                df_loss = gfw_tree_cover_loss(geojson_poly, GFW_API_KEY)
-                            if df_loss.empty:
-                                st.warning("Sem dados de perda.")
+                            st.markdown("### 📊 PRODES Legal AMZ — Incremento Anual na AOI")
+                            with st.spinner("Consultando TerraBrasilis WFS..."):
+                                df_prodes = terrabrasilis_wfs(
+                                    "https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/yearly_deforestation/ows",
+                                    "prodes-legal-amz:yearly_deforestation",
+                                    bbox_str
+                                )
+                            if df_prodes.empty:
+                                st.warning("Sem dados PRODES para esta AOI.")
                             else:
-                                fig_loss = go.Figure()
-                                fig_loss.add_trace(go.Bar(x=df_loss['umd_tree_cover_loss__year'],
-                                                          y=df_loss['loss_ha'], marker_color='#ff4444', name='Perda (ha)'))
-                                fig_loss.update_layout(xaxis_title="Ano", yaxis_title="ha", height=300,
-                                                       margin=dict(t=10, b=40, l=40, r=10),
-                                                       template="plotly_white", hovermode='x unified')
-                                st.plotly_chart(fig_loss, use_container_width=True)
+                                if 'year' in df_prodes.columns and 'def_cloud' in df_prodes.columns:
+                                    df_prodes['year'] = pd.to_numeric(df_prodes['year'], errors='coerce')
+                                    df_prodes_year = df_prodes.groupby('year').size().reset_index(name='poligonos')
+                                    fig_p = go.Figure()
+                                    fig_p.add_trace(go.Bar(
+                                        x=df_prodes_year['year'],
+                                        y=df_prodes_year['poligonos'],
+                                        marker_color='#C0392B',
+                                        name='Polígonos PRODES'
+                                    ))
+                                    fig_p.update_layout(
+                                        xaxis_title="Ano", yaxis_title="Nº Polígonos",
+                                        height=300, template="plotly_white",
+                                        margin=dict(t=10, b=40, l=40, r=10),
+                                        hovermode='x unified'
+                                    )
+                                    st.plotly_chart(fig_p, use_container_width=True)
+
+                                with st.expander("📋 Tabela PRODES"):
+                                    st.dataframe(df_prodes, use_container_width=True, height=300)
+                                    csv = df_prodes.to_csv(index=False).encode('utf-8')
+                                    st.download_button("⬇️ Download CSV", data=csv,
+                                                       file_name="prodes_aoi.csv", mime="text/csv")
 
                         with col_g2:
-                            st.markdown("### 🟡 Alertas GLAD")
-                            with st.spinner("Consultando GLAD..."):
-                                df_glad = gfw_glad_alerts(geojson_poly, GFW_API_KEY)
-                            if df_glad.empty:
-                                st.warning("Sem alertas GLAD.")
-                            else:
-                                fig_glad = go.Figure()
-                                fig_glad.add_trace(go.Bar(x=df_glad['alert__year'], y=df_glad['alert_count'],
-                                                          marker_color='#FFC300', name='Alertas GLAD'))
-                                fig_glad.update_layout(xaxis_title="Ano", yaxis_title="Alertas", height=300,
-                                                       margin=dict(t=10, b=40, l=40, r=10),
-                                                       template="plotly_white", hovermode='x unified')
-                                st.plotly_chart(fig_glad, use_container_width=True)
+                            st.markdown("### 📊 Classe de Desmatamento")
+                            if not df_prodes.empty and 'class_name' in df_prodes.columns:
+                                class_counts = df_prodes['class_name'].value_counts().reset_index()
+                                class_counts.columns = ['Classe', 'Count']
+                                fig_cls = go.Figure()
+                                fig_cls.add_trace(go.Bar(
+                                    x=class_counts['Classe'],
+                                    y=class_counts['Count'],
+                                    marker_color='#E74C3C'
+                                ))
+                                fig_cls.update_layout(
+                                    xaxis_title="Classe", yaxis_title="Nº Polígonos",
+                                    height=300, template="plotly_white",
+                                    margin=dict(t=10, b=40, l=40, r=10)
+                                )
+                                st.plotly_chart(fig_cls, use_container_width=True)
 
-                        with col_g3:
-                            st.markdown("### 🟠 Alertas RADD")
-                            with st.spinner("Consultando RADD..."):
-                                df_radd = gfw_radd_alerts(geojson_poly, GFW_API_KEY)
-                            if df_radd.empty:
-                                st.warning("Sem alertas RADD.")
-                            else:
-                                fig_radd = go.Figure()
-                                fig_radd.add_trace(go.Bar(x=df_radd['alert__year'], y=df_radd['alert_count'],
-                                                          marker_color='#FF7900', name='Alertas RADD'))
-                                fig_radd.update_layout(xaxis_title="Ano", yaxis_title="Alertas", height=300,
-                                                       margin=dict(t=10, b=40, l=40, r=10),
-                                                       template="plotly_white", hovermode='x unified')
-                                st.plotly_chart(fig_radd, use_container_width=True)
-                    else:
-                        st.warning("⚠️ Geometria inválida para consulta GFW.")
+                # ===================================
+                # TAB DETER AMAZÔNIA
+                # ===================================
+                with tab_deter_amz:
+                    col_mapa_d, col_info_d = st.columns([8, 2])
+
+                    with col_mapa_d:
+                        st.markdown("### 🗺️ Mapa DETER Amazônia")
+
+                        m_deter = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
+                        folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m_deter)
+
+                        folium.WmsTileLayer(
+                            url="https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/deter_amz/ows",
+                            layers="deter_amz",
+                            fmt="image/png",
+                            transparent=True,
+                            name="DETER AMZ",
+                            overlay=True,
+                            opacity=0.8
+                        ).add_to(m_deter)
+
+                        for _, row in selected_gdf.iterrows():
+                            try:
+                                folium.GeoJson(
+                                    data=mapping(row["geometry"]),
+                                    style_function=lambda x: {
+                                        "fillColor": "transparent", "color": "#FF6600",
+                                        "weight": 3, "fillOpacity": 0.1, "dashArray": "5, 5"
+                                    }
+                                ).add_to(m_deter)
+                            except Exception:
+                                pass
+
+                        if not is_overview:
+                            b = selected_gdf.total_bounds
+                            m_deter.fit_bounds([[b[1], b[0]], [b[3], b[2]]])
+
+                        folium.LayerControl().add_to(m_deter)
+                        st_folium(m_deter, width=None, height=600, key="map_deter_amz")
+
+                    with col_info_d:
+                        if not is_overview:
+                            row_proj = selected_gdf.iloc[0]
+                            st.markdown("### 📋 Info")
+                            st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
+                            st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
+                        else:
+                            st.info("💡 Selecione um projeto.")
+
+                    if not is_overview and bbox_str:
+                        st.divider()
+                        st.markdown("### 📊 DETER AMZ — Alertas na AOI")
+                        with st.spinner("Consultando TerraBrasilis WFS..."):
+                            df_deter = terrabrasilis_wfs(
+                                "https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/deter_amz/ows",
+                                "deter-amz:deter_amz",
+                                bbox_str
+                            )
+
+                        if df_deter.empty:
+                            st.warning("Sem alertas DETER para esta AOI.")
+                        else:
+                            col_g1, col_g2 = st.columns(2)
+
+                            with col_g1:
+                                if 'view_date' in df_deter.columns:
+                                    df_deter['year'] = pd.to_datetime(
+                                        df_deter['view_date'], errors='coerce').dt.year
+                                    df_deter_year = df_deter.groupby('year').agg(
+                                        alertas=('year', 'count'),
+                                        area_km2=('areauckm', 'sum')
+                                    ).reset_index()
+                                    fig_d = go.Figure()
+                                    fig_d.add_trace(go.Bar(
+                                        x=df_deter_year['year'],
+                                        y=df_deter_year['alertas'],
+                                        marker_color='#E67E22', name='Alertas'
+                                    ))
+                                    fig_d.update_layout(
+                                        xaxis_title="Ano", yaxis_title="Nº Alertas",
+                                        height=300, template="plotly_white",
+                                        margin=dict(t=10, b=40, l=40, r=10),
+                                        hovermode='x unified'
+                                    )
+                                    st.plotly_chart(fig_d, use_container_width=True)
+
+                            with col_g2:
+                                if 'classname' in df_deter.columns:
+                                    class_d = df_deter['classname'].value_counts().reset_index()
+                                    class_d.columns = ['Classe', 'Count']
+                                    fig_cd = go.Figure()
+                                    fig_cd.add_trace(go.Bar(
+                                        x=class_d['Classe'], y=class_d['Count'],
+                                        marker_color='#D35400'
+                                    ))
+                                    fig_cd.update_layout(
+                                        xaxis_title="Classe", yaxis_title="Alertas",
+                                        height=300, template="plotly_white",
+                                        margin=dict(t=10, b=40, l=40, r=10)
+                                    )
+                                    st.plotly_chart(fig_cd, use_container_width=True)
+
+                            with st.expander("📋 Tabela DETER AMZ"):
+                                st.dataframe(df_deter, use_container_width=True, height=300)
+                                csv = df_deter.to_csv(index=False).encode('utf-8')
+                                st.download_button("⬇️ Download CSV", data=csv,
+                                                   file_name="deter_amz_aoi.csv", mime="text/csv")
+
+                # ===================================
+                # TAB DETER CERRADO
+                # ===================================
+                with tab_deter_cer:
+                    col_mapa_c, col_info_c = st.columns([8, 2])
+
+                    with col_mapa_c:
+                        st.markdown("### 🗺️ Mapa DETER Cerrado")
+
+                        m_cer = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
+                        folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m_cer)
+
+                        folium.WmsTileLayer(
+                            url="https://terrabrasilis.dpi.inpe.br/geoserver/deter-cerrado-nb/deter_cerrado/ows",
+                            layers="deter_cerrado",
+                            fmt="image/png",
+                            transparent=True,
+                            name="DETER Cerrado",
+                            overlay=True,
+                            opacity=0.8
+                        ).add_to(m_cer)
+
+                        for _, row in selected_gdf.iterrows():
+                            try:
+                                folium.GeoJson(
+                                    data=mapping(row["geometry"]),
+                                    style_function=lambda x: {
+                                        "fillColor": "transparent", "color": "#F1C40F",
+                                        "weight": 3, "fillOpacity": 0.1, "dashArray": "5, 5"
+                                    }
+                                ).add_to(m_cer)
+                            except Exception:
+                                pass
+
+                        if not is_overview:
+                            b = selected_gdf.total_bounds
+                            m_cer.fit_bounds([[b[1], b[0]], [b[3], b[2]]])
+
+                        folium.LayerControl().add_to(m_cer)
+                        st_folium(m_cer, width=None, height=600, key="map_deter_cer")
+
+                    with col_info_c:
+                        if not is_overview:
+                            row_proj = selected_gdf.iloc[0]
+                            st.markdown("### 📋 Info")
+                            st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
+                            st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
+                        else:
+                            st.info("💡 Selecione um projeto.")
+
+                    if not is_overview and bbox_str:
+                        st.divider()
+                        st.markdown("### 📊 DETER Cerrado — Alertas na AOI")
+                        with st.spinner("Consultando TerraBrasilis WFS..."):
+                            df_cer = terrabrasilis_wfs(
+                                "https://terrabrasilis.dpi.inpe.br/geoserver/deter-cerrado-nb/deter_cerrado/ows",
+                                "deter-cerrado-nb:deter_cerrado",
+                                bbox_str
+                            )
+
+                        if df_cer.empty:
+                            st.warning("Sem alertas DETER Cerrado para esta AOI.")
+                        else:
+                            st.dataframe(df_cer, use_container_width=True, height=300)
+                            csv = df_cer.to_csv(index=False).encode('utf-8')
+                            st.download_button("⬇️ Download CSV", data=csv,
+                                               file_name="deter_cerrado_aoi.csv", mime="text/csv")    
+    
+    
+    
 
     # =====================================
     # STORYTELLING 2: MAPBIOMAS
