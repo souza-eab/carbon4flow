@@ -566,6 +566,21 @@ with tabs[0]:
 # FUNÇÃO PARA CRIAR MAPAS
 # =====================================
 
+# =====================================
+# FUNÇÕES AUXILIARES
+# =====================================
+
+def safe_get(row, col, fmt=None):
+    try:
+        val = row[col]
+        if pd.isna(val):
+            return 'N/A'
+        if fmt == 'num':
+            return f"{pd.to_numeric(val, errors='coerce'):,.0f}"
+        return str(val)
+    except:
+        return 'N/A'
+    
 def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
     st.header(title)
     df_map = prepare_map_data(df)
@@ -667,16 +682,6 @@ with tabs[2]:
     st.info(f"📊 Exibindo **{len(df_credit_unique):,}** projetos únicos (de {len(df_credit):,} registros totais)")
     create_interactive_map(df_credit_unique, "Projetos com lastro de Créditos", "credit_unique")
 
-def safe_get(row, col, fmt=None):
-                try:
-                    val = row[col]
-                    if pd.isna(val):
-                        return 'N/A'
-                    if fmt == 'num':
-                        return f"{pd.to_numeric(val, errors='coerce'):,.0f}"
-                    return str(val)
-                except:
-                    return 'N/A'
 
 popup_html = f"""
 <div style="font-family: Arial; font-size: 12px; width: 300px;">
