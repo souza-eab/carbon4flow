@@ -416,32 +416,35 @@ STATUS_COLORS = {
 # SIDEBAR
 # =====================================
 
-st.sidebar.title("⚙️ Configurações")
+SHOW_CONFIG = False  # mude para True quando quiser ver
 
-file_id_all = st.sidebar.text_input(
-    "ID - Todos os Projetos",
-    value="13ijts4CMnyOV9rVdQ6tXP7-qIPfPa0Yb",
-    help="ID do arquivo Parquet no Google Drive"
-)
+if SHOW_CONFIG:
+    st.sidebar.title("⚙️ Configurações")
 
-file_id_credit = st.sidebar.text_input(
-    "ID - Projetos com Créditos",
-    value="13ZlnQjYHsbs57A1rj92brWlGMnBGlU3P",
-    help="ID do arquivo Parquet no Google Drive"
-)
+    file_id_all = st.sidebar.text_input(
+        "ID - Todos os Projetos",
+        value="13ijts4CMnyOV9rVdQ6tXP7-qIPfPa0Yb",
+        help="ID do arquivo Parquet no Google Drive"
+    )
 
-if st.sidebar.button("🔄 Recarregar Dados", use_container_width=True):
-    st.cache_data.clear()
-    st.rerun()
+    file_id_credit = st.sidebar.text_input(
+        "ID - Projetos com Créditos",
+        value="13ZlnQjYHsbs57A1rj92brWlGMnBGlU3P",
+        help="ID do arquivo Parquet no Google Drive"
+    )
 
-st.sidebar.divider()
+    if st.sidebar.button("🔄 Recarregar Dados", use_container_width=True):
+        st.cache_data.clear()
+        st.rerun()
 
-st.markdown("""
-    <style>
-        [data-testid="stSidebar"] input,
-        [data-testid="stSidebar"] button { display: none !important; }
-    </style>
-""", unsafe_allow_html=True)
+    #st.sidebar.divider()
+
+    #st.markdown("""
+    #    <style>
+    #        [data-testid="stSidebar"] input,
+    #        [data-testid="stSidebar"] button { display: none !important; }
+    #    </style>
+    #""", unsafe_allow_html=True)
 
 # =====================================
 # CARREGAMENTO DE DADOS
