@@ -1294,7 +1294,7 @@ with tabs[4]:
                                 "deter-amz:deter_amz",
                                 bbox_str
                             )
-                            
+
                         if df_deter.empty:
                             st.warning("Sem alertas DETER para esta AOI.")
                         else:
@@ -1323,29 +1323,52 @@ with tabs[4]:
                                     )
                                     st.plotly_chart(fig_d, use_container_width=True)
 
+                            #with col_g2:
+                            #    st.markdown("### 📊 Área por Ano (km²)")
+                            #    if 'view_date' in df_deter.columns and 'areauckm' in df_deter.columns:
+                            #        df_deter['areauckm'] = pd.to_numeric(df_deter['areauckm'], errors='coerce')
+                            #        df_deter_area = df_deter.groupby('year').agg(
+                            #            area_total=('areauckm', 'sum')
+                            #        ).reset_index()
+                            #        fig_da = go.Figure()
+                            #        fig_da.add_trace(go.Bar(
+                            #            x=df_deter_area['year'],
+                            #            y=df_deter_area['area_total'],
+                            #            marker_color='#CA6F1E', name='Área (km²)'
+                            #        ))
+                            #        fig_da.update_layout(
+                            #            xaxis_title="Ano", yaxis_title="km²",
+                            #            height=300, template="plotly_white",
+                            #            margin=dict(t=10, b=40, l=40, r=10),
+                            #            hovermode='x unified'
+                            #        )
+                            #        st.plotly_chart(fig_da, use_container_width=True)
+                            #    else:
+                            #        st.warning("Coluna `areauckm` não encontrada.")
+
                             with col_g2:
-                                st.markdown("### 📊 Área por Ano (km²)")
-                                if 'view_date' in df_deter.columns and 'areauckm' in df_deter.columns:
+                                st.markdown("### 📊 Área por Classe (km²)")
+                                if 'classname' in df_deter.columns and 'areauckm' in df_deter.columns:
                                     df_deter['areauckm'] = pd.to_numeric(df_deter['areauckm'], errors='coerce')
-                                    df_deter_area = df_deter.groupby('year').agg(
+                                    df_area_classe = df_deter.groupby('classname').agg(
                                         area_total=('areauckm', 'sum')
-                                    ).reset_index()
+                                    ).reset_index().sort_values('area_total', ascending=False)
                                     fig_da = go.Figure()
                                     fig_da.add_trace(go.Bar(
-                                        x=df_deter_area['year'],
-                                        y=df_deter_area['area_total'],
+                                        x=df_area_classe['classname'],
+                                        y=df_area_classe['area_total'],
                                         marker_color='#CA6F1E', name='Área (km²)'
                                     ))
                                     fig_da.update_layout(
-                                        xaxis_title="Ano", yaxis_title="km²",
+                                        xaxis_title="Classe", yaxis_title="km²",
                                         height=300, template="plotly_white",
                                         margin=dict(t=10, b=40, l=40, r=10),
                                         hovermode='x unified'
                                     )
                                     st.plotly_chart(fig_da, use_container_width=True)
                                 else:
-                                    st.warning("Coluna `areauckm` não encontrada.")
-
+                                    st.warning("Colunas `classname` ou `areauckm` não encontradas.")
+                                    
                             with col_g3:
                                 st.markdown("### 📊 Classe de Alerta")
                                 if 'classname' in df_deter.columns:
