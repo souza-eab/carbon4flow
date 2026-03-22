@@ -416,35 +416,34 @@ STATUS_COLORS = {
 # SIDEBAR
 # =====================================
 
-SHOW_CONFIG = False  # mude para True quando quiser ver
+st.sidebar.title("⚙️ Configurações")
 
-if SHOW_CONFIG:
-    st.sidebar.title("⚙️ Configurações")
+file_id_all = st.sidebar.text_input(
+    "ID - Todos os Projetos",
+    value="13ijts4CMnyOV9rVdQ6tXP7-qIPfPa0Yb",
+    help="ID do arquivo Parquet no Google Drive"
+)
 
-    file_id_all = st.sidebar.text_input(
-        "ID - Todos os Projetos",
-        value="13ijts4CMnyOV9rVdQ6tXP7-qIPfPa0Yb",
-        help="ID do arquivo Parquet no Google Drive"
-    )
+file_id_credit = st.sidebar.text_input(
+    "ID - Projetos com Créditos",
+    value="13ZlnQjYHsbs57A1rj92brWlGMnBGlU3P",
+    help="ID do arquivo Parquet no Google Drive"
+)
 
-    file_id_credit = st.sidebar.text_input(
-        "ID - Projetos com Créditos",
-        value="13ZlnQjYHsbs57A1rj92brWlGMnBGlU3P",
-        help="ID do arquivo Parquet no Google Drive"
-    )
+if st.sidebar.button("🔄 Recarregar Dados", use_container_width=True):
+    st.cache_data.clear()
+    st.rerun()
 
-    if st.sidebar.button("🔄 Recarregar Dados", use_container_width=True):
-        st.cache_data.clear()
-        st.rerun()
+st.sidebar.divider()
 
-    #st.sidebar.divider()
+st.markdown("""
+    <style>
+        [data-testid="stSidebar"] input,
+        [data-testid="stSidebar"] button { display: none !important; }
+    </style>
+""", unsafe_allow_html=True)
 
-    #st.markdown("""
-    #    <style>
-    #        [data-testid="stSidebar"] input,
-    #        [data-testid="stSidebar"] button { display: none !important; }
-    #    </style>
-    #""", unsafe_allow_html=True)
+st.set_page_config(initial_sidebar_state="collapsed")
 
 # =====================================
 # CARREGAMENTO DE DADOS
