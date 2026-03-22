@@ -656,15 +656,45 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
 with tabs[1]:
     create_interactive_map(df_all, "🌎 Mapa - Todos os Projetos BR", "all")
 
+popup_html = f"""
+            <div style="font-family: Arial; font-size: 12px; width: 300px;">
+                <h4 style="margin: 0 0 8px 0; color: #2c3e50;">
+                    {row.get('resourceName_x', 'N/A')}
+                </h4>
+                <hr style="margin: 4px 0 8px 0;">
+                <table style="width:100%; border-collapse: collapse;">
+                    <tr><td style="color:#888; width:45%">🏷️ Status</td>
+                        <td><b>{row.get('vcsProjectStatus', 'N/A')}</b></td></tr>
+                    <tr><td style="color:#888">📍 Estado</td>
+                        <td><b>{row.get('state_Recode', 'N/A')}</b></td></tr>
+                    <tr><td style="color:#888">🌳 Atividade</td>
+                        <td><b>{row.get('vcsAFOLUActivity', 'N/A')}</b></td></tr>
+                    <tr><td style="color:#888">📋 Protocolo</td>
+                        <td><b>{row.get('protocol', 'N/A')}</b></td></tr>
+                    <tr><td style="color:#888">📅 Registro</td>
+                        <td><b>{row.get('vcsRegistrationDate', 'N/A')}</b></td></tr>
+                    <tr><td style="color:#888">📐 Área (ha)</td>
+                        <td><b>{row.get('vcsAcresHectares', 'N/A')}</b></td></tr>
+                    <tr><td style="color:#888">💨 EAER</td>
+                        <td><b>{pd.to_numeric(row.get('vcsEstimatedAnnualEmissionReductions', 0), errors='coerce'):,.0f}</b></td></tr>
+                    <tr><td style="color:#888">💰 VCUs Emitidos</td>
+                        <td><b>{pd.to_numeric(row.get('totalVintageQuantity', 0), errors='coerce'):,.0f}</b></td></tr>
+                    <tr><td style="color:#888">🔄 Aposentados</td>
+                        <td><b>{pd.to_numeric(row.get('quantity', 0), errors='coerce'):,.0f}</b></td></tr>
+                </table>
+                <hr style="margin: 8px 0 4px 0;">
+                <p style="margin:0; font-size:10px; color:#aaa;">ID: {row.get('resourceIdentifier', 'N/A')}</p>
+            </div>
+            """
 # =====================================
 # ABA 3: MAPA - PROJETOS COM CRÉDITOS
 # =====================================
 
 with tabs[2]:
-    st.header("💰 Mapa - Projetos com Créditos")
+    st.header("💰 Mapa - Projetos já emitiram Créditos")
     df_credit_unique = df_credit.groupby('resourceName_x').first().reset_index()
     st.info(f"📊 Exibindo **{len(df_credit_unique):,}** projetos únicos (de {len(df_credit):,} registros totais)")
-    create_interactive_map(df_credit_unique, "Projetos Únicos com Créditos", "credit_unique")
+    create_interactive_map(df_credit_unique, "Projetos com lastro de Créditos", "credit_unique")
 
 # =====================================
 # ABA 4: ANÁLISE DE VINTAGE
@@ -911,7 +941,7 @@ with tabs[4]:
                 st.info(
                         "⚠️ **Aviso:** A aplicação ainda está em desenvolvimento. "
                         "Os resultados são estimativas com base na BBox (Área Azul).\n\n"
-                        "**🧞 Novidades**\n"
+                        "**🧞 Novidades em breve**\n"
                         "- Estimativas considerando o recorte da BBox (Área Azul)\n"
                         "- Análises disponíveis apenas para AOI (Área de Interesse)\n\n"
                         "🎲 **Transparência e democratização da informação**"
