@@ -1368,6 +1368,35 @@ with tabs[4]:
                             #        st.plotly_chart(fig_da, use_container_width=True)
                             #    else:
                             #        st.warning("Colunas `classname` ou `areamunkm` não encontradas.")
+                            #with col_g2:
+                            #    st.markdown("### 📊 Área por Classe ao Longo do Tempo (km²)")
+                            #    if 'classname' in df_deter.columns and 'areamunkm' in df_deter.columns and 'year' in df_deter.columns:
+                            #        df_deter['areamunkm'] = pd.to_numeric(df_deter['areamunkm'], errors='coerce')
+                            #        df_area_linha = df_deter.groupby(['year', 'classname']).agg(
+                            #            area_total=('areamunkm', 'sum')
+                            #        ).reset_index()
+                            #        fig_da = go.Figure()
+                            #        for classe in df_area_linha['classname'].unique():
+                            #            df_cls = df_area_linha[df_area_linha['classname'] == classe]
+                            #            fig_da.add_trace(go.Scatter(
+                            #                x=df_cls['year'],
+                            #                y=df_cls['area_total'],
+                            #                mode='lines+markers',
+                            #                name=classe,
+                            #                line=dict(width=2),
+                            #                marker=dict(size=6)
+                            #            ))
+                            #        fig_da.update_layout(
+                            #            xaxis_title="Ano", yaxis_title="km²",
+                            #            height=300, template="plotly_white",
+                            #            margin=dict(t=10, b=40, l=40, r=10),
+                            #            hovermode='x unified',
+                            #            legend=dict(font=dict(size=10), orientation='v')
+                            #        )
+                            #        st.plotly_chart(fig_da, use_container_width=True)
+                            #    else:
+                            #        st.warning("Colunas necessárias não encontradas.")
+
                             with col_g2:
                                 st.markdown("### 📊 Área por Classe ao Longo do Tempo (km²)")
                                 if 'classname' in df_deter.columns and 'areamunkm' in df_deter.columns and 'year' in df_deter.columns:
@@ -1375,17 +1404,31 @@ with tabs[4]:
                                     df_area_linha = df_deter.groupby(['year', 'classname']).agg(
                                         area_total=('areamunkm', 'sum')
                                     ).reset_index()
+
+                                    DETER_COLORS = {
+                                        'CICATRIZ_DE_QUEIMADA':           '#d7191c',
+                                        'CORTE_SELETIVO':                 '#868686',
+                                        'CORTE_SELETIVO_DESORDENADO':     '#db83ff',
+                                        'CORTE_SELETIVO_GEOMETRICO':      '#ff7e00',
+                                        'DEGRADACAO':                     '#ffffbf',
+                                        'DESMATAMENTO_CORTE_RASO':        '#8a5f4b',
+                                        'DESMATAMENTO_VEG':               '#abdda4',
+                                        'MINERACAO':                      '#4223e5',
+                                    }
+
                                     fig_da = go.Figure()
-                                    for classe in df_area_linha['classname'].unique():
+                                    for classe in sorted(df_area_linha['classname'].unique()):
                                         df_cls = df_area_linha[df_area_linha['classname'] == classe]
+                                        cor = DETER_COLORS.get(classe.upper().replace(' ', '_'), '#999999')
                                         fig_da.add_trace(go.Scatter(
                                             x=df_cls['year'],
                                             y=df_cls['area_total'],
                                             mode='lines+markers',
                                             name=classe,
-                                            line=dict(width=2),
-                                            marker=dict(size=6)
+                                            line=dict(width=2, color=cor),
+                                            marker=dict(size=6, color=cor)
                                         ))
+
                                     fig_da.update_layout(
                                         xaxis_title="Ano", yaxis_title="km²",
                                         height=300, template="plotly_white",
