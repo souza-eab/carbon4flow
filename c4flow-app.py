@@ -1346,29 +1346,58 @@ with tabs[4]:
                             #    else:
                             #        st.warning("Coluna `areauckm` não encontrada.")
 
-                            with col_g2:
-                                st.markdown("### 📊 Área por Classe (km²)")
-                                if 'classname' in df_deter.columns and 'areamunkm' in df_deter.columns:
+                            #with col_g2:
+                            #    st.markdown("### 📊 Área por Classe (km²)")
+                            #    if 'classname' in df_deter.columns and 'areamunkm' in df_deter.columns:
+                            #        df_deter['areamunkm'] = pd.to_numeric(df_deter['areamunkm'], errors='coerce')
+                            #        df_area_classe = df_deter.groupby('classname').agg(
+                            #            area_total=('areamunkm', 'sum')
+                            #        ).reset_index().sort_values('area_total', ascending=False)
+                            #        fig_da = go.Figure()
+                            #        fig_da.add_trace(go.Bar(
+                            #            x=df_area_classe['classname'],
+                            #            y=df_area_classe['area_total'],
+                            #            marker_color='#CA6F1E', name='Área (km²)'
+                            #        ))
+                            #        fig_da.update_layout(
+                            #            xaxis_title="Classe", yaxis_title="km²",
+                            #            height=300, template="plotly_white",
+                            #            margin=dict(t=10, b=40, l=40, r=10),
+                            #            hovermode='x unified'
+                            #        )
+                            #        st.plotly_chart(fig_da, use_container_width=True)
+                            #    else:
+                            #        st.warning("Colunas `classname` ou `areamunkm` não encontradas.")
+                                with col_g2:
+                                st.markdown("### 📊 Área por Classe ao Longo do Tempo (km²)")
+                                if 'classname' in df_deter.columns and 'areamunkm' in df_deter.columns and 'year' in df_deter.columns:
                                     df_deter['areamunkm'] = pd.to_numeric(df_deter['areamunkm'], errors='coerce')
-                                    df_area_classe = df_deter.groupby('classname').agg(
+                                    df_area_linha = df_deter.groupby(['year', 'classname']).agg(
                                         area_total=('areamunkm', 'sum')
-                                    ).reset_index().sort_values('area_total', ascending=False)
+                                    ).reset_index()
+
                                     fig_da = go.Figure()
-                                    fig_da.add_trace(go.Bar(
-                                        x=df_area_classe['classname'],
-                                        y=df_area_classe['area_total'],
-                                        marker_color='#CA6F1E', name='Área (km²)'
-                                    ))
+                                    for classe in df_area_linha['classname'].unique():
+                                        df_cls = df_area_linha[df_area_linha['classname'] == classe]
+                                        fig_da.add_trace(go.Scatter(
+                                            x=df_cls['year'],
+                                            y=df_cls['area_total'],
+                                            mode='lines+markers',
+                                            name=classe,
+                                            line=dict(width=2),
+                                            marker=dict(size=6)
+                                        ))
+
                                     fig_da.update_layout(
-                                        xaxis_title="Classe", yaxis_title="km²",
+                                        xaxis_title="Ano", yaxis_title="km²",
                                         height=300, template="plotly_white",
                                         margin=dict(t=10, b=40, l=40, r=10),
-                                        hovermode='x unified'
+                                        hovermode='x unified',
+                                        legend=dict(font=dict(size=10), orientation='v')
                                     )
                                     st.plotly_chart(fig_da, use_container_width=True)
                                 else:
-                                    st.warning("Colunas `classname` ou `areamunkm` não encontradas.")
-
+                                    st.warning("Colunas necessárias não encontradas.")
                             with col_g3:
                                 st.markdown("### 📊 Classe de Alerta")
                                 if 'classname' in df_deter.columns:
