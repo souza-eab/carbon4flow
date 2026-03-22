@@ -1378,7 +1378,8 @@ with tabs[4]:
                                         height=640, template="plotly_white",
                                         margin=dict(t=10, b=40, l=40, r=10),
                                         hovermode='x unified',
-                                        legend=dict(font=dict(size=10), orientation='v')
+                                        #legend=dict(font=dict(size=10), orientation='v')
+                                        legend=dict(font=dict(size=10), orientation='v', xanchor='auto', yanchor='auto') #Voltar aqui para alinhar tabelea
                                     )
                                     st.plotly_chart(fig_da, use_container_width=True)
                                 else:
