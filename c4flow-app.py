@@ -900,9 +900,22 @@ with tabs[4]:
                     key="project_selector_v2"
                 )
 
-                st.info("⚠️ Pedimos compreensão: Estamos em desenvolvimento e os resultados a seguir são estimativas com base no recorte da BBox (Área Azul)" \
-                "🧞 New features: Estimativas com base no recorte da BBox (Área Azul) e apenas para AOI - Área de Interesse")
-                #st.info("🧞 New features: Estimativas com base no recorte da BBox (Área Azul) e apenas para AOI - Área de Interesse")
+                #st.info("⚠️ Pedimos compreensão: Estamos em desenvolvimento e os resultados a seguir são estimativas com base no recorte da BBox (Área Azul)")
+                #st.info("🧞 New features: 0-Estimativas com base no recorte da BBox (Área Azul) e (1) apenas para AOI - Área de Interesse")
+                #st.info("🎲 Dados transparência e universialização da informação")
+                
+                #st.info("⚠️ Aviso: A aplicação ainda está em desenvolvimento. Os resultados apresentados são estimativas baseadas no recorte da BBox (Área Azul).")
+                #st.info("🧞 Novidades: (0) Estimativas considerando o recorte da BBox (Área Azul); (1) Análises disponíveis apenas para AOI (Área de Interesse).")
+                #st.info("🎲 Compromisso com transparência e democratização da informação.")
+
+                st.info(
+                        "⚠️ **Aviso:** A aplicação ainda está em desenvolvimento. "
+                        "Os resultados são estimativas com base na BBox (Área Azul).\n\n"
+                        "**🧞 Novidades**\n"
+                        "- Estimativas considerando o recorte da BBox (Área Azul)\n"
+                        "- Análises disponíveis apenas para AOI (Área de Interesse)\n\n"
+                        "🎲 **Transparência e democratização da informação**"
+                    )
 
                 is_overview = selected_project == "🌎 Visão Geral (Todos os Projetos)"
 
