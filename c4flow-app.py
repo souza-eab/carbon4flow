@@ -1270,14 +1270,14 @@ with tabs[4]:
                             </style>
                             <div class='deter-leg'>
                             <b>Avisos de Desmatamento<br>a partir de 2016</b><br><br>
-                            <div class='deter-item'><div class='deter-box' style='background:#e31a1c'></div>Cicatriz de queimada</div>
-                            <div class='deter-item'><div class='deter-box' style='background:#b15928'></div>Corte seletivo</div>
-                            <div class='deter-item'><div class='deter-box' style='background:#f781bf'></div>Corte seletivo desordenado</div>
-                            <div class='deter-item'><div class='deter-box' style='background:#ff7f00'></div>Corte seletivo geométrico</div>
-                            <div class='deter-item'><div class='deter-box' style='background:#ffff99'></div>Degradação</div>
-                            <div class='deter-item'><div class='deter-box' style='background:#a0522d'></div>Desmatamento corte raso</div>
-                            <div class='deter-item'><div class='deter-box' style='background:#b2df8a'></div>Desmatamento vegetação</div>
-                            <div class='deter-item'><div class='deter-box' style='background:#1f78b4'></div>Mineração</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#d7191c'></div>Cicatriz de queimada</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#868686'></div>Corte seletivo</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#db83ff'></div>Corte seletivo desordenado</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#ff7e00'></div>Corte seletivo geométrico</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#ffffbf'></div>Degradação</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#8a5f4b'></div>Desmatamento corte raso</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#abdda4'></div>Desmatamento vegetação</div>
+                            <div class='deter-item'><div class='deter-box' style='background:#4223e5'></div>Mineração</div>
                             </div>
                             """, unsafe_allow_html=True)
                     
