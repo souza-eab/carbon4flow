@@ -635,6 +635,14 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
         for idx, row in df_map.iterrows():
             activity = row.get("vcsAFOLUActivity", "Unknown")
             color = ACTIVITY_COLORS.get(activity, "#808080")
+            popup_html = f"""
+            <div style="font-family: Arial; font-size: 12px; width: 250px;">
+                <h4 style="margin: 0 0 10px 0;">{row.get('resourceName_x', 'N/A')}</h4>
+                <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>
+                <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
+                <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
+            </div>
+            """
             folium.CircleMarker(location=[row["new_latitude"], row["new_longitude"]], radius=5,
                                 color=color, fill=True, fill_color=color, fill_opacity=0.6).add_to(m)
 
@@ -668,35 +676,6 @@ with tabs[2]:
     st.info(f"📊 Exibindo **{len(df_credit_unique):,}** projetos únicos (de {len(df_credit):,} registros totais)")
     create_interactive_map(df_credit_unique, "Projetos com lastro de Créditos", "credit_unique")
 
-
-popup_html = (
-                "<div style='font-family: Arial; font-size: 12px; width: 300px;'>"
-                "<h4 style='margin: 0 0 8px 0; color: #2c3e50;'>" + safe_get(row, 'resourceName_x') + "</h4>"
-                "<hr style='margin: 4px 0 8px 0;'>"
-                "<table style='width:100%; border-collapse: collapse;'>"
-                "<tr><td style='color:#888; width:45%'>🏷️ Status</td>"
-                    "<td><b>" + safe_get(row, 'vcsProjectStatus') + "</b></td></tr>"
-                "<tr><td style='color:#888'>📍 Estado</td>"
-                    "<td><b>" + safe_get(row, 'state_Recode') + "</b></td></tr>"
-                "<tr><td style='color:#888'>🌳 Atividade</td>"
-                    "<td><b>" + safe_get(row, 'vcsAFOLUActivity') + "</b></td></tr>"
-                "<tr><td style='color:#888'>📋 Protocolo</td>"
-                    "<td><b>" + safe_get(row, 'protocol') + "</b></td></tr>"
-                "<tr><td style='color:#888'>📅 Registro</td>"
-                    "<td><b>" + safe_get(row, 'vcsRegistrationDate') + "</b></td></tr>"
-                "<tr><td style='color:#888'>📐 Área (ha)</td>"
-                    "<td><b>" + safe_get(row, 'vcsAcresHectares') + "</b></td></tr>"
-                "<tr><td style='color:#888'>💨 EAER</td>"
-                    "<td><b>" + safe_get(row, 'vcsEstimatedAnnualEmissionReductions', fmt='num') + "</b></td></tr>"
-                "<tr><td style='color:#888'>💰 VCUs Emitidos</td>"
-                    "<td><b>" + safe_get(row, 'totalVintageQuantity', fmt='num') + "</b></td></tr>"
-                "<tr><td style='color:#888'>🔄 Aposentados</td>"
-                    "<td><b>" + safe_get(row, 'quantity', fmt='num') + "</b></td></tr>"
-                "</table>"
-                "<hr style='margin: 8px 0 4px 0;'>"
-                "<p style='margin:0; font-size:10px; color:#aaa;'>ID: " + safe_get(row, 'resourceIdentifier') + "</p>"
-                "</div>"
-            )
 
 # =====================================
 # ABA 4: ANÁLISE DE VINTAGE
