@@ -1348,10 +1348,10 @@ with tabs[4]:
 
                             with col_g2:
                                 st.markdown("### 📊 Área por Classe (km²)")
-                                if 'classname' in df_deter.columns and 'areauckm' in df_deter.columns:
-                                    df_deter['areauckm'] = pd.to_numeric(df_deter['areauckm'], errors='coerce')
+                                if 'classname' in df_deter.columns and 'areamunkm' in df_deter.columns:
+                                    df_deter['areamunkm'] = pd.to_numeric(df_deter['areamunkm'], errors='coerce')
                                     df_area_classe = df_deter.groupby('classname').agg(
-                                        area_total=('areauckm', 'sum')
+                                        area_total=('areamunkm', 'sum')
                                     ).reset_index().sort_values('area_total', ascending=False)
                                     fig_da = go.Figure()
                                     fig_da.add_trace(go.Bar(
@@ -1367,8 +1367,8 @@ with tabs[4]:
                                     )
                                     st.plotly_chart(fig_da, use_container_width=True)
                                 else:
-                                    st.warning("Colunas `classname` ou `areauckm` não encontradas.")
-                                    
+                                    st.warning("Colunas `classname` ou `areamunkm` não encontradas.")
+
                             with col_g3:
                                 st.markdown("### 📊 Classe de Alerta")
                                 if 'classname' in df_deter.columns:
