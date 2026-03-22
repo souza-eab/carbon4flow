@@ -1070,6 +1070,11 @@ with tabs[4]:
                             st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
                             st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
                             st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
+                            st.markdown(f"**Area:** {row_proj.get('vcsAcresHectares', 'N/A')}")
+                            st.markdown(f"**Tipo:** {row_proj.get('vcsAFOLUActivity', 'N/A')}")
+                            st.markdown(f"**Acreditação:** {row_proj.get('vcsCreditingPeriodTerm', 'N/A')}")
+                            st.markdown(f"**Protocolo:** {row_proj.get('vcsMethodology', 'N/A')}")
+
 
                     if not is_overview:
                         from shapely.ops import unary_union
@@ -1218,6 +1223,7 @@ with tabs[4]:
                             st.markdown("### 📋 Info")
                             st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
                             st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
+                            
                         else:
                             st.info("💡 Selecione um projeto.")
 
