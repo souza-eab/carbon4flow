@@ -900,6 +900,9 @@ with tabs[4]:
                     key="project_selector_v2"
                 )
 
+                st.info("⚠️ Pedimos compreensão: Estamos em desenvolvimento e os resultados a seguir são estimativas com base no recorte da BBox (Área Azul)")
+                st.info("🧞 New features: Estimativas com base no recorte da BBox (Área Azul) e apenas para AOI - Área de Interesse")
+
                 is_overview = selected_project == "🌎 Visão Geral (Todos os Projetos)"
 
                 if is_overview:
