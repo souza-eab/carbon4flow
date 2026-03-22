@@ -722,7 +722,7 @@ with tabs[4]:
             st.markdown("""
             ### Do Desmatamento aos Créditos de Carbono
             - 💰 **Valoriza economicamente** a floresta em pé
-            - 🌳 **Preserva a biodiversidade** amazônica
+            - 🌳 **Preserva a biodiversidade** 
             - 👥 **Beneficia comunidades** locais
             - 🌍 **Combate as mudanças climáticas** globais
             """)
@@ -1295,125 +1295,125 @@ with tabs[4]:
     # STORYTELLING 2: MAPBIOMAS
     # =====================================
 
-    with story_tabs[2]:
-        st.markdown("## 🌿 Alertas MapBiomas")
-
-        MAPBIOMAS_EMAIL    = st.secrets["MAPBIOMAS_EMAIL"]
-        MAPBIOMAS_PASSWORD = st.secrets["MAPBIOMAS_PASSWORD"]
-
-        mb_token = mapbiomas_get_token(MAPBIOMAS_EMAIL, MAPBIOMAS_PASSWORD)
-
-        if not mb_token:
-            st.error("❌ Não foi possível autenticar no MapBiomas.")
-        else:
-            BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-            KML_DIR  = os.path.join(BASE_DIR, "kml")
-            gdf_mb, _ = carregar_geometrias(df_all, KML_DIR)
-
-            if gdf_mb.empty:
-                st.warning("Nenhum KML válido encontrado.")
-            else:
-                gdf_mb_plot = gdf_mb[~gdf_mb["geometry"].is_empty & gdf_mb["geometry"].notnull()].copy()
-                gdf_mb_plot = gdf_mb_plot[gdf_mb_plot.is_valid]
-
-                mb_options = ["🌎 Visão Geral (Todos os Projetos)"] + [
-                    f"{row.get('resourceName_x', 'Sem nome')} — {row.get('state_Recode', 'N/A')}"
-                    for _, row in gdf_mb_plot.iterrows()
-                ]
-
-                mb_selected = st.selectbox("📍 Selecione um projeto:", options=mb_options, key="mb_project_selector")
-                mb_is_overview = mb_selected == "🌎 Visão Geral (Todos os Projetos)"
-
-                if mb_is_overview:
-                    st.info("💡 Selecione um projeto para ver os alertas MapBiomas.")
-                else:
-                    mb_project_name = mb_selected.split(" — ")[0]
-                    mb_gdf = gdf_mb_plot[gdf_mb_plot["resourceName_x"] == mb_project_name]
-
-                    if mb_gdf.empty:
-                        st.warning("Projeto não encontrado.")
-                    else:
-                        bounds = mb_gdf.total_bounds
-                        bbox   = [float(bounds[0]), float(bounds[1]), float(bounds[2]), float(bounds[3])]
-
-                        with st.spinner("Consultando MapBiomas Alerta..."):
-                            mb_data = mapbiomas_alerts(bbox, mb_token)
-
-                        if not mb_data:
-                            st.warning("Sem dados disponíveis para este projeto.")
-                        else:
-                            summary    = mb_data.get('summary', {})
-                            collection = mb_data.get('collection', [])
-                            metadata   = mb_data.get('metadata', {})
-
-                            col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-                            with col_m1:
-                                st.metric("Total de Alertas", f"{summary.get('total', 0):,}")
-                            with col_m2:
-                                st.metric("Área Total (ha)", f"{summary.get('area', 0):,.1f}")
-                            with col_m3:
-                                st.metric("Total de Páginas", f"{metadata.get('totalPages', 1)}")
-                            with col_m4:
-                                st.metric("Anos com Alertas", f"{len(summary.get('alertsByYear', []))}")
-
-                            st.divider()
-
-                            col_g1, col_g2 = st.columns(2)
-
-                            with col_g1:
-                                st.markdown("### 📊 Alertas por Ano")
-                                df_by_year = pd.DataFrame(summary.get('alertsByYear', []))
-                                if not df_by_year.empty:
-                                    fig_ay = go.Figure()
-                                    fig_ay.add_trace(go.Bar(x=df_by_year['year'], y=df_by_year['value'],
-                                                            marker_color='#E67E22', name='Alertas'))
-                                    fig_ay.update_layout(xaxis_title="Ano", yaxis_title="Alertas", height=300,
-                                                         template="plotly_white", margin=dict(t=10, b=40, l=40, r=10),
-                                                         hovermode='x unified')
-                                    st.plotly_chart(fig_ay, use_container_width=True)
-
-                            with col_g2:
-                                st.markdown("### 🌳 Área Desmatada por Ano (ha)")
-                                df_area_year = pd.DataFrame(summary.get('deforestationAreaByYear', []))
-                                if not df_area_year.empty:
-                                    fig_area = go.Figure()
-                                    fig_area.add_trace(go.Bar(x=df_area_year['year'], y=df_area_year['value'],
-                                                              marker_color='#C0392B', name='Área (ha)'))
-                                    fig_area.update_layout(xaxis_title="Ano", yaxis_title="ha", height=300,
-                                                           template="plotly_white", margin=dict(t=10, b=40, l=40, r=10),
-                                                           hovermode='x unified')
-                                    st.plotly_chart(fig_area, use_container_width=True)
-
-                            st.divider()
-
-                            if collection:
-                                st.markdown("### 📋 Lista de Alertas")
-                                df_col = pd.DataFrame(collection)
-
-                                for col_list in ['sources', 'deforestationClasses', 'crossedBiomes', 'crossedStates']:
-                                    if col_list in df_col.columns:
-                                        df_col[col_list] = df_col[col_list].apply(
-                                            lambda x: ', '.join(x) if isinstance(x, list) else x)
-
-                                df_col = df_col.rename(columns={
-                                    'alertCode': 'Código', 'areaHa': 'Área (ha)',
-                                    'detectedAt': 'Detectado em', 'publishedAt': 'Publicado em',
-                                    'sources': 'Fontes', 'deforestationClasses': 'Classe',
-                                    'statusName': 'Status', 'crossedBiomes': 'Bioma', 'crossedStates': 'Estado'
-                                })
-
-                                st.dataframe(df_col.style.format({'Área (ha)': '{:,.2f}'}),
-                                             use_container_width=True, height=400)
-
-                                csv = df_col.to_csv(index=False).encode('utf-8')
-                                st.download_button(
-                                    label="⬇️ Download Alertas (CSV)",
-                                    data=csv,
-                                    file_name=f"alertas_mapbiomas_{mb_project_name[:30]}.csv",
-                                    mime='text/csv'
-                                )
-
-    # =====================================
+    #with story_tabs[2]:
+    #    st.markdown("## 🌿 Alertas MapBiomas")
+#
+    #    MAPBIOMAS_EMAIL    = st.secrets["MAPBIOMAS_EMAIL"]
+    #    MAPBIOMAS_PASSWORD = st.secrets["MAPBIOMAS_PASSWORD"]
+#
+    #    mb_token = mapbiomas_get_token(MAPBIOMAS_EMAIL, MAPBIOMAS_PASSWORD)
+#
+    #    if not mb_token:
+    #        st.error("❌ Não foi possível autenticar no MapBiomas.")
+    #    else:
+    #        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    #        KML_DIR  = os.path.join(BASE_DIR, "kml")
+    #        gdf_mb, _ = carregar_geometrias(df_all, KML_DIR)
+#
+    #        if gdf_mb.empty:
+    #            st.warning("Nenhum KML válido encontrado.")
+    #        else:
+    #            gdf_mb_plot = gdf_mb[~gdf_mb["geometry"].is_empty & gdf_mb["geometry"].notnull()].copy()
+    #            gdf_mb_plot = gdf_mb_plot[gdf_mb_plot.is_valid]
+#
+    #            mb_options = ["🌎 Visão Geral (Todos os Projetos)"] + [
+    #                f"{row.get('resourceName_x', 'Sem nome')} — {row.get('state_Recode', 'N/A')}"
+    #                for _, row in gdf_mb_plot.iterrows()
+    #            ]
+#
+    #            mb_selected = st.selectbox("📍 Selecione um projeto:", options=mb_options, key="mb_project_selector")
+    #            mb_is_overview = mb_selected == "🌎 Visão Geral (Todos os Projetos)"
+#
+    #            if mb_is_overview:
+    #                st.info("💡 Selecione um projeto para ver os alertas MapBiomas.")
+    #            else:
+    #                mb_project_name = mb_selected.split(" — ")[0]
+    #                mb_gdf = gdf_mb_plot[gdf_mb_plot["resourceName_x"] == mb_project_name]
+#
+    #                if mb_gdf.empty:
+    #                    st.warning("Projeto não encontrado.")
+    #                else:
+    #                    bounds = mb_gdf.total_bounds
+    #                    bbox   = [float(bounds[0]), float(bounds[1]), float(bounds[2]), float(bounds[3])]
+#
+    #                    with st.spinner("Consultando MapBiomas Alerta..."):
+    #                        mb_data = mapbiomas_alerts(bbox, mb_token)
+#
+    #                    if not mb_data:
+    #                        st.warning("Sem dados disponíveis para este projeto.")
+    #                    else:
+    #                        summary    = mb_data.get('summary', {})
+    #                        collection = mb_data.get('collection', [])
+    #                        metadata   = mb_data.get('metadata', {})
+#
+    #                        col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+    #                        with col_m1:
+    #                            st.metric("Total de Alertas", f"{summary.get('total', 0):,}")
+    #                        with col_m2:
+    #                            st.metric("Área Total (ha)", f"{summary.get('area', 0):,.1f}")
+    #                        with col_m3:
+    #                            st.metric("Total de Páginas", f"{metadata.get('totalPages', 1)}")
+    #                        with col_m4:
+    #                            st.metric("Anos com Alertas", f"{len(summary.get('alertsByYear', []))}")
+#
+    #                        st.divider()
+#
+    #                        col_g1, col_g2 = st.columns(2)
+#
+    #                        with col_g1:
+    #                            st.markdown("### 📊 Alertas por Ano")
+    #                            df_by_year = pd.DataFrame(summary.get('alertsByYear', []))
+    #                            if not df_by_year.empty:
+    #                                fig_ay = go.Figure()
+    #                                fig_ay.add_trace(go.Bar(x=df_by_year['year'], y=df_by_year['value'],
+    #                                                        marker_color='#E67E22', name='Alertas'))
+    #                                fig_ay.update_layout(xaxis_title="Ano", yaxis_title="Alertas", height=300,
+    #                                                     template="plotly_white", margin=dict(t=10, b=40, l=40, r=10),
+    #                                                     hovermode='x unified')
+    #                                st.plotly_chart(fig_ay, use_container_width=True)
+#
+    #                        with col_g2:
+    #                            st.markdown("### 🌳 Área Desmatada por Ano (ha)")
+    #                            df_area_year = pd.DataFrame(summary.get('deforestationAreaByYear', []))
+    #                            if not df_area_year.empty:
+    #                                fig_area = go.Figure()
+    #                                fig_area.add_trace(go.Bar(x=df_area_year['year'], y=df_area_year['value'],
+    #                                                          marker_color='#C0392B', name='Área (ha)'))
+    #                                fig_area.update_layout(xaxis_title="Ano", yaxis_title="ha", height=300,
+    #                                                       template="plotly_white", margin=dict(t=10, b=40, l=40, r=10),
+    #                                                       hovermode='x unified')
+    #                                st.plotly_chart(fig_area, use_container_width=True)
+#
+    #                        st.divider()
+#
+    #                        if collection:
+    #                            st.markdown("### 📋 Lista de Alertas")
+    #                            df_col = pd.DataFrame(collection)
+#
+    #                            for col_list in ['sources', 'deforestationClasses', 'crossedBiomes', 'crossedStates']:
+    #                                if col_list in df_col.columns:
+    #                                    df_col[col_list] = df_col[col_list].apply(
+    #                                        lambda x: ', '.join(x) if isinstance(x, list) else x)
+#
+    #                            df_col = df_col.rename(columns={
+    #                                'alertCode': 'Código', 'areaHa': 'Área (ha)',
+    #                                'detectedAt': 'Detectado em', 'publishedAt': 'Publicado em',
+    #                                'sources': 'Fontes', 'deforestationClasses': 'Classe',
+    #                                'statusName': 'Status', 'crossedBiomes': 'Bioma', 'crossedStates': 'Estado'
+    #                            })
+#
+    #                            st.dataframe(df_col.style.format({'Área (ha)': '{:,.2f}'}),
+    #                                         use_container_width=True, height=400)
+#
+    #                            csv = df_col.to_csv(index=False).encode('utf-8')
+    #                            st.download_button(
+    #                                label="⬇️ Download Alertas (CSV)",
+    #                                data=csv,
+    #                                file_name=f"alertas_mapbiomas_{mb_project_name[:30]}.csv",
+    #                                mime='text/csv'
+    #                            )
+#
+    ## =====================================
     # STORYTELLING 3: EVOLUÇÃO TEMPORAL
     # =====================================
 
