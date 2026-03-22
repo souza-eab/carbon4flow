@@ -628,11 +628,11 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
             #"""
             popup_html = f"""
             <div style="font-family: Arial; font-size: 12px; width: 250px;">
-                <h4 style="margin: 0 0 10px 0;">{row.get('resourceName_x', 'N/A')}</h4>            
+                <h4 style="margin: 0 0 8px 0;">{row.get('resourceName_x', 'N/A')}</h4>            
                 <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>    
                 <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
-                <b>Protocolos:</b> {row.get('protocols', 'N/A')}<br>
-                <b>Tipo:</b> {row.get('protocolSubCategories', 'N/A')}<br>
+                <b>Protocolos:</b> {row.get('vcsMethodology', 'N/A')}<br>
+                <b>Tipo:</b> {row.get('vcsAFOLUActivity', 'N/A')}<br>
                 <b>Acreditação:</b> {row.get('vcsCreditingPeriodTerm', 'N/A')}<br>
                 <b>Area:</b> {row.get('vcsAcresHectares', 'N/A')}<br>
                 <b>Resumo:</b> {row.get('description', 'N/A')}<br>
@@ -651,11 +651,11 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
             color = ACTIVITY_COLORS.get(activity, "#808080")
             popup_html = f"""
             <div style="font-family: Arial; font-size: 12px; width: 250px;">
-                <h4 style="margin: 0 0 10px 0;">{row.get('resourceName_x', 'N/A')}</h4>
+                <h4 style="margin: 0 0 8px 0;">{row.get('resourceName_x', 'N/A')}</h4>
                 <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>
                 <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
-                <b>Protocolos:</b> {row.get('protocols', 'N/A')}<br>
-                <b>Tipo:</b> {row.get('protocolSubCategories', 'N/A')}<br>
+                <b>Protocolos:</b> {row.get('vcsMethodology', 'N/A')}<br>
+                <b>Tipo:</b> {row.get('vcsAFOLUActivity', 'N/A')}<br>
                 <b>Acreditação:</b> {row.get('vcsCreditingPeriodTerm', 'N/A')}<br>
                 <b>Area:</b> {row.get('vcsAcresHectares', 'N/A')}<br>
                 <b>Resumo:</b> {row.get('description', 'N/A')}<br>
