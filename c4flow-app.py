@@ -738,23 +738,6 @@ with tabs[3]:
             else:
                 df_proj = pd.DataFrame()
 
-        with st.expander("🔍 Filtros Avançados"):
-        
-        col_advZ, col_adW = st.columns(2)
-        with col_advZ:
-            if "protocolSubCategories" in df_map.columns:
-                categories = sorted(df_map["protocolSubCategories"].dropna().unique().tolist())
-                selected_cat = st.multiselect("Protocol Sub-Categories:", options=categories, default=categories, key=f"cat_{map_key}")
-                if selected_cat:
-                    df_map = df_map[df_map["protocolSubCategories"].isin(selected_cat)]
-        with col_advW:
-            if "vcsProjectStatus" in df_map.columns:
-                statuses = sorted(df_map["vcsProjectStatus"].dropna().unique().tolist())
-                selected_status = st.multiselect("Status:", options=statuses, default=statuses, key=f"status_{map_key}")
-                if selected_status:
-                    df_map = df_map[df_map["vcsProjectStatus"].isin(selected_status)]
-
-
         if df_proj.empty:
             st.info("Selecione um estado e projeto para visualizar a análise")
         else:
