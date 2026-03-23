@@ -909,8 +909,8 @@ with tabs[3]:
                     if 'retiredCancelled' in df_flow_display.columns:
                         def highlight_retired(row):
                             if row.get('retiredCancelled') == True:
-                                return ['background-color: #ffffff; color: #c0392b'] * len(row)
-                            return ['background-color: #eafaf1; color: #1e8449'] * len(row)
+                                return ['background-color: #ffffff; color: #666666'] * len(row)
+                            return ['background-color: #ffffff; color: #666666'] * len(row)
 
                         fmt = {c: "{:,.0f}" for c in ['quantity'] if c in df_flow_display.columns}
                         st.dataframe(
