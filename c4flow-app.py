@@ -801,6 +801,134 @@ with tabs[3]:
                 st.dataframe(df_proj[display_cols].style.format(
                     {col: "{:,.0f}" for col in display_cols if col != 'Ano_Periodo'}),
                     use_container_width=True)
+                
+            # =====================================
+            # SEÇÃO: TRANSAÇÕES | FLOW
+            # =====================================
+
+            st.divider()
+            st.subheader("💸 Transações | Flow")
+            st.caption(f"Transações granulares de `df_credit` filtradas por: **{estado_sel}** → **{projeto_sel}**")
+
+            # Filtrar df_credit pelo projeto selecionado
+            df_flow = df_credit[df_credit['resourceName_x'] == projeto_sel].copy()
+
+            if df_flow.empty:
+                st.warning("⚠️ Nenhuma transação encontrada para este projeto.")
+            else:
+                # --- Métricas de topo ---
+                col_fl1, col_fl2, col_fl3, col_fl4 = st.columns(4)
+
+                total_qty = pd.to_numeric(df_flow['quantity'], errors='coerce').sum()
+
+                if 'retiredCancelled' in df_flow.columns:
+                    mask_ret = df_flow['retiredCancelled'] == True
+                    qty_retired = pd.to_numeric(df_flow.loc[mask_ret, 'quantity'], errors='coerce').sum()
+                    qty_active  = pd.to_numeric(df_flow.loc[~mask_ret, 'quantity'], errors='coerce').sum()
+                else:
+                    qty_retired = 0
+                    qty_active  = total_qty
+
+                pct_retired = (qty_retired / total_qty * 100) if total_qty > 0 else 0
+
+                with col_fl1:
+                    st.metric("📦 Total Transações", f"{len(df_flow):,}")
+                with col_fl2:
+                    st.metric("🔢 Quantidade Total (VCUs)", f"{total_qty:,.0f}")
+                with col_fl3:
+                    st.metric(
+                        "✅ Ativos",
+                        f"{qty_active:,.0f}",
+                        delta=f"{100 - pct_retired:.1f}%",
+                        delta_color="normal"
+                    )
+                with col_fl4:
+                    st.metric(
+                        "🔴 Retired / Cancelled",
+                        f"{qty_retired:,.0f}",
+                        delta=f"{pct_retired:.1f}%",
+                        delta_color="inverse"
+                    )
+
+                st.divider()
+
+                # --- Gráfico Ativos vs Retired por Vintage ---
+                if 'Vintage' in df_flow.columns and 'retiredCancelled' in df_flow.columns:
+                    df_flow['quantity_num'] = pd.to_numeric(df_flow['quantity'], errors='coerce')
+                    df_flow['Status_Label'] = df_flow['retiredCancelled'].apply(
+                        lambda x: '🔴 Retired/Cancelled' if x == True else '✅ Ativo'
+                    )
+                    df_flow['Ano_Periodo'] = df_flow['Vintage'].apply(
+                        lambda x: (
+                            f"{x.split(' e ')[0][:4]}-{x.split(' e ')[1][:4]}"
+                            if isinstance(x, str) and ' e ' in x
+                            else str(x)[:4] if pd.notna(x) else 'N/A'
+                        )
+                    )
+
+                    df_bar = df_flow.groupby(['Ano_Periodo', 'Status_Label']).agg(
+                        Quantidade=('quantity_num', 'sum')
+                    ).reset_index()
+
+                    fig_flow = px.bar(
+                        df_bar,
+                        x='Ano_Periodo',
+                        y='Quantidade',
+                        color='Status_Label',
+                        color_discrete_map={
+                            '✅ Ativo':              '#2ecc71',
+                            '🔴 Retired/Cancelled': '#e74c3c'
+                        },
+                        barmode='stack',
+                        title=f"Distribuição de VCUs por Vintage — {projeto_sel}",
+                        labels={'Ano_Periodo': 'Período (Vintage)', 'Quantidade': 'VCUs', 'Status_Label': 'Status'}
+                    )
+                    fig_flow.update_layout(
+                        template='plotly_white',
+                        height=380,
+                        hovermode='x unified',
+                        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+                        margin=dict(t=60, b=40, l=60, r=20)
+                    )
+                    st.plotly_chart(fig_flow, use_container_width=True)
+
+                st.divider()
+
+                # --- Tabela granular ---
+                with st.expander("📋 Ver Tabela de Transações (Granular)", expanded=True):
+                    cols_flow = [
+                        'issuanceDate', 'tbl_type', 'resourceName_y',
+                        'quantity', 'retiredCancelled',
+                        'RetirementBeneficiary', 'retirementReason', 'Vintage'
+                    ]
+                    cols_flow_exist = [c for c in cols_flow if c in df_flow.columns]
+
+                    df_flow_display = df_flow[cols_flow_exist].copy()
+
+                    # Destaque visual: linha vermelha para retired
+                    if 'retiredCancelled' in df_flow_display.columns:
+                        def highlight_retired(row):
+                            if row.get('retiredCancelled') == True:
+                                return ['background-color: #fdecea; color: #c0392b'] * len(row)
+                            return ['background-color: #eafaf1; color: #1e8449'] * len(row)
+
+                        fmt = {c: "{:,.0f}" for c in ['quantity'] if c in df_flow_display.columns}
+                        st.dataframe(
+                            df_flow_display.style.apply(highlight_retired, axis=1).format(fmt),
+                            use_container_width=True,
+                            height=420
+                        )
+                    else:
+                        st.dataframe(df_flow_display, use_container_width=True, height=420)
+
+                    # Download
+                    csv_flow = df_flow_display.to_csv(index=False).encode('utf-8')
+                    st.download_button(
+                        label="⬇️ Download Transações (CSV)",
+                        data=csv_flow,
+                        file_name=f"transacoes_{projeto_sel[:40].replace(' ', '_')}.csv",
+                        mime="text/csv"
+                    )
 
 # =====================================
 # ABA 5: STORYTELLING
