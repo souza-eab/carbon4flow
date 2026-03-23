@@ -229,7 +229,7 @@ def gfw_radd_alerts(geojson, api_key):
 # =====================================
 
 @st.cache_data(show_spinner=False)
-def terrabrasilis_wfs(url, type_name, bbox):
+def terrabrasilis_wfs(url, type_name, bbox, max_features=50000):
     """Consulta WFS do TerraBrasilis filtrado por bbox."""
     try:
         r = requests.get(url, params={
