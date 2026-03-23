@@ -630,7 +630,8 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
             #"""
             popup_html = f"""
             <div style="font-family: Arial; font-size: 11px; width: 250px;">
-                <h4 style="margin: 0 0 15px 0;">{row.get('resourceName_x', 'N/A')}</h4>            
+                <h4 style="margin: 0 0 15px 0;">{row.get('resourceName_x', 'N/A')}</h4>
+                <b>ID:</b> {row.get('resourceIdentifier', 'N/A')}<br>             
                 <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>    
                 <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
                 <b>Protocolos:</b> {row.get('vcsMethodology', 'N/A')}<br>
@@ -654,6 +655,7 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
             popup_html = f"""
             <div style="font-family: Arial; font-size: 11px; width: 250px;">
                 <h4 style="margin: 0 0 15px 0;">{row.get('resourceName_x', 'N/A')}</h4>
+                <b>ID:</b> {row.get('resourceIdentifier', 'N/A')}<br>    
                 <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>
                 <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
                 <b>Protocolos:</b> {row.get('vcsMethodology', 'N/A')}<br>
@@ -1070,6 +1072,7 @@ with tabs[4]:
                             row_proj = selected_gdf.iloc[0]
                             st.markdown("### 📋 Info")
                             st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
+                            st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
                             st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
                             st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
                             st.markdown(f"**Area:** {row_proj.get('vcsAcresHectares', 'N/A')}")
@@ -1225,6 +1228,7 @@ with tabs[4]:
                             row_proj = selected_gdf.iloc[0]
                             st.markdown("### 📋 Info")
                             st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
+                            st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
                             st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
                             st.markdown(f"**Area:** {row_proj.get('vcsAcresHectares', 'N/A')}")
                             st.markdown(f"**Tipo:** {row_proj.get('vcsAFOLUActivity', 'N/A')}")
@@ -1382,6 +1386,7 @@ with tabs[4]:
                             row_proj = selected_gdf.iloc[0]
                             st.markdown("### 📋 Info")
                             st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
+                            st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
                             st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
                             st.markdown(f"**Area:** {row_proj.get('vcsAcresHectares', 'N/A')}")
                             st.markdown(f"**Tipo:** {row_proj.get('vcsAFOLUActivity', 'N/A')}")
@@ -1632,6 +1637,7 @@ with tabs[4]:
                             row_proj = selected_gdf.iloc[0]
                             st.markdown("### 📋 Info")
                             st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
+                            st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
                             st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
                             st.markdown(f"**Area:** {row_proj.get('vcsAcresHectares', 'N/A')}")
                             st.markdown(f"**Tipo:** {row_proj.get('vcsAFOLUActivity', 'N/A')}")
