@@ -709,9 +709,17 @@ with tabs[1]:
 # ABA 3: MAPA - PROJETOS COM CRÉDITOS
 # =====================================
 
+@st.cache_data(show_spinner=False)
+def get_credit_unique(df):
+    return df.groupby('resourceName_x').first().reset_index()
+
+# Na aba 3:
+df_credit_unique = get_credit_unique(df_credit)
+
+
 with tabs[2]:
     st.header("💰 Mapa - Projetos já emitiram Créditos")
-    df_credit_unique = df_credit.groupby('resourceName_x').first().reset_index()
+    #df_credit_unique = df_credit.groupby('resourceName_x').first().reset_index()
     st.info(f"📊 Exibindo **{len(df_credit_unique):,}** projetos únicos (de {len(df_credit):,} registros totais)")
     create_interactive_map(df_credit_unique, "Projetos com lastro de Créditos", "credit_unique")
 
