@@ -898,8 +898,8 @@ with tabs[3]:
                 with st.expander("📋 Ver Tabela de Transações (Granular)", expanded=True):
                     cols_flow = [
                         'issuanceDate', 'tbl_type', 'resourceName_y',
-                        'quantity', 'retiredCancelled',
-                        'RetirementBeneficiary', 'retirementReason', 'Vintage'
+                        'quantity', 'retiredCancelled', 'additionalCertifications',
+                        'retirementBeneficiary', 'retirementReason','retirementDetails', 'Vintage'
                     ]
                     cols_flow_exist = [c for c in cols_flow if c in df_flow.columns]
 
@@ -909,7 +909,7 @@ with tabs[3]:
                     if 'retiredCancelled' in df_flow_display.columns:
                         def highlight_retired(row):
                             if row.get('retiredCancelled') == True:
-                                return ['background-color: #fdecea; color: #c0392b'] * len(row)
+                                return ['background-color: #ffffff; color: #c0392b'] * len(row)
                             return ['background-color: #eafaf1; color: #1e8449'] * len(row)
 
                         fmt = {c: "{:,.0f}" for c in ['quantity'] if c in df_flow_display.columns}
