@@ -1156,9 +1156,15 @@ with tabs[4]:
             df_all_ref["resourceIdentifier"] = df_all_ref["resourceIdentifier"].astype(str)
             #df_all_ref["resourceIdentifier"] = df_all_ref["resourceIdentifier"].astype(str)
             gdf_kml.index = gdf_kml.index.astype(str)
-            gdf_combined = gdf_kml.reset_index().merge(
+            #gdf_combined = gdf_kml.reset_index().merge(
+            #    df_all_ref, on="resourceIdentifier", how="left"
+            #)
+            gdf_kml_reset = gdf_kml.reset_index()
+            gdf_kml_reset = gdf_kml_reset.drop_duplicates(subset=['resourceIdentifier'])
+            gdf_combined = gdf_kml_reset.merge(
                 df_all_ref, on="resourceIdentifier", how="left"
             )
+
             gdf_combined = gpd.GeoDataFrame(gdf_combined, geometry="geometry", crs="EPSG:4326")
         else:
             gdf_combined = gdf_kml
