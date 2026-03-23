@@ -133,9 +133,7 @@ def analise_vcu_por_vintage(df_full):
 # =====================================
 
 @st.cache_data(show_spinner=True)
-#def carregar_geometrias(df_all, kml_dir: str):
-def carregar_geometrias_kml(kml_dir: str):
-
+def carregar_geometrias(df_all, kml_dir: str):
 #def carregar_geometrias(kml_dir: str):  # Fix 3 - remova df_all do argumento
     lista_gdfs = []
     erros = []
@@ -155,7 +153,7 @@ def carregar_geometrias_kml(kml_dir: str):
         gdf_all.set_crs("EPSG:4326", inplace=True)
     else:
         gdf_all = gdf_all.to_crs("EPSG:4326")
-    #df_all["resourceIdentifier"] = df_all["resourceIdentifier"].astype(str)
+    df_all["resourceIdentifier"] = df_all["resourceIdentifier"].astype(str)
     gdf_all["resourceIdentifier"] = gdf_all["resourceIdentifier"].astype(str)
     gdf_all["geometry"] = gdf_all["geometry"].buffer(0)
     try:
@@ -1130,8 +1128,7 @@ with tabs[4]:
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         KML_DIR  = os.path.join(BASE_DIR, "kml")
 
-        #gdf_combined, erros = carregar_geometrias_kml(df_all, KML_DIR)
-        gdf_combined, erros = carregar_geometrias_kml(df_all, KML_DIR)
+        gdf_combined, erros = carregar_geometrias(df_all, KML_DIR)
         
 
         if erros:
