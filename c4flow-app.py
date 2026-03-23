@@ -1136,8 +1136,17 @@ with tabs[4]:
         gdf_kml, erros = carregar_geometrias(KML_DIR)
 
         if not gdf_kml.empty:
-            df_all_ref = df_all.copy()
+            #df_all_ref = df_all.copy()
+
+            cols_merge = [
+                'resourceIdentifier', 'resourceName_x', 'state_Recode',
+                'vcsAFOLUActivity', 'vcsProjectStatus', 'vcsMethodology',
+                'vcsCreditingPeriodTerm', 'vcsAcresHectares', 'description'
+            ]
+            cols_merge = [c for c in cols_merge if c in df_all.columns]
+            df_all_ref = df_all[cols_merge].copy()
             df_all_ref["resourceIdentifier"] = df_all_ref["resourceIdentifier"].astype(str)
+            #df_all_ref["resourceIdentifier"] = df_all_ref["resourceIdentifier"].astype(str)
             gdf_kml.index = gdf_kml.index.astype(str)
             gdf_combined = gdf_kml.reset_index().merge(
                 df_all_ref, on="resourceIdentifier", how="left"
