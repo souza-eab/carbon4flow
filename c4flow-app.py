@@ -133,7 +133,9 @@ def analise_vcu_por_vintage(df_full):
 # =====================================
 
 @st.cache_data(show_spinner=True)
-def carregar_geometrias(df_all, kml_dir: str):
+#def carregar_geometrias(df_all, kml_dir: str):
+def carregar_geometrias(kml_dir: str):
+
 #def carregar_geometrias(kml_dir: str):  # Fix 3 - remova df_all do argumento
     lista_gdfs = []
     erros = []
@@ -153,7 +155,7 @@ def carregar_geometrias(df_all, kml_dir: str):
         gdf_all.set_crs("EPSG:4326", inplace=True)
     else:
         gdf_all = gdf_all.to_crs("EPSG:4326")
-    df_all["resourceIdentifier"] = df_all["resourceIdentifier"].astype(str)
+    #df_all["resourceIdentifier"] = df_all["resourceIdentifier"].astype(str)
     gdf_all["resourceIdentifier"] = gdf_all["resourceIdentifier"].astype(str)
     gdf_all["geometry"] = gdf_all["geometry"].buffer(0)
     try:
@@ -161,7 +163,7 @@ def carregar_geometrias(df_all, kml_dir: str):
     except TopologicalError:
         gdf_all["geometry"] = gdf_all["geometry"].buffer(0)
         gdf_all = gdf_all.dissolve(by="resourceIdentifier")
-    gdf_all = gdf_all.merge(df_all, on="resourceIdentifier", how="left")
+    #gdf_all = gdf_all.merge(df_all, on="resourceIdentifier", how="left")
     return gdf_all, erros
 
 @st.cache_data(show_spinner=False)
@@ -1128,8 +1130,21 @@ with tabs[4]:
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
         KML_DIR  = os.path.join(BASE_DIR, "kml")
 
-        gdf_combined, erros = carregar_geometrias(df_all, KML_DIR)
+        #gdf_combined, erros = carregar_geometrias(KML_DIR)
         
+        # Cache estável — sem df_all dentro
+        gdf_kml, erros = carregar_geometrias(KML_DIR)
+
+        if not gdf_kml.empty:
+            df_all_ref = df_all.copy()
+            df_all_ref["resourceIdentifier"] = df_all_ref["resourceIdentifier"].astype(str)
+            gdf_kml.index = gdf_kml.index.astype(str)
+            gdf_combined = gdf_kml.reset_index().merge(
+                df_all_ref, on="resourceIdentifier", how="left"
+            )
+            gdf_combined = gpd.GeoDataFrame(gdf_combined, geometry="geometry", crs="EPSG:4326")
+        else:
+            gdf_combined = gdf_kml
 
         if erros:
             with st.expander("⚠️ Erros ao carregar alguns KMLs"):
