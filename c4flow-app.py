@@ -909,23 +909,24 @@ with tabs[3]:
                     ]
                     cols_flow_exist = [c for c in cols_flow if c in df_flow.columns]
 
-                    df_flow_display = df_flow[cols_flow_exist].copy()
+                    df_flow_display = df_flow[cols_flow_exist]
 
                     # Destaque visual: linha vermelha para retired
-                    if 'retiredCancelled' in df_flow_display.columns:
-                        def highlight_retired(row):
-                            if row.get('retiredCancelled') == True:
-                                return ['background-color: #ffffff; color: #666666'] * len(row)
-                            return ['background-color: #ffffff; color: #666666'] * len(row)
-
-                        fmt = {c: "{:,.0f}" for c in ['quantity'] if c in df_flow_display.columns}
-                        st.dataframe(
-                            df_flow_display.style.apply(highlight_retired, axis=1).format(fmt),
-                            use_container_width=True,
-                            height=420
-                        )
-                    else:
-                        st.dataframe(df_flow_display, use_container_width=True, height=420)
+                    #if 'retiredCancelled' in df_flow_display.columns:
+                    #    def highlight_retired(row):
+                    #        if row.get('retiredCancelled') == True:
+                    #            return ['background-color: #ffffff; color: #666666'] * len(row)
+                    #        return ['background-color: #ffffff; color: #666666'] * len(row)
+#
+                    #    fmt = {c: "{:,.0f}" for c in ['quantity'] if c in df_flow_display.columns}
+                    #    st.dataframe(
+                    #        df_flow_display.style.apply(highlight_retired, axis=1).format(fmt),
+                    #        use_container_width=True,
+                    #        height=420
+                    #    )
+                    #else:
+                    #    st.dataframe(df_flow_display, use_container_width=True, height=420)
+                    st.dataframe(df_flow_display, use_container_width=True, height=420)
 
                     # Download
                     csv_flow = df_flow_display.to_csv(index=False).encode('utf-8')
