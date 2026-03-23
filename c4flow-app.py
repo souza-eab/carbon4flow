@@ -743,7 +743,7 @@ with tabs[3]:
         if df_proj.empty:
             st.info("Selecione um estado e projeto para visualizar a análise")
         else:
-            col_m1, col_m3, col_m4 = st.columns(3)
+            col_m1, col_m3, col_m4, col_m5 = st.columns(4)
             with col_m1:
                 if 'Mean' in df_proj.columns:
                     st.metric("Média VCUs", f"{df_proj['Mean'].iloc[0]:,.0f} ± {df_proj['IC_Mais'].iloc[0] - df_proj['Mean'].iloc[0]:,.0f}")
@@ -752,6 +752,9 @@ with tabs[3]:
                     st.metric("Protocolo", df_proj['protocol'].iloc[0], delta_color="off")
             with col_m4:
                 if 'vcsProjectStatus' in df_proj.columns:
+                    st.metric("Status", df_proj['vcsProjectStatus'].iloc[0], delta_color="off")
+            with col_m5:
+                if '' in df_proj.columns:
                     st.metric("Status", df_proj['vcsProjectStatus'].iloc[0], delta_color="off")
 
             st.divider()
@@ -774,7 +777,8 @@ with tabs[3]:
                 fig.update_layout(barmode='group', title=f"Análise de VCUs - {projeto_sel}",
                                   xaxis_title="Período (Ano)", yaxis_title="Quantidade de VCUs",
                                   legend_title="Métricas", template="plotly_white", height=450,
-                                  hovermode='x unified', margin=dict(t=50, b=40, l=60, r=20))
+                                  legend=dict(font=dict(size=10), orientation='v', xanchor='auto', yanchor='auto'), #Voltar aqui para alinhar tabelea
+                                  hovermode='x unified')
                 st.plotly_chart(fig, use_container_width=True)
 
             with col_graf2:
@@ -887,7 +891,9 @@ with tabs[3]:
                         template='plotly_white',
                         height=380,
                         hovermode='x unified',
-                        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+                        #legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+                        legend=dict(font=dict(size=10), orientation='v', xanchor='auto', yanchor='auto') #Voltar aqui para alinhar tabelea
+
                         margin=dict(t=60, b=40, l=60, r=20)
                     )
                     st.plotly_chart(fig_flow, use_container_width=True)
