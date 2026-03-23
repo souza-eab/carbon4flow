@@ -936,10 +936,9 @@ with tabs[3]:
                         file_name=f"transacoes_{projeto_sel[:40].replace(' ', '_')}.csv",
                         mime="text/csv"
                     )
-
-                    # --- Nuvem de Compradores ---
+                    # --- Quem Comprou? ---
                     st.divider()
-                    st.markdown("### 🌐 Quem Comprou? — Top 15 Beneficiários")
+                    st.markdown("### 🛒 Quem Comprou? — Top 15 Beneficiários")
     
                     if 'retirementBeneficiary' in df_flow.columns and 'quantity' in df_flow.columns:
                         df_buyers = df_flow.copy()
@@ -951,8 +950,8 @@ with tabs[3]:
                         top_buyers = (
                             df_buyers.groupby('retirementBeneficiary')['quantity_num']
                             .sum()
-                            .sort_values(ascending=False)
-                            .head(15)
+                            .sort_values(ascending=True)  # ascending=True para barh ficar maior no topo
+                            .tail(15)
                             .reset_index()
                         )
                         top_buyers.columns = ['Beneficiário', 'Total_VCUs']
@@ -962,81 +961,50 @@ with tabs[3]:
                         else:
                             total_vcus = top_buyers['Total_VCUs'].sum()
                             top_buyers['Pct'] = (top_buyers['Total_VCUs'] / total_vcus * 100).round(1)
+                            top_buyers['Label'] = top_buyers.apply(
+                                lambda r: f"{r['Total_VCUs']:,.0f} VCUs ({r['Pct']}%)", axis=1
+                            )
     
-                            min_size, max_size = 14, 64
-                            min_qty = top_buyers['Total_VCUs'].min()
-                            max_qty = top_buyers['Total_VCUs'].max()
+                            fig_buyers = go.Figure()
+                            fig_buyers.add_trace(go.Bar(
+                                x=top_buyers['Total_VCUs'],
+                                y=top_buyers['Beneficiário'],
+                                orientation='h',
+                                text=top_buyers['Label'],
+                                textposition='outside',
+                                marker=dict(
+                                    color=top_buyers['Total_VCUs'],
+                                    colorscale='Greens',
+                                    showscale=False
+                                ),
+                                hovertemplate='<b>%{y}</b><br>VCUs: %{x:,.0f}<extra></extra>'
+                            ))
     
-                            def scale_font(val):
-                                if max_qty == min_qty:
-                                    return (min_size + max_size) // 2
-                                return int(min_size + (val - min_qty) / (max_qty - min_qty) * (max_size - min_size))
+                            fig_buyers.update_layout(
+                                template='plotly_white',
+                                height=max(350, len(top_buyers) * 42),
+                                margin=dict(t=20, b=40, l=260, r=160),
+                                xaxis=dict(title='Quantidade de VCUs', showgrid=True, gridcolor='#eeeeee'),
+                                yaxis=dict(title='', tickfont=dict(size=12)),
+                                bargap=0.3
+                            )
     
-                            PALETTE = [
-                                "#1a7a4a", "#2ecc71", "#27ae60", "#1e8449",
-                                "#52be80", "#76d7a0", "#0e6655", "#117a65",
-                                "#1abc9c", "#148f77", "#45b39d", "#a9dfbf",
-                                "#196f3d", "#239b56", "#82e0aa"
-                            ]
+                            st.plotly_chart(fig_buyers, use_container_width=True)
     
-                            words_html = ""
-                            for i, row in top_buyers.iterrows():
-                                fs   = scale_font(row['Total_VCUs'])
-                                color = PALETTE[i % len(PALETTE)]
-                                label = row['Beneficiário'][:40] + ("…" if len(row['Beneficiário']) > 40 else "")
-                                tooltip = f"{row['Beneficiário']} | {row['Total_VCUs']:,.0f} VCUs | {row['Pct']}%"
-                                words_html += f"""
-                                <span title="{tooltip}" style="
-                                    font-size: {fs}px;
-                                    color: {color};
-                                    font-weight: {'800' if fs > 40 else '600' if fs > 25 else '400'};
-                                    margin: 10px 14px;
-                                    display: inline-block;
-                                    cursor: default;
-                                    transition: transform 0.2s ease, opacity 0.2s ease;
-                                    line-height: 1.4;
-                                    font-family: 'Segoe UI', sans-serif;
-                                "
-                                onmouseover="this.style.transform='scale(1.15)';this.style.opacity='0.85'"
-                                onmouseout="this.style.transform='scale(1)';this.style.opacity='1'"
-                                >{label}</span>
-                                """
-    
-                            html_cloud = f"""
-                            <div style="
-                                background: #f8fdf9;
-                                border: 1px solid #d5e8d4;
-                                border-radius: 16px;
-                                padding: 32px 24px;
-                                text-align: center;
-                                line-height: 2.2;
-                                min-height: 220px;
-                                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-                            ">
-                                {words_html}
-                            </div>
-                            <p style="text-align:center; color:#888; font-size:12px; margin-top:8px;">
-                                💡 Passe o mouse para ver detalhes · Tamanho proporcional à quantidade de VCUs comprados
-                            </p>
-                            """
-                            st.markdown(html_cloud, unsafe_allow_html=True)
-    
-                            # Tabela de apoio compacta
                             with st.expander("📊 Ver ranking completo"):
                                 st.dataframe(
-                                    top_buyers.rename(columns={
-                                        'Beneficiário': 'Beneficiário',
-                                        'Total_VCUs': 'VCUs Comprados',
-                                        'Pct': '% do Total'
-                                    }).style.format({
-                                        'VCUs Comprados': '{:,.0f}',
-                                        '% do Total': '{:.1f}%'
-                                    }).background_gradient(subset=['VCUs Comprados'], cmap='Greens'),
+                                    top_buyers[['Beneficiário', 'Total_VCUs', 'Pct']]
+                                    .sort_values('Total_VCUs', ascending=False)
+                                    .rename(columns={'Total_VCUs': 'VCUs Comprados', 'Pct': '% do Total'})
+                                    .style.format({'VCUs Comprados': '{:,.0f}', '% do Total': '{:.1f}%'})
+                                    .background_gradient(subset=['VCUs Comprados'], cmap='Greens'),
                                     use_container_width=True,
                                     hide_index=True
                                 )
                     else:
                         st.info("Colunas `retirementBeneficiary` ou `quantity` não encontradas no dataset.")
+
+                    
 
 
 # =====================================
