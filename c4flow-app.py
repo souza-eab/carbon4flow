@@ -133,7 +133,8 @@ def analise_vcu_por_vintage(df_full):
 # =====================================
 
 @st.cache_data(show_spinner=True)
-def carregar_geometrias(df_all, kml_dir: str):
+#def carregar_geometrias(df_all, kml_dir: str):
+def carregar_geometrias(kml_dir: str):  # Fix 3 - remova df_all do argumento
     lista_gdfs = []
     erros = []
     for file in os.listdir(kml_dir):
@@ -455,7 +456,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.set_page_config(initial_sidebar_state="auto")
+#st.set_page_config(initial_sidebar_state="auto") #FIX 1: Remover
 
 # =====================================
 # CARREGAMENTO DE DADOS
@@ -516,7 +517,8 @@ tabs = st.tabs([
 with tabs[0]:
     st.header("📊 Visão Geral dos Projetos")
 
-    df_overview = df_all.copy()
+    #df_overview = df_all.copy()
+    df_overview = df_all  # ou filtre direto FIX 3
     if st.session_state.selected_state_overview:
         df_overview = df_overview[df_overview["state_Recode"] == st.session_state.selected_state_overview]
         st.info(f"🔍 Filtrando por: **{st.session_state.selected_state_overview}**")
@@ -1127,6 +1129,7 @@ with tabs[4]:
         KML_DIR  = os.path.join(BASE_DIR, "kml")
 
         gdf_combined, erros = carregar_geometrias(df_all, KML_DIR)
+        
 
         if erros:
             with st.expander("⚠️ Erros ao carregar alguns KMLs"):
