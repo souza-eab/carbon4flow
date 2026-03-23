@@ -892,7 +892,7 @@ with tabs[3]:
                         height=380,
                         hovermode='x unified',
                         #legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
-                        legend=dict(font=dict(size=10), orientation='v', xanchor='auto', yanchor='auto') #Voltar aqui para alinhar tabelea
+                        legend=dict(font=dict(size=10), orientation='v', xanchor='auto', yanchor='auto'), #Voltar aqui para alinhar tabelea
 
                         margin=dict(t=60, b=40, l=60, r=20)
                     )
