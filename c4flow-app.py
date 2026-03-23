@@ -754,7 +754,7 @@ with tabs[3]:
         if df_proj.empty:
             st.info("Selecione um estado e projeto para visualizar a análise")
         else:
-            col_m1, col_m3, col_m4, col_m5, col_m6 = st.columns(6)
+            col_m1, col_m3, col_m4, col_m5, col_m6 = st.columns(5)
             with col_m1:
                 if 'Mean' in df_proj.columns:
                     st.metric("Média VCUs", f"{df_proj['Mean'].iloc[0]:,.0f} ± {df_proj['IC_Mais'].iloc[0] - df_proj['Mean'].iloc[0]:,.0f}")
@@ -765,10 +765,10 @@ with tabs[3]:
                 if 'vcsProjectStatus' in df_proj.columns:
                     st.metric("Status", df_proj['vcsProjectStatus'].iloc[0], delta_color="off")
             with col_m5:
-                if '' in df_proj.columns:
+                if 'resourceIdentifier' in df_proj.columns:
                     st.metric("ID", df_proj['resourceIdentifier'].iloc[0], delta_color="off")
             with col_m6:
-                if '' in df_proj.columns:
+                if 'vcsAFOLUActivity' in df_proj.columns:
                     st.metric("ID", df_proj['vcsAFOLUActivity'].iloc[0], delta_color="off")
 
             st.divider()
