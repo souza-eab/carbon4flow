@@ -133,8 +133,8 @@ def analise_vcu_por_vintage(df_full):
 # =====================================
 
 @st.cache_data(show_spinner=True)
-#def carregar_geometrias(df_all, kml_dir: str):
-def carregar_geometrias(kml_dir: str):  # Fix 3 - remova df_all do argumento
+def carregar_geometrias(df_all, kml_dir: str):
+#def carregar_geometrias(kml_dir: str):  # Fix 3 - remova df_all do argumento
     lista_gdfs = []
     erros = []
     for file in os.listdir(kml_dir):
