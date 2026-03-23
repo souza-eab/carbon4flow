@@ -114,7 +114,7 @@ def analise_vcu_por_vintage(df_full):
         Sum_Retired=('qty_ret', 'sum'),
         Sum_Active=('qty_act', 'sum')
     ).reset_index()
-    
+
     ic_df = calcular_intervalo_confianca(df)
     estatisticas = estatisticas.merge(ic_df, on='resourceName_x', how='left')
     estatisticas['Ano_Periodo'] = estatisticas['Vintage'].apply(
@@ -650,11 +650,10 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
                 <b>Tipo:</b> {row.get('vcsAFOLUActivity', 'N/A')}<br>
                 <b>Acreditação:</b> {row.get('vcsCreditingPeriodTerm', 'N/A')}<br>
                 <b>Area:</b> {row.get('vcsAcresHectares', 'N/A')}<br>
-                <b>Resumo:</b> {row.get('description', 'N/A')}<br>
                 <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
             </div>
             """
-
+            #<b>Resumo:</b> {row.get('description', 'N/A')}<br>
             folium.CircleMarker(location=[lat, lon], radius=6, color=color, fill=True,
                                 fill_color=color, fill_opacity=0.7,
                                 popup=folium.Popup(popup_html, max_width=300)).add_to(marker_cluster)
@@ -674,10 +673,10 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
                 <b>Tipo:</b> {row.get('vcsAFOLUActivity', 'N/A')}<br>
                 <b>Acreditação:</b> {row.get('vcsCreditingPeriodTerm', 'N/A')}<br>
                 <b>Area:</b> {row.get('vcsAcresHectares', 'N/A')}<br>
-                <b>Resumo:</b> {row.get('description', 'N/A')}<br>
                 <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
             </div>
             """
+            #<b>Resumo:</b> {row.get('description', 'N/A')}<br>
             folium.CircleMarker(location=[row["new_latitude"], row["new_longitude"]], radius=5,
                                 color=color, fill=True, fill_color=color, fill_opacity=0.6,
                                 popup=folium.Popup(popup_html, max_width=300)).add_to(m)
@@ -1297,6 +1296,7 @@ with tabs[4]:
                             st.markdown(f"**Acreditação:** {row_proj.get('vcsCreditingPeriodTerm', 'N/A')}")
                             st.markdown(f"**Protocolo:** {row_proj.get('vcsMethodology', 'N/A')}")
                             st.markdown(f"**Status:** {row_proj.get('vcsProjectStatus', 'N/A')}")
+                            st.markdown(f"**Resumo:** {row_proj.get('description', 'N/A')}")
 
 
                     if not is_overview:
@@ -1452,6 +1452,7 @@ with tabs[4]:
                             st.markdown(f"**Acreditação:** {row_proj.get('vcsCreditingPeriodTerm', 'N/A')}")
                             st.markdown(f"**Protocolo:** {row_proj.get('vcsMethodology', 'N/A')}")
                             st.markdown(f"**Status:** {row_proj.get('vcsProjectStatus', 'N/A')}")
+                            st.markdown(f"**Resumo:** {row_proj.get('description', 'N/A')}")
                             
                         else:
                             st.info("💡 Selecione um projeto.")
@@ -1610,6 +1611,7 @@ with tabs[4]:
                             st.markdown(f"**Acreditação:** {row_proj.get('vcsCreditingPeriodTerm', 'N/A')}")
                             st.markdown(f"**Protocolo:** {row_proj.get('vcsMethodology', 'N/A')}")
                             st.markdown(f"**Status:** {row_proj.get('vcsProjectStatus', 'N/A')}")
+                            st.markdown(f"**Resumo:** {row_proj.get('description', 'N/A')}")
                             st.markdown("""
                             <style>
                             .deter-leg { font-size: 12px; line-height: 1.8; }
@@ -1861,6 +1863,7 @@ with tabs[4]:
                             st.markdown(f"**Acreditação:** {row_proj.get('vcsCreditingPeriodTerm', 'N/A')}")
                             st.markdown(f"**Protocolo:** {row_proj.get('vcsMethodology', 'N/A')}")
                             st.markdown(f"**Status:** {row_proj.get('vcsProjectStatus', 'N/A')}")
+                            st.markdown(f"**Resumo:** {row_proj.get('description', 'N/A')}")
 
                         else:
                             st.info("💡 Selecione um projeto.")
