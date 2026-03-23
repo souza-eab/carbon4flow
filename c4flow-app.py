@@ -97,12 +97,24 @@ def analise_vcu_por_vintage(df_full):
     group_cols = ['state_Recode', 'resourceName_x', 'Vintage', 'protocol',
                   'vcsProjectStatus', 'vcsEstimatedAnnualEmissionReductions']
     group_cols = [col for col in group_cols if col in df.columns]
+    #estatisticas = df.groupby(group_cols, dropna=False).agg(
+    #    TotalVintageQuantity=('totalVintageQuantity', 'first'),
+    #    SumQuantity=('quantity', 'sum'),
+    #    Sum_Retired=('quantity', lambda x: x[df.loc[x.index, 'retiredCancelled'] == True].sum()),
+    #    Sum_Active=('quantity', lambda x: x[df.loc[x.index, 'retiredCancelled'] == False].sum())
+    #).reset_index()
+    # Antes da chamada do groupby, crie máscaras fora
+    mask_ret = df['retiredCancelled'] == True
+    df['qty_ret'] = df['quantity'].where(mask_ret, 0)
+    df['qty_act'] = df['quantity'].where(~mask_ret, 0)
+
     estatisticas = df.groupby(group_cols, dropna=False).agg(
         TotalVintageQuantity=('totalVintageQuantity', 'first'),
         SumQuantity=('quantity', 'sum'),
-        Sum_Retired=('quantity', lambda x: x[df.loc[x.index, 'retiredCancelled'] == True].sum()),
-        Sum_Active=('quantity', lambda x: x[df.loc[x.index, 'retiredCancelled'] == False].sum())
+        Sum_Retired=('qty_ret', 'sum'),
+        Sum_Active=('qty_act', 'sum')
     ).reset_index()
+    
     ic_df = calcular_intervalo_confianca(df)
     estatisticas = estatisticas.merge(ic_df, on='resourceName_x', how='left')
     estatisticas['Ano_Periodo'] = estatisticas['Vintage'].apply(
