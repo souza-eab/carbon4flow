@@ -1,6 +1,3 @@
-#!pip install pandas rapidfuzz streamlit pandas requests io plotly datetime folium numpy scipy
-
-
 import streamlit as st
 import pandas as pd
 import requests
@@ -14,10 +11,6 @@ from streamlit_folium import st_folium
 import numpy as np
 from scipy import stats
 from carbon4flow_gcp import render_aoi_tab
-import os
-import geopandas as gpd
-from shapely.geometry import mapping
-from shapely.errors import TopologicalError
 
 # =====================================
 # CONFIGURAÇÃO DA PÁGINA
@@ -98,24 +91,15 @@ def analise_vcu_por_vintage(df_full):
     group_cols = ['state_Recode', 'resourceName_x', 'Vintage', 'protocol',
                   'vcsProjectStatus', 'vcsEstimatedAnnualEmissionReductions']
     group_cols = [col for col in group_cols if col in df.columns]
-    #estatisticas = df.groupby(group_cols, dropna=False).agg(
-    #    TotalVintageQuantity=('totalVintageQuantity', 'first'),
-    #    SumQuantity=('quantity', 'sum'),
-    #    Sum_Retired=('quantity', lambda x: x[df.loc[x.index, 'retiredCancelled'] == True].sum()),
-    #    Sum_Active=('quantity', lambda x: x[df.loc[x.index, 'retiredCancelled'] == False].sum())
-    #).reset_index()
-    # Antes da chamada do groupby, crie máscaras fora
     mask_ret = df['retiredCancelled'] == True
     df['qty_ret'] = df['quantity'].where(mask_ret, 0)
     df['qty_act'] = df['quantity'].where(~mask_ret, 0)
-
     estatisticas = df.groupby(group_cols, dropna=False).agg(
         TotalVintageQuantity=('totalVintageQuantity', 'first'),
         SumQuantity=('quantity', 'sum'),
         Sum_Retired=('qty_ret', 'sum'),
         Sum_Active=('qty_act', 'sum')
     ).reset_index()
-
     ic_df = calcular_intervalo_confianca(df)
     estatisticas = estatisticas.merge(ic_df, on='resourceName_x', how='left')
     estatisticas['Ano_Periodo'] = estatisticas['Vintage'].apply(
@@ -130,42 +114,8 @@ def analise_vcu_por_vintage(df_full):
     return estatisticas
 
 # =====================================
-# FUNÇÕES GFW — escopo global
+# FUNÇÕES GFW
 # =====================================
-
-#@st.cache_data(show_spinner=True)
-#def carregar_geometrias(df_all, kml_dir: str):
-#def carregar_geometrias(kml_dir: str):
-
-#def carregar_geometrias(kml_dir: str):  # Fix 3 - remova df_all do argumento
-    lista_gdfs = []
-    erros = []
-    for file in os.listdir(kml_dir):
-        if file.lower().endswith(".kml"):
-            resource_id = file.split("_")[0]
-            try:
-                gdf = gpd.read_file(os.path.join(kml_dir, file), driver="KML")
-                gdf["resourceIdentifier"] = str(resource_id)
-                lista_gdfs.append(gdf)
-            except Exception as e:
-                erros.append((file, str(e)))
-    if not lista_gdfs:
-        return gpd.GeoDataFrame(), erros
-    gdf_all = pd.concat(lista_gdfs, ignore_index=True)
-    if gdf_all.crs is None:
-        gdf_all.set_crs("EPSG:4326", inplace=True)
-    else:
-        gdf_all = gdf_all.to_crs("EPSG:4326")
-    #df_all["resourceIdentifier"] = df_all["resourceIdentifier"].astype(str)
-    gdf_all["resourceIdentifier"] = gdf_all["resourceIdentifier"].astype(str)
-    gdf_all["geometry"] = gdf_all["geometry"].buffer(0)
-    try:
-        gdf_all = gdf_all.dissolve(by="resourceIdentifier")
-    except TopologicalError:
-        gdf_all["geometry"] = gdf_all["geometry"].buffer(0)
-        gdf_all = gdf_all.dissolve(by="resourceIdentifier")
-    #gdf_all = gdf_all.merge(df_all, on="resourceIdentifier", how="left")
-    return gdf_all, erros
 
 @st.cache_data(show_spinner=False)
 def gfw_tree_cover_loss(geojson, api_key):
@@ -226,12 +176,11 @@ def gfw_radd_alerts(geojson, api_key):
         return pd.DataFrame()
 
 # =====================================
-# FUNÇÕES TERRABRASILIS — escopo global
+# FUNÇÕES TERRABRASILIS
 # =====================================
 
 @st.cache_data(show_spinner=False)
 def terrabrasilis_wfs(url, type_name, bbox, max_features=50000):
-    """Consulta WFS do TerraBrasilis filtrado por bbox."""
     try:
         r = requests.get(url, params={
             "SERVICE":      "WFS",
@@ -252,7 +201,7 @@ def terrabrasilis_wfs(url, type_name, bbox, max_features=50000):
         return pd.DataFrame()
 
 # =====================================
-# FUNÇÕES MAPBIOMAS — escopo global
+# FUNÇÕES MAPBIOMAS
 # =====================================
 
 @st.cache_data(ttl=3600, show_spinner=False)
@@ -286,39 +235,20 @@ def mapbiomas_alerts(bbox, token, start_date="2019-01-01", end_date="2024-12-31"
         limit: $limit
         page: $page
       ) {
-        metadata {
-          totalCount
-          totalPages
-          currentPage
-          limitValue
-        }
+        metadata { totalCount totalPages currentPage limitValue }
         summary {
-          total
-          area
+          total area
           alertsByYear { year value }
           deforestationAreaByYear { year value }
         }
         collection {
-          alertCode
-          areaHa
-          detectedAt
-          publishedAt
-          sources
-          deforestationClasses
-          statusName
-          crossedBiomes
-          crossedStates
+          alertCode areaHa detectedAt publishedAt sources
+          deforestationClasses statusName crossedBiomes crossedStates
         }
       }
     }
     """
-    variables = {
-        "boundingBox": bbox,
-        "startDate": start_date,
-        "endDate": end_date,
-        "limit": 1000,
-        "page": 1
-    }
+    variables = {"boundingBox": bbox, "startDate": start_date, "endDate": end_date, "limit": 1000, "page": 1}
     try:
         r = requests.post(
             "https://plataforma.alerta.mapbiomas.org/api/v2/graphql",
@@ -333,99 +263,26 @@ def mapbiomas_alerts(bbox, token, start_date="2019-01-01", end_date="2024-12-31"
         return None
 
 # =====================================
-# FUNÇÕES PRODES GPKG — escopo global
-# =====================================
-
-#@st.cache_data(ttl=86400, show_spinner=False)
-#def baixar_gpkg_drive(file_id: str, dest_path: str) -> str:
-#    """Baixa GPKG do Google Drive para arquivo temporário. Cache de 24h."""
-#    if os.path.exists(dest_path):
-#        return dest_path
-#    try:
-#        # Tenta download direto
-#        url = f"https://drive.google.com/uc?export=download&id={file_id}"
-#        session = requests.Session()
-#        r = session.get(url, stream=True, timeout=120)
-#
-#        # Arquivo grande — precisa confirmar o aviso do Drive
-#        for key, value in r.cookies.items():
-#            if 'download_warning' in key:
-#                params = {'id': file_id, 'confirm': value}
-#                r = session.get(url, params=params, stream=True, timeout=120)
-#                break
-#
-#        with open(dest_path, 'wb') as f:
-#            for chunk in r.iter_content(chunk_size=32768):
-#                if chunk:
-#                    f.write(chunk)
-#        return dest_path
-#    except Exception as e:
-#        return None
-
-
-#@st.cache_data(show_spinner=False)
-#def carregar_prodes_bbox(file_id: str, bbox_tuple: tuple) -> pd.DataFrame:
-#    """Carrega PRODES layer yearly_deforestation filtrado por bbox."""
-#    import tempfile
-#
-#    dest_path = os.path.join(tempfile.gettempdir(), "prodes_amazonia_legal.gpkg")
-#
-#    with st.spinner("📥 Baixando GPKG PRODES (primeira vez pode demorar)..."):
-#        gpkg_path = baixar_gpkg_drive(file_id, dest_path)
-#
-#    if not gpkg_path:
-#        return gpd.GeoDataFrame()
-#
-#    try:
-#        gdf = gpd.read_file(
-#            gpkg_path,
-#            layer="yearly_deforestation",
-#            bbox=bbox_tuple  # (minx, miny, maxx, maxy)
-#        )
-#        return gdf
-#    except Exception as e:
-#        return gpd.GeoDataFrame()
-
-# Na função carregar_prodes_bbox, forçar limpeza após uso
-#@st.cache_data(show_spinner=False)
-#def carregar_prodes_bbox(file_id: str, bbox_tuple: tuple):
-#    import tempfile, gc
-#    dest_path = os.path.join(tempfile.gettempdir(), "prodes_amazonia_legal.gpkg")
-#    gpkg_path = baixar_gpkg_drive(file_id, dest_path)
-#    if not gpkg_path:
-#        return gpd.GeoDataFrame()
-#    try:
-#        gdf = gpd.read_file(gpkg_path, layer="yearly_deforestation", bbox=bbox_tuple)
-#        # Manter só colunas necessárias — reduz memória
-#        cols_keep = ['year', 'area_km', 'class_name', 'main_class', 'state', 'geometry']
-#        cols_keep = [c for c in cols_keep if c in gdf.columns]
-#        gdf = gdf[cols_keep]
-#        gc.collect()
-#        return gdf
-#    except Exception:
-#        return gpd.GeoDataFrame()    
-    
-# =====================================
 # CONFIGURAÇÃO DE CORES E ESTILOS
 # =====================================
 
 ACTIVITY_COLORS = {
-    'REDD': "#f79c3c",
-    'IFM': "#3b8fbf",
-    'ARR': "#78cafe",
-    'ACoGS': "#ffffcc",
+    'REDD':        "#f79c3c",
+    'IFM':         "#3b8fbf",
+    'ARR':         "#78cafe",
+    'ACoGS':       "#ffffcc",
     'ACoGS; REDD': "#c7e9b4",
-    'ALM': "#7fcdbb",
-    'IFM; REDD': "#225ea8",
-    'Unknown': "#808080"
+    'ALM':         "#7fcdbb",
+    'IFM; REDD':   "#225ea8",
+    'Unknown':     "#808080"
 }
 
 STATUS_COLORS = {
-    'Registered': "#2ecc71",
-    'Under Validation': "#f39c12",
+    'Registered':        "#2ecc71",
+    'Under Validation':  "#f39c12",
     'Under Development': "#3498db",
-    'Inactive': "#95a5a6",
-    'Unknown': "#808080"
+    'Inactive':          "#95a5a6",
+    'Unknown':           "#808080"
 }
 
 # =====================================
@@ -459,15 +316,17 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-#st.set_page_config(initial_sidebar_state="auto") #FIX 1: Remover
-
 # =====================================
 # CARREGAMENTO DE DADOS
 # =====================================
 
 with st.spinner("📥 Carregando dados..."):
-    df_all = load_parquet_from_gdrive(file_id_all)
+    df_all    = load_parquet_from_gdrive(file_id_all)
     df_credit = load_parquet_from_gdrive(file_id_credit)
+
+if df_all is None or df_credit is None:
+    st.error("❌ Não foi possível carregar os dados. Verifique os IDs dos arquivos.")
+    st.stop()
 
 if "Vintage" not in df_credit.columns:
     if {"vintageStart", "vintageEnd"}.issubset(df_credit.columns):
@@ -478,13 +337,12 @@ if "Vintage" not in df_credit.columns:
     else:
         df_credit["Vintage"] = np.nan
 
-if df_all is None or df_credit is None:
-    st.error("❌ Não foi possível carregar os dados. Verifique os IDs dos arquivos.")
-    st.stop()
-
 st.sidebar.success("✅ Dados carregados com sucesso!")
 st.sidebar.metric("Total de Projetos", f"{len(df_all):,}")
-st.sidebar.metric("Projetos com VCUs", f"{df_credit['resourceName_x'].nunique():,}" if 'resourceName_x' in df_credit.columns else f"{len(df_credit):,}")
+st.sidebar.metric(
+    "Projetos com VCUs",
+    f"{df_credit['resourceName_x'].nunique():,}" if 'resourceName_x' in df_credit.columns else f"{len(df_credit):,}"
+)
 st.sidebar.caption(f"Última atualização: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
 
 # =====================================
@@ -520,8 +378,7 @@ tabs = st.tabs([
 with tabs[0]:
     st.header("📊 Visão Geral dos Projetos")
 
-    #df_overview = df_all.copy()
-    df_overview = df_all  # ou filtre direto FIX 3
+    df_overview = df_all
     if st.session_state.selected_state_overview:
         df_overview = df_overview[df_overview["state_Recode"] == st.session_state.selected_state_overview]
         st.info(f"🔍 Filtrando por: **{st.session_state.selected_state_overview}**")
@@ -537,7 +394,10 @@ with tabs[0]:
             active_count = len(df_overview[df_overview["vcsProjectStatus"] == "Registered"])
             st.metric("Projetos Registrados", f"{active_count:,}")
     with col3:
-        credit_count = len(df_credit[df_credit["resourceName_x"].isin(df_overview["resourceName_x"])]) if st.session_state.selected_state_overview else len(df_credit)
+        credit_count = (
+            len(df_credit[df_credit["resourceName_x"].isin(df_overview["resourceName_x"])])
+            if st.session_state.selected_state_overview else len(df_credit)
+        )
         st.metric("N obs", f"{credit_count:,}")
     with col4:
         if "vcsAFOLUActivity" in df_overview.columns:
@@ -552,8 +412,10 @@ with tabs[0]:
         if "vcsProjectStatus" in df_overview.columns:
             status_counts = df_overview["vcsProjectStatus"].value_counts().reset_index()
             status_counts.columns = ["Status", "Quantidade"]
-            fig_status = px.bar(status_counts, x="Status", y="Quantidade", color="Status",
-                                color_discrete_map=STATUS_COLORS, text="Quantidade")
+            fig_status = px.bar(
+                status_counts, x="Status", y="Quantidade",
+                color="Status", color_discrete_map=STATUS_COLORS, text="Quantidade"
+            )
             fig_status.update_traces(textposition='outside')
             fig_status.update_layout(showlegend=False, height=600, xaxis_title="", yaxis_title="Número de Projetos")
             st.plotly_chart(fig_status, use_container_width=True)
@@ -563,8 +425,10 @@ with tabs[0]:
         if "vcsAFOLUActivity" in df_overview.columns:
             activity_counts = df_overview["vcsAFOLUActivity"].value_counts().reset_index()
             activity_counts.columns = ["Atividade", "Quantidade"]
-            fig_activity = px.pie(activity_counts, names="Atividade", values="Quantidade",
-                                  color="Atividade", color_discrete_map=ACTIVITY_COLORS, hole=0.4)
+            fig_activity = px.pie(
+                activity_counts, names="Atividade", values="Quantidade",
+                color="Atividade", color_discrete_map=ACTIVITY_COLORS, hole=0.4
+            )
             fig_activity.update_traces(textposition='inside', textinfo='percent+label')
             fig_activity.update_layout(height=500)
             st.plotly_chart(fig_activity, use_container_width=True)
@@ -575,8 +439,10 @@ with tabs[0]:
     if "state_Recode" in df_overview.columns:
         state_counts = df_overview["state_Recode"].value_counts().head(10).reset_index()
         state_counts.columns = ["Estado", "Quantidade"]
-        fig_states = px.bar(state_counts, x="Quantidade", y="Estado", orientation='h',
-                            text="Quantidade", color="Quantidade", color_continuous_scale="Viridis")
+        fig_states = px.bar(
+            state_counts, x="Quantidade", y="Estado", orientation='h',
+            text="Quantidade", color="Quantidade", color_continuous_scale="Viridis"
+        )
         fig_states.update_traces(textposition='outside')
         fig_states.update_layout(height=400, showlegend=False, xaxis_title="Número de Projetos", yaxis_title="")
         st.plotly_chart(fig_states, use_container_width=True, on_select="rerun", key="state_chart")
@@ -584,7 +450,6 @@ with tabs[0]:
 # =====================================
 # FUNÇÃO PARA CRIAR MAPAS
 # =====================================
-
 
 def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
     st.header(title)
@@ -633,45 +498,14 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
 
     if map_type == "Clusters":
         marker_cluster = MarkerCluster().add_to(m)
-        for idx, row in df_map.iterrows():
-            lat, lon = row["new_latitude"], row["new_longitude"]
-            activity = row.get("vcsAFOLUActivity", "Unknown")
-            color = ACTIVITY_COLORS.get(activity, "#808080")
-            #popup_html = f"""
-            #<div style="font-family: Arial; font-size: 12px; width: 250px;">
-            #    <h4 style="margin: 0 0 10px 0;">{row.get('resourceName_x', 'N/A')}</h4>
-            #    <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>
-            #    <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
-            #    <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
-            #</div>
-            #"""
+        for _, row in df_map.iterrows():
+            lat, lon  = row["new_latitude"], row["new_longitude"]
+            activity  = row.get("vcsAFOLUActivity", "Unknown")
+            color     = ACTIVITY_COLORS.get(activity, "#808080")
             popup_html = f"""
             <div style="font-family: Arial; font-size: 11px; width: 250px;">
                 <h4 style="margin: 0 0 15px 0;">{row.get('resourceName_x', 'N/A')}</h4>
-                <b>ID:</b> {row.get('resourceIdentifier', 'N/A')}<br>             
-                <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>    
-                <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
-                <b>Protocolos:</b> {row.get('vcsMethodology', 'N/A')}<br>
-                <b>Tipo:</b> {row.get('vcsAFOLUActivity', 'N/A')}<br>
-                <b>Acreditação:</b> {row.get('vcsCreditingPeriodTerm', 'N/A')}<br>
-                <b>Area:</b> {row.get('vcsAcresHectares', 'N/A')}<br>
-                <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
-            </div>
-            """
-            #<b>Resumo:</b> {row.get('description', 'N/A')}<br>
-            folium.CircleMarker(location=[lat, lon], radius=6, color=color, fill=True,
-                                fill_color=color, fill_opacity=0.7,
-                                popup=folium.Popup(popup_html, max_width=300)).add_to(marker_cluster)
-    elif map_type == "Heatmap":
-        HeatMap([[row["new_latitude"], row["new_longitude"]] for _, row in df_map.iterrows()], radius=15).add_to(m)
-    else:
-        for idx, row in df_map.iterrows():
-            activity = row.get("vcsAFOLUActivity", "Unknown")
-            color = ACTIVITY_COLORS.get(activity, "#808080")
-            popup_html = f"""
-            <div style="font-family: Arial; font-size: 11px; width: 250px;">
-                <h4 style="margin: 0 0 15px 0;">{row.get('resourceName_x', 'N/A')}</h4>
-                <b>ID:</b> {row.get('resourceIdentifier', 'N/A')}<br>    
+                <b>ID:</b> {row.get('resourceIdentifier', 'N/A')}<br>
                 <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>
                 <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
                 <b>Protocolos:</b> {row.get('vcsMethodology', 'N/A')}<br>
@@ -681,10 +515,40 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
                 <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
             </div>
             """
-            #<b>Resumo:</b> {row.get('description', 'N/A')}<br>
-            folium.CircleMarker(location=[row["new_latitude"], row["new_longitude"]], radius=5,
-                                color=color, fill=True, fill_color=color, fill_opacity=0.6,
-                                popup=folium.Popup(popup_html, max_width=300)).add_to(m)
+            folium.CircleMarker(
+                location=[lat, lon], radius=6, color=color, fill=True,
+                fill_color=color, fill_opacity=0.7,
+                popup=folium.Popup(popup_html, max_width=300)
+            ).add_to(marker_cluster)
+
+    elif map_type == "Heatmap":
+        HeatMap(
+            [[row["new_latitude"], row["new_longitude"]] for _, row in df_map.iterrows()],
+            radius=15
+        ).add_to(m)
+
+    else:
+        for _, row in df_map.iterrows():
+            activity = row.get("vcsAFOLUActivity", "Unknown")
+            color    = ACTIVITY_COLORS.get(activity, "#808080")
+            popup_html = f"""
+            <div style="font-family: Arial; font-size: 11px; width: 250px;">
+                <h4 style="margin: 0 0 15px 0;">{row.get('resourceName_x', 'N/A')}</h4>
+                <b>ID:</b> {row.get('resourceIdentifier', 'N/A')}<br>
+                <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>
+                <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
+                <b>Protocolos:</b> {row.get('vcsMethodology', 'N/A')}<br>
+                <b>Tipo:</b> {row.get('vcsAFOLUActivity', 'N/A')}<br>
+                <b>Acreditação:</b> {row.get('vcsCreditingPeriodTerm', 'N/A')}<br>
+                <b>Area:</b> {row.get('vcsAcresHectares', 'N/A')}<br>
+                <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
+            </div>
+            """
+            folium.CircleMarker(
+                location=[row["new_latitude"], row["new_longitude"]],
+                radius=5, color=color, fill=True, fill_color=color, fill_opacity=0.6,
+                popup=folium.Popup(popup_html, max_width=300)
+            ).add_to(m)
 
     st_folium(m, width=None, height=600, key=f"map_{map_key}")
 
@@ -705,7 +569,6 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
 with tabs[1]:
     create_interactive_map(df_all, "🌎 Mapa - Todos os Projetos BR", "all")
 
-
 # =====================================
 # ABA 3: MAPA - PROJETOS COM CRÉDITOS
 # =====================================
@@ -714,16 +577,12 @@ with tabs[1]:
 def get_credit_unique(df):
     return df.groupby('resourceName_x').first().reset_index()
 
-# Na aba 3:
 df_credit_unique = get_credit_unique(df_credit)
-
 
 with tabs[2]:
     st.header("💰 Mapa - Projetos já emitiram Créditos")
-    #df_credit_unique = df_credit.groupby('resourceName_x').first().reset_index()
     st.info(f"📊 Exibindo **{len(df_credit_unique):,}** projetos únicos (de {len(df_credit):,} registros totais)")
     create_interactive_map(df_credit_unique, "Projetos com lastro de Créditos", "credit_unique")
-
 
 # =====================================
 # ABA 4: ANÁLISE DE VINTAGE
@@ -744,7 +603,7 @@ with tabs[3]:
             if 'state_Recode' in estatisticas.columns:
                 estados = sorted(estatisticas['state_Recode'].dropna().unique())
                 if len(estados) > 0:
-                    estado_sel = st.selectbox("📍 Selecione o Estado:", estados, key="vintage_state")
+                    estado_sel  = st.selectbox("📍 Selecione o Estado:", estados, key="vintage_state")
                     dados_estado = estatisticas[estatisticas['state_Recode'] == estado_sel]
                 else:
                     st.warning("Nenhum estado disponível")
@@ -757,7 +616,7 @@ with tabs[3]:
                 projetos = sorted(dados_estado['resourceName_x'].dropna().unique())
                 if len(projetos) > 0:
                     projeto_sel = st.selectbox("🏢 Selecione o Projeto:", projetos, key="vintage_project")
-                    df_proj = dados_estado[dados_estado['resourceName_x'] == projeto_sel]
+                    df_proj     = dados_estado[dados_estado['resourceName_x'] == projeto_sel]
                 else:
                     st.warning("Nenhum projeto disponível para este estado")
                     df_proj = pd.DataFrame()
@@ -782,7 +641,7 @@ with tabs[3]:
                     st.metric("ID", df_proj['resourceIdentifier'].iloc[0], delta_color="off")
             with col_m6:
                 if 'vcsAFOLUActivity' in df_proj.columns:
-                    st.metric("ID", df_proj['vcsAFOLUActivity'].iloc[0], delta_color="off")
+                    st.metric("Tipo", df_proj['vcsAFOLUActivity'].iloc[0], delta_color="off")
 
             st.divider()
 
@@ -791,48 +650,59 @@ with tabs[3]:
             with col_graf1:
                 fig = go.Figure()
                 fig.add_trace(go.Bar(x=df_proj['Ano_Periodo'], y=df_proj['TotalVintageQuantity'], name='Total Vintage', marker_color='#1E800A'))
-                fig.add_trace(go.Bar(x=df_proj['Ano_Periodo'], y=df_proj['SumQuantity'], name='Sum Quantity', marker_color='#6DD458'))
-                fig.add_trace(go.Bar(x=df_proj['Ano_Periodo'], y=df_proj['Sum_Retired'], name='Retired', marker_color='#FFC2A3'))
+                fig.add_trace(go.Bar(x=df_proj['Ano_Periodo'], y=df_proj['SumQuantity'],          name='Sum Quantity',  marker_color='#6DD458'))
+                fig.add_trace(go.Bar(x=df_proj['Ano_Periodo'], y=df_proj['Sum_Retired'],           name='Retired',       marker_color='#FFC2A3'))
                 if 'Mean' in df_proj.columns:
-                    fig.add_trace(go.Scatter(x=df_proj['Ano_Periodo'], y=df_proj['Mean'], mode='lines+markers',
-                                             name='Média', line=dict(color='#1E800A', width=3), marker=dict(size=8)))
+                    fig.add_trace(go.Scatter(
+                        x=df_proj['Ano_Periodo'], y=df_proj['Mean'], mode='lines+markers',
+                        name='Média', line=dict(color='#1E800A', width=3), marker=dict(size=8)
+                    ))
                 if 'IC_Mais' in df_proj.columns and 'IC_Menos' in df_proj.columns:
-                    fig.add_trace(go.Scatter(x=df_proj['Ano_Periodo'], y=df_proj['IC_Mais'], mode='lines',
-                                             name='IC Superior', line=dict(color='gray', width=2, dash='dot')))
-                    fig.add_trace(go.Scatter(x=df_proj['Ano_Periodo'], y=df_proj['IC_Menos'], mode='lines',
-                                             name='IC Inferior', line=dict(color='gray', width=2, dash='dot')))
-                fig.update_layout(barmode='group', title=f"Análise de VCUs - {projeto_sel}",
-                                  xaxis_title="Período (Ano)", yaxis_title="Quantidade de VCUs",
-                                  legend_title="Métricas", template="plotly_white", height=450,
-                                  legend=dict(font=dict(size=10), orientation='v', xanchor='auto', yanchor='auto'), #Voltar aqui para alinhar tabelea
-                                  hovermode='x unified')
+                    fig.add_trace(go.Scatter(x=df_proj['Ano_Periodo'], y=df_proj['IC_Mais'], mode='lines', name='IC Superior', line=dict(color='gray', width=2, dash='dot')))
+                    fig.add_trace(go.Scatter(x=df_proj['Ano_Periodo'], y=df_proj['IC_Menos'], mode='lines', name='IC Inferior', line=dict(color='gray', width=2, dash='dot')))
+                fig.update_layout(
+                    barmode='group', title=f"Análise de VCUs - {projeto_sel}",
+                    xaxis_title="Período (Ano)", yaxis_title="Quantidade de VCUs",
+                    legend_title="Métricas", template="plotly_white", height=450,
+                    legend=dict(font=dict(size=10), orientation='v', xanchor='auto', yanchor='auto'),
+                    hovermode='x unified'
+                )
                 st.plotly_chart(fig, use_container_width=True)
 
             with col_graf2:
-                metricas_totais = {'TotalVintageQuantity': '#1E800A', 'SumQuantity': '#6DD458',
-                                   'Sum_Retired': '#FFC2A3', 'Sum_Active': '#A3C4F3'}
+                metricas_totais = {
+                    'TotalVintageQuantity': '#1E800A',
+                    'SumQuantity':          '#6DD458',
+                    'Sum_Retired':          '#FFC2A3',
+                    'Sum_Active':           '#A3C4F3'
+                }
                 labels, valores, cores = [], [], []
                 for col_name, cor in metricas_totais.items():
                     if col_name in df_proj.columns:
-                        labels.append(col_name.replace('Sum_', '').replace('Sum', '').replace('Total', 'Total '))
+                        labels.append(col_name.replace('Sum_','').replace('Sum','').replace('Total','Total '))
                         valores.append(pd.to_numeric(df_proj[col_name], errors='coerce').sum())
                         cores.append(cor)
                 fig_tot = go.Figure()
-                fig_tot.add_trace(go.Bar(x=labels, y=valores, marker_color=cores,
-                                         text=[f"{v:,.0f}" for v in valores], textposition='outside',
-                                         textfont=dict(size=10), showlegend=False))
-                fig_tot.update_layout(title="Totais Acumulados", template="plotly_white", height=450,
-                                      margin=dict(t=50, b=40, l=40, r=20), yaxis=dict(showticklabels=False))
+                fig_tot.add_trace(go.Bar(
+                    x=labels, y=valores, marker_color=cores,
+                    text=[f"{v:,.0f}" for v in valores], textposition='outside',
+                    textfont=dict(size=10), showlegend=False
+                ))
+                fig_tot.update_layout(
+                    title="Totais Acumulados", template="plotly_white", height=450,
+                    margin=dict(t=50, b=40, l=40, r=20), yaxis=dict(showticklabels=False)
+                )
                 st.plotly_chart(fig_tot, use_container_width=True)
 
             with st.expander("📊 Ver Tabela de Dados Detalhada"):
                 display_cols = ['Ano_Periodo', 'TotalVintageQuantity', 'SumQuantity',
                                 'Sum_Retired', 'Sum_Active', 'Mean', 'IC_Mais', 'IC_Menos']
                 display_cols = [col for col in display_cols if col in df_proj.columns]
-                st.dataframe(df_proj[display_cols].style.format(
-                    {col: "{:,.0f}" for col in display_cols if col != 'Ano_Periodo'}),
-                    use_container_width=True)
-                
+                st.dataframe(
+                    df_proj[display_cols].style.format({col: "{:,.0f}" for col in display_cols if col != 'Ano_Periodo'}),
+                    use_container_width=True
+                )
+
             # =====================================
             # SEÇÃO: TRANSAÇÕES | FLOW
             # =====================================
@@ -841,20 +711,17 @@ with tabs[3]:
             st.subheader("💸 Transações | Flow")
             st.caption(f"Transações granulares de `df_credit` filtradas por: **{estado_sel}** → **{projeto_sel}**")
 
-            # Filtrar df_credit pelo projeto selecionado
             df_flow = df_credit[df_credit['resourceName_x'] == projeto_sel].copy()
 
             if df_flow.empty:
                 st.warning("⚠️ Nenhuma transação encontrada para este projeto.")
             else:
-                # --- Métricas de topo ---
                 col_fl1, col_fl2, col_fl3, col_fl4 = st.columns(4)
-
                 total_qty = pd.to_numeric(df_flow['quantity'], errors='coerce').sum()
 
                 if 'retiredCancelled' in df_flow.columns:
-                    mask_ret = df_flow['retiredCancelled'] == True
-                    qty_retired = pd.to_numeric(df_flow.loc[mask_ret, 'quantity'], errors='coerce').sum()
+                    mask_ret    = df_flow['retiredCancelled'] == True
+                    qty_retired = pd.to_numeric(df_flow.loc[mask_ret,  'quantity'], errors='coerce').sum()
                     qty_active  = pd.to_numeric(df_flow.loc[~mask_ret, 'quantity'], errors='coerce').sum()
                 else:
                     qty_retired = 0
@@ -867,23 +734,12 @@ with tabs[3]:
                 with col_fl2:
                     st.metric("🔢 Quantidade Total (VCUs)", f"{total_qty:,.0f}")
                 with col_fl3:
-                    st.metric(
-                        "✅ Ativos",
-                        f"{qty_active:,.0f}",
-                        delta=f"{100 - pct_retired:.1f}%",
-                        delta_color="normal"
-                    )
+                    st.metric("✅ Ativos", f"{qty_active:,.0f}", delta=f"{100 - pct_retired:.1f}%", delta_color="normal")
                 with col_fl4:
-                    st.metric(
-                        "🔴 Retired / Cancelled",
-                        f"{qty_retired:,.0f}",
-                        delta=f"{pct_retired:.1f}%",
-                        delta_color="inverse"
-                    )
+                    st.metric("🔴 Retired / Cancelled", f"{qty_retired:,.0f}", delta=f"{pct_retired:.1f}%", delta_color="inverse")
 
                 st.divider()
 
-                # --- Gráfico Ativos vs Retired por Vintage ---
                 if 'Vintage' in df_flow.columns and 'retiredCancelled' in df_flow.columns:
                     df_flow['quantity_num'] = pd.to_numeric(df_flow['quantity'], errors='coerce')
                     df_flow['Status_Label'] = df_flow['retiredCancelled'].apply(
@@ -896,117 +752,76 @@ with tabs[3]:
                             else str(x)[:4] if pd.notna(x) else 'N/A'
                         )
                     )
-
                     df_bar = df_flow.groupby(['Ano_Periodo', 'Status_Label']).agg(
                         Quantidade=('quantity_num', 'sum')
                     ).reset_index()
 
                     fig_flow = px.bar(
-                        df_bar,
-                        x='Ano_Periodo',
-                        y='Quantidade',
-                        color='Status_Label',
-                        color_discrete_map={
-                            '✅ Ativo':              '#2ecc71',
-                            '🔴 Retired/Cancelled': '#e74c3c'
-                        },
+                        df_bar, x='Ano_Periodo', y='Quantidade', color='Status_Label',
+                        color_discrete_map={'✅ Ativo': '#2ecc71', '🔴 Retired/Cancelled': '#e74c3c'},
                         barmode='stack',
                         title=f"Distribuição de VCUs por Vintage — {projeto_sel}",
                         labels={'Ano_Periodo': 'Período (Vintage)', 'Quantidade': 'VCUs', 'Status_Label': 'Status'}
                     )
                     fig_flow.update_layout(
-                        template='plotly_white',
-                        height=380,
-                        hovermode='x unified',
-                        #legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
-                        legend=dict(font=dict(size=10), orientation='v', xanchor='auto', yanchor='auto'), #Voltar aqui para alinhar tabelea
-
+                        template='plotly_white', height=380, hovermode='x unified',
+                        legend=dict(font=dict(size=10), orientation='v', xanchor='auto', yanchor='auto'),
                         margin=dict(t=60, b=40, l=60, r=20)
                     )
                     st.plotly_chart(fig_flow, use_container_width=True)
 
                 st.divider()
 
-                # --- Tabela granular ---
                 with st.expander("📋 Ver Tabela de Transações (Granular)", expanded=True):
                     cols_flow = [
-                        'issuanceDate', 'tbl_type', 'resourceName_y',
-                        'quantity', 'retiredCancelled', 'additionalCertifications',
-                        'retirementBeneficiary', 'retirementReason','retirementDetails', 'Vintage'
+                        'issuanceDate', 'tbl_type', 'resourceName_y', 'quantity',
+                        'retiredCancelled', 'additionalCertifications',
+                        'retirementBeneficiary', 'retirementReason', 'retirementDetails', 'Vintage'
                     ]
-                    cols_flow_exist = [c for c in cols_flow if c in df_flow.columns]
-
-                    df_flow_display = df_flow[cols_flow_exist]
-
-                    # Destaque visual: linha vermelha para retired
-                    #if 'retiredCancelled' in df_flow_display.columns:
-                    #    def highlight_retired(row):
-                    #        if row.get('retiredCancelled') == True:
-                    #            return ['background-color: #ffffff; color: #666666'] * len(row)
-                    #        return ['background-color: #ffffff; color: #666666'] * len(row)
-#
-                    #    fmt = {c: "{:,.0f}" for c in ['quantity'] if c in df_flow_display.columns}
-                    #    st.dataframe(
-                    #        df_flow_display.style.apply(highlight_retired, axis=1).format(fmt),
-                    #        use_container_width=True,
-                    #        height=420
-                    #    )
-                    #else:
-                    #    st.dataframe(df_flow_display, use_container_width=True, height=420)
+                    cols_flow_exist   = [c for c in cols_flow if c in df_flow.columns]
+                    df_flow_display   = df_flow[cols_flow_exist]
                     st.dataframe(df_flow_display, use_container_width=True, height=420)
 
-                    # Download
                     csv_flow = df_flow_display.to_csv(index=False).encode('utf-8')
                     st.download_button(
-                        label="⬇️ Download Transações (CSV)",
-                        data=csv_flow,
+                        label="⬇️ Download Transações (CSV)", data=csv_flow,
                         file_name=f"transacoes_{projeto_sel[:40].replace(' ', '_')}.csv",
                         mime="text/csv"
                     )
-                    # --- Quem Comprou? ---
+
                     st.divider()
                     st.markdown("### 🛒 Quem Comprou? — Top 15 Beneficiários")
-    
+
                     if 'retirementBeneficiary' in df_flow.columns and 'quantity' in df_flow.columns:
                         df_buyers = df_flow.copy()
                         df_buyers['quantity_num'] = pd.to_numeric(df_buyers['quantity'], errors='coerce')
-                        df_buyers = df_buyers[df_buyers['retiredCancelled'] == True] if 'retiredCancelled' in df_buyers.columns else df_buyers
+                        if 'retiredCancelled' in df_buyers.columns:
+                            df_buyers = df_buyers[df_buyers['retiredCancelled'] == True]
                         df_buyers = df_buyers.dropna(subset=['retirementBeneficiary', 'quantity_num'])
                         df_buyers = df_buyers[df_buyers['retirementBeneficiary'].str.strip() != '']
-    
+
                         top_buyers = (
                             df_buyers.groupby('retirementBeneficiary')['quantity_num']
-                            .sum()
-                            .sort_values(ascending=True)  # ascending=True para barh ficar maior no topo
-                            .tail(15)
-                            .reset_index()
+                            .sum().sort_values(ascending=True).tail(15).reset_index()
                         )
                         top_buyers.columns = ['Beneficiário', 'Total_VCUs']
-    
+
                         if top_buyers.empty:
                             st.info("Nenhum dado de beneficiário disponível para este projeto.")
                         else:
-                            total_vcus = top_buyers['Total_VCUs'].sum()
-                            top_buyers['Pct'] = (top_buyers['Total_VCUs'] / total_vcus * 100).round(1)
+                            total_vcus      = top_buyers['Total_VCUs'].sum()
+                            top_buyers['Pct']   = (top_buyers['Total_VCUs'] / total_vcus * 100).round(1)
                             top_buyers['Label'] = top_buyers.apply(
                                 lambda r: f"{r['Total_VCUs']:,.0f} VCUs ({r['Pct']}%)", axis=1
                             )
-    
+
                             fig_buyers = go.Figure()
                             fig_buyers.add_trace(go.Bar(
-                                x=top_buyers['Total_VCUs'],
-                                y=top_buyers['Beneficiário'],
-                                orientation='h',
-                                text=top_buyers['Label'],
-                                textposition='outside',
-                                marker=dict(
-                                    color=top_buyers['Total_VCUs'],
-                                    colorscale='Greens',
-                                    showscale=False
-                                ),
+                                x=top_buyers['Total_VCUs'], y=top_buyers['Beneficiário'],
+                                orientation='h', text=top_buyers['Label'], textposition='outside',
+                                marker=dict(color=top_buyers['Total_VCUs'], colorscale='Greens', showscale=False),
                                 hovertemplate='<b>%{y}</b><br>VCUs: %{x:,.0f}<extra></extra>'
                             ))
-    
                             fig_buyers.update_layout(
                                 template='plotly_white',
                                 height=max(350, len(top_buyers) * 42),
@@ -1015,9 +830,8 @@ with tabs[3]:
                                 yaxis=dict(title='', tickfont=dict(size=12)),
                                 bargap=0.3
                             )
-    
                             st.plotly_chart(fig_buyers, use_container_width=True)
-    
+
                             with st.expander("📊 Ver ranking completo"):
                                 st.dataframe(
                                     top_buyers[['Beneficiário', 'Total_VCUs', 'Pct']]
@@ -1025,14 +839,10 @@ with tabs[3]:
                                     .rename(columns={'Total_VCUs': 'VCUs Comprados', 'Pct': '% do Total'})
                                     .style.format({'VCUs Comprados': '{:,.0f}', '% do Total': '{:.1f}%'})
                                     .background_gradient(subset=['VCUs Comprados'], cmap='Greens'),
-                                    use_container_width=True,
-                                    hide_index=True
+                                    use_container_width=True, hide_index=True
                                 )
                     else:
                         st.info("Colunas `retirementBeneficiary` ou `quantity` não encontradas no dataset.")
-
-                    
-
 
 # =====================================
 # ABA 5: STORYTELLING
@@ -1042,18 +852,15 @@ with tabs[4]:
     st.header("📖 A História dos Projetos de Carbono no Brasil")
 
     story_tabs = st.tabs([
-        "🌍 Panorama Geral",       # index 0
-        "📍 Dados AOI",            # index 1
-        "🌿 MapBiomas",            # index 2
-        "📊 Evolução Temporal",    # index 3
-        "🎯 Impacto Regional",     # index 4
-        "💡 Insights"              # index 5
+        "🌍 Panorama Geral",
+        "📍 Dados AOI",
+        "🌿 MapBiomas",
+        "📊 Evolução Temporal",
+        "🎯 Impacto Regional",
+        "💡 Insights"
     ])
 
-    # =====================================
-    # STORYTELLING 0: PANORAMA GERAL
-    # =====================================
-
+    # ── STORYTELLING 0: PANORAMA GERAL ──────────────────────────────────
     with story_tabs[0]:
         st.markdown("## 🌱 A Jornada do Carbono Florestal Brasileiro")
 
@@ -1062,13 +869,13 @@ with tabs[4]:
             st.markdown("""
             ### Do Desmatamento aos Créditos de Carbono
             - 💰 **Valoriza economicamente** a floresta em pé
-            - 🌳 **Preserva a biodiversidade** 
+            - 🌳 **Preserva a biodiversidade**
             - 👥 **Beneficia comunidades** locais
             - 🌍 **Combate as mudanças climáticas** globais
             """)
         with col2:
             st.markdown("""
-            <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                         padding: 30px; border-radius: 15px; color: white; text-align: center;'>
                 <h1 style='margin: 0; font-size: 3em;'>🌎</h1>
                 <h3 style='margin: 10px 0;'>Brasil</h3>
@@ -1087,15 +894,16 @@ with tabs[4]:
             df_timeline['Ano'] = df_timeline['vcsRegistrationDate'].dt.year
             timeline_data = df_timeline.groupby(['Ano', 'vcsAFOLUActivity']).size().reset_index(name='Quantidade')
             timeline_data = timeline_data[timeline_data['Ano'] >= 2000]
-            fig_timeline = px.area(timeline_data, x='Ano', y='Quantidade', color='vcsAFOLUActivity',
-                                   color_discrete_map=ACTIVITY_COLORS,
-                                   title='Crescimento dos Projetos de Carbono ao Longo do Tempo')
+            fig_timeline = px.area(
+                timeline_data, x='Ano', y='Quantidade', color='vcsAFOLUActivity',
+                color_discrete_map=ACTIVITY_COLORS,
+                title='Crescimento dos Projetos de Carbono ao Longo do Tempo'
+            )
             fig_timeline.update_layout(hovermode='x unified', height=400, legend_title_text='Tipo de Atividade')
             st.plotly_chart(fig_timeline, use_container_width=True)
 
         st.markdown("### 🎯 Números que Contam Histórias")
-        #col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-        col_m1, col_m3,  = st.columns(2)
+        col_m1, col_m3 = st.columns(2)
 
         with col_m1:
             if 'vcsAcresHectares' in df_all.columns:
@@ -1103,18 +911,12 @@ with tabs[4]:
                     df_all_temp = df_all.copy()
                     df_all_temp['area_num'] = pd.to_numeric(
                         df_all_temp['vcsAcresHectares'].astype(str)
-                        .str.replace(r'[^\d.,]', '', regex=True).str.replace(',', '', regex=False), errors='coerce')
-                    st.metric("Área Total Protegida", f"{df_all_temp['area_num'].sum()/1000000:,.1f}M ha")
+                        .str.replace(r'[^\d.,]', '', regex=True).str.replace(',', '', regex=False),
+                        errors='coerce'
+                    )
+                    st.metric("Área Total Protegida", f"{df_all_temp['area_num'].sum()/1_000_000:,.1f}M ha")
                 except Exception:
                     st.metric("Área Total Protegida", "N/A")
-
-        #with col_m2:
-        #    if 'vcsEstimatedAnnualEmissionReductions' in df_all.columns:
-        #        try:
-        #            total_eaer = pd.to_numeric(df_all['vcsEstimatedAnnualEmissionReductions'], errors='coerce').sum()
-        #            st.metric("Reduções Anuais (tCO2e)", f"{total_eaer/1000000:.1f}M")
-        #        except Exception:
-        #            st.metric("Reduções Anuais", "N/A")
 
         with col_m3:
             try:
@@ -1123,14 +925,7 @@ with tabs[4]:
             except Exception:
                 st.metric("Projetos REDD+", "N/A")
 
-        #with col_m4:
-        #    if 'state_Recode' in df_all.columns:
-        #        st.metric("Estados Alcançados", f"{df_all['state_Recode'].nunique()}")
-
-    # =====================================
-    # STORYTELLING 1: DADOS AOI (GFW + PRODES + DETER)
-    # =====================================
-
+    # ── STORYTELLING 1: DADOS AOI ────────────────────────────────────────
     with story_tabs[1]:
         render_aoi_tab(
             df_all              = df_all,
@@ -1142,932 +937,12 @@ with tabs[4]:
             ACTIVITY_COLORS     = ACTIVITY_COLORS,
         )
 
-    #with story_tabs[1]:
-    #    st.markdown("## 📍 Análise Espacial por Projeto")
-#
-    #    GFW_API_KEY = st.secrets["GFW_API_KEY"].strip()
-#
-    #    #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    #    #KML_DIR  = os.path.join(BASE_DIR, "kml")
-#
-    #    #gdf_combined, erros = carregar_geometrias(KML_DIR)
-    #    
-    #    # Cache estável — sem df_all dentro
-    #    gdf_kml, erros = carregar_geometrias(KML_DIR)
-#
-    #    if not gdf_kml.empty:
-    #        #df_all_ref = df_all.copy()
-#
-    #        cols_merge = [
-    #            'resourceIdentifier', 'resourceName_x', 'state_Recode',
-    #            'vcsAFOLUActivity', 'vcsProjectStatus', 'vcsMethodology',
-    #            'vcsCreditingPeriodTerm', 'vcsAcresHectares', 'description'
-    #        ]
-    #        cols_merge = [c for c in cols_merge if c in df_all.columns]
-    #        df_all_ref = df_all[cols_merge].copy()
-    #        df_all_ref["resourceIdentifier"] = df_all_ref["resourceIdentifier"].astype(str)
-    #        #df_all_ref["resourceIdentifier"] = df_all_ref["resourceIdentifier"].astype(str)
-    #        gdf_kml.index = gdf_kml.index.astype(str)
-    #        #gdf_combined = gdf_kml.reset_index().merge(
-    #        #    df_all_ref, on="resourceIdentifier", how="left"
-    #        #)
-    #        gdf_kml_reset = gdf_kml.reset_index()
-    #        gdf_kml_reset = gdf_kml_reset.drop_duplicates(subset=['resourceIdentifier'])
-    #        gdf_combined = gdf_kml_reset.merge(
-    #            df_all_ref, on="resourceIdentifier", how="left"
-    #        )
-#
-    #        gdf_combined = gpd.GeoDataFrame(gdf_combined, geometry="geometry", crs="EPSG:4326")
-    #    else:
-    #        gdf_combined = gdf_kml
-#
-    #    if erros:
-    #        with st.expander("⚠️ Erros ao carregar alguns KMLs"):
-    #            for f, e in erros:
-    #                st.text(f"{f}: {e}")
-#
-    #    if gdf_combined.empty:
-    #        st.warning("Nenhum KML válido encontrado.")
-    #    else:
-    #        gdf_plot = gdf_combined[
-    #            ~gdf_combined["geometry"].is_empty & gdf_combined["geometry"].notnull()
-    #        ].copy()
-    #        gdf_plot = gdf_plot[gdf_plot.is_valid]
-#
-    #        if gdf_plot.empty:
-    #            st.warning("⚠️ Nenhuma geometria válida para exibir.")
-    #        else:
-    #            project_options = ["🌎 Visão Geral (Todos os Projetos)"] + [
-    #                f"{row.get('resourceName_x', 'Sem nome')} — {row.get('state_Recode', 'N/A')}"
-    #                for _, row in gdf_plot.iterrows()
-    #            ]
-#
-    #            selected_project = st.selectbox(
-    #                "📍 Selecione um projeto para análise:",
-    #                options=project_options,
-    #                key="project_selector_v2"
-    #            )
-#
-    #            #st.info("⚠️ Pedimos compreensão: Estamos em desenvolvimento e os resultados a seguir são estimativas com base no recorte da BBox (Área Azul)")
-    #            #st.info("🧞 New features: 0-Estimativas com base no recorte da BBox (Área Azul) e (1) apenas para AOI - Área de Interesse")
-    #            #st.info("🎲 Dados transparência e universialização da informação")
-    #            
-    #            #st.info("⚠️ Aviso: A aplicação ainda está em desenvolvimento. Os resultados apresentados são estimativas baseadas no recorte da BBox (Área Azul).")
-    #            #st.info("🧞 Novidades: (0) Estimativas considerando o recorte da BBox (Área Azul); (1) Análises disponíveis apenas para AOI (Área de Interesse).")
-    #            #st.info("🎲 Compromisso com transparência e democratização da informação.")
-#
-    #            st.info(
-    #                    "⚠️ **Aviso:** A aplicação ainda está em desenvolvimento. "
-    #                    "Os resultados são estimativas com base na BBox (Área Azul).\n\n"
-    #                    "**🧞 Novidades em breve**\n"
-    #                    "- Estimativas considerando o recorte da BBox (Área Azul)\n"
-    #                    "- Análises disponíveis apenas para AOI (Área de Interesse)\n\n"
-    #                    "🎲 **Transparência e democratização da informação**"
-    #                )
-#
-    #            is_overview = selected_project == "🌎 Visão Geral (Todos os Projetos)"
-#
-    #            if is_overview:
-    #                centroid     = gdf_plot.geometry.centroid
-    #                center       = [centroid.y.mean(), centroid.x.mean()]
-    #                zoom_start   = 5
-    #                selected_gdf = gdf_plot
-    #            else:
-    #                project_name = selected_project.split(" — ")[0]
-    #                selected_gdf = gdf_plot[gdf_plot["resourceName_x"] == project_name]
-    #                if not selected_gdf.empty:
-    #                    bounds     = selected_gdf.total_bounds
-    #                    center     = [(bounds[1]+bounds[3])/2, (bounds[0]+bounds[2])/2]
-    #                    zoom_start = 10
-    #                else:
-    #                    selected_gdf = gdf_plot
-    #                    centroid     = gdf_plot.geometry.centroid
-    #                    center       = [centroid.y.mean(), centroid.x.mean()]
-    #                    zoom_start   = 5
-#
-    #            # bbox string para WFS
-    #            if not is_overview:
-    #                b = selected_gdf.total_bounds
-    #                bbox_str = f"{b[0]},{b[1]},{b[2]},{b[3]}"
-    #            else:
-    #                bbox_str = None
-#
-    #            st.divider()
-#
-    #            # ===================================
-    #            # TABS INTERNAS: GFW | PRODES | DETER
-    #            # ===================================
-    #            tab_gfw, tab_prodes, tab_deter_amz, tab_deter_cer = st.tabs([
-    #                "🌳 GFW", "🔴 PRODES", "🟠 DETER Amazônia", "🟡 DETER Cerrado"
-    #            ])
-#
-    #            # ===================================
-    #            # TAB GFW
-    #            # ===================================
-    #            with tab_gfw:
-    #                col_mapa, col_info = st.columns([8, 2])
-#
-    #                with col_mapa:
-    #                    st.markdown("### 🗺️ Mapa")
-#
-    #                    c1, c2, c3 = st.columns(3)
-    #                    with c1:
-    #                        show_loss = st.toggle("🔴 Tree Cover Loss", value=True,  key="toggle_loss")
-    #                    with c2:
-    #                        show_glad = st.toggle("🟡 GLAD Alerts",     value=False, key="toggle_glad")
-    #                    with c3:
-    #                        show_radd = st.toggle("🟠 RADD Alerts",     value=False, key="toggle_radd")
-#
-    #                    m_gfw = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
-    #                    folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m_gfw)
-#
-    #                    # Bounding box da AOI
-    #                    if not is_overview:
-    #                        b = selected_gdf.total_bounds  # (minx, miny, maxx, maxy)
-    #                        bbox_coords = [
-    #                            [b[1], b[0]],  # SW
-    #                            [b[1], b[2]],  # SE
-    #                            [b[3], b[2]],  # NE
-    #                            [b[3], b[0]],  # NW
-    #                            [b[1], b[0]],  # fecha
-    #                        ]
-    #                        folium.PolyLine(
-    #                            locations=bbox_coords,
-    #                            color="#00FFFF",
-    #                            weight=2,
-    #                            dash_array="6 4",
-    #                            tooltip="Bounding Box (área de consulta WFS)",
-    #                            opacity=0.8
-    #                        ).add_to(m_gfw)
-#
-#
-    #                    if show_loss:
-    #                        folium.TileLayer(
-    #                            tiles='https://tiles.globalforestwatch.org/umd_tree_cover_loss/v1.11/tcd_30/{z}/{x}/{y}.png',
-    #                            name='Tree Cover Loss', attr='GFW', overlay=True, opacity=0.8
-    #                        ).add_to(m_gfw)
-    #                    if show_glad:
-    #                        folium.TileLayer(
-    #                            tiles='https://tiles.globalforestwatch.org/umd_glad_landsat_alerts/v20260320/default/{z}/{x}/{y}.png',
-    #                            name='GLAD Alerts', attr='GFW', overlay=True, opacity=0.8
-    #                        ).add_to(m_gfw)
-    #                    if show_radd:
-    #                        folium.TileLayer(
-    #                            tiles='https://tiles.globalforestwatch.org/wur_radd_alerts/v20260315/default/{z}/{x}/{y}.png',
-    #                            name='RADD Alerts', attr='GFW', overlay=True, opacity=0.8
-    #                        ).add_to(m_gfw)
-#
-    #                    for _, row in selected_gdf.iterrows():
-    #                        try:
-    #                            folium.GeoJson(
-    #                                data=mapping(row["geometry"]),
-    #                                style_function=lambda x: {
-    #                                    "fillColor": "transparent", "color": "#FF0000",
-    #                                    "weight": 3, "fillOpacity": 0.1, "dashArray": "5, 5"
-    #                                }
-    #                            ).add_to(m_gfw)
-    #                        except Exception:
-    #                            pass
-#
-    #                    if not is_overview:
-    #                        b = selected_gdf.total_bounds
-    #                        m_gfw.fit_bounds([[b[1], b[0]], [b[3], b[2]]])
-#
-    #                    folium.LayerControl().add_to(m_gfw)
-    #                    st_folium(m_gfw, width=None, height=600, key="map_gfw")
-#
-    #                with col_info:
-    #                    if is_overview:
-    #                        st.info("💡 Selecione um projeto.")
-    #                        st.metric("Total de Projetos", f"{len(gdf_plot):,}")
-    #                    else:
-    #                        row_proj = selected_gdf.iloc[0]
-    #                        st.markdown("### 📋 Info")
-    #                        st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
-    #                        st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
-    #                        st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
-    #                        st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
-    #                        st.markdown(f"**Area:** {row_proj.get('vcsAcresHectares', 'N/A')}")
-    #                        st.markdown(f"**Tipo:** {row_proj.get('vcsAFOLUActivity', 'N/A')}")
-    #                        st.markdown(f"**Acreditação:** {row_proj.get('vcsCreditingPeriodTerm', 'N/A')}")
-    #                        st.markdown(f"**Protocolo:** {row_proj.get('vcsMethodology', 'N/A')}")
-    #                        st.markdown(f"**Status:** {row_proj.get('vcsProjectStatus', 'N/A')}")
-    #                        st.markdown(f"**Resumo:** {row_proj.get('description', 'N/A')}")
-#
-#
-    #                if not is_overview:
-    #                    from shapely.ops import unary_union
-    #                    geom = selected_gdf.geometry.iloc[0]
-    #                    if geom.geom_type == 'GeometryCollection':
-    #                        polys = [g for g in geom.geoms if g.geom_type in ['Polygon', 'MultiPolygon']]
-    #                        geom  = unary_union(polys) if polys else None
-#
-    #                    if geom and geom.geom_type in ['Polygon', 'MultiPolygon']:
-    #                        geojson_poly = mapping(geom)
-    #                        st.divider()
-    #                        col_g1, col_g2, col_g3 = st.columns(3)
-#
-    #                        with col_g1:
-    #                            st.markdown("### 📊 Tree Cover Loss")
-    #                            with st.spinner("Consultando GFW..."):
-    #                                df_loss = gfw_tree_cover_loss(geojson_poly, GFW_API_KEY)
-    #                            if df_loss.empty:
-    #                                st.warning("Sem dados.")
-    #                            else:
-    #                                fig = go.Figure()
-    #                                fig.add_trace(go.Bar(x=df_loss['umd_tree_cover_loss__year'],
-    #                                                     y=df_loss['loss_ha'], marker_color='#ff4444'))
-    #                                fig.update_layout(height=300, template="plotly_white",
-    #                                                  margin=dict(t=10, b=40, l=40, r=10),
-    #                                                  xaxis_title="Ano", yaxis_title="ha",
-    #                                                  hovermode='x unified')
-    #                                st.plotly_chart(fig, use_container_width=True)
-#
-    #                        with col_g2:
-    #                            st.markdown("### 🟡 GLAD")
-    #                            with st.spinner("Consultando GLAD..."):
-    #                                df_glad = gfw_glad_alerts(geojson_poly, GFW_API_KEY)
-    #                            if df_glad.empty:
-    #                                st.warning("Sem dados.")
-    #                            else:
-    #                                fig = go.Figure()
-    #                                fig.add_trace(go.Bar(x=df_glad['alert__year'],
-    #                                                     y=df_glad['alert_count'], marker_color='#FFC300'))
-    #                                fig.update_layout(height=300, template="plotly_white",
-    #                                                  margin=dict(t=10, b=40, l=40, r=10),
-    #                                                  xaxis_title="Ano", yaxis_title="Alertas",
-    #                                                  hovermode='x unified')
-    #                                st.plotly_chart(fig, use_container_width=True)
-#
-    #                        with col_g3:
-    #                            st.markdown("### 🟠 RADD")
-    #                            with st.spinner("Consultando RADD..."):
-    #                                df_radd = gfw_radd_alerts(geojson_poly, GFW_API_KEY)
-    #                            if df_radd.empty:
-    #                                st.warning("Sem dados.")
-    #                            else:
-    #                                fig = go.Figure()
-    #                                fig.add_trace(go.Bar(x=df_radd['alert__year'],
-    #                                                     y=df_radd['alert_count'], marker_color='#FF7900'))
-    #                                fig.update_layout(height=300, template="plotly_white",
-    #                                                  margin=dict(t=10, b=40, l=40, r=10),
-    #                                                  xaxis_title="Ano", yaxis_title="Alertas",
-    #                                                  hovermode='x unified')
-    #                                st.plotly_chart(fig, use_container_width=True)
-#
-    #            # ===================================
-    #            # TAB PRODES
-    #            # ===================================
-    #            with tab_prodes:
-    #                col_mapa_p, col_info_p = st.columns([8, 2])
-#
-    #                with col_mapa_p:
-    #                    st.markdown("### 🗺️ Mapa PRODES")
-#
-    #                    c1, c2 = st.columns(2)
-    #                    with c1:
-    #                        show_prodes_br  = st.toggle("🔴 PRODES Brasil",    value=True,  key="toggle_prodes_br")
-    #                    with c2:
-    #                        show_prodes_amz = st.toggle("🟥 PRODES Legal AMZ", value=False, key="toggle_prodes_amz")
-#
-    #                    m_prodes = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
-    #                    folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m_prodes)
-#
-    #                    # Bounding box da AOI
-    #                    if not is_overview:
-    #                        b = selected_gdf.total_bounds  # (minx, miny, maxx, maxy)
-    #                        bbox_coords = [
-    #                            [b[1], b[0]],  # SW
-    #                            [b[1], b[2]],  # SE
-    #                            [b[3], b[2]],  # NE
-    #                            [b[3], b[0]],  # NW
-    #                            [b[1], b[0]],  # fecha
-    #                        ]
-    #                        folium.PolyLine(
-    #                            locations=bbox_coords,
-    #                            color="#00FFFF",
-    #                            weight=2,
-    #                            dash_array="6 4",
-    #                            tooltip="Bounding Box (área de consulta WFS)",
-    #                            opacity=0.8
-    #                        ).add_to(m_prodes)
-#
-#
-    #                    if show_prodes_br:
-    #                        folium.WmsTileLayer(
-    #                            url="https://terrabrasilis.dpi.inpe.br/geoserver/prodes-brasil-nb/prodes_brasil/ows",
-    #                            layers="prodes_brasil",
-    #                            fmt="image/png",
-    #                            transparent=True,
-    #                            name="PRODES Brasil",
-    #                            overlay=True,
-    #                            opacity=0.8
-    #                        ).add_to(m_prodes)
-#
-    #                    if show_prodes_amz:
-    #                        folium.WmsTileLayer(
-    #                            url="https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/yearly_deforestation/ows",
-    #                            layers="yearly_deforestation",
-    #                            fmt="image/png",
-    #                            transparent=True,
-    #                            name="PRODES Legal AMZ",
-    #                            overlay=True,
-    #                            opacity=0.8
-    #                        ).add_to(m_prodes)
-#
-    #                    for _, row in selected_gdf.iterrows():
-    #                        try:
-    #                            folium.GeoJson(
-    #                                data=mapping(row["geometry"]),
-    #                                style_function=lambda x: {
-    #                                    "fillColor": "transparent", "color": "#49006a",
-    #                                    "weight": 3, "fillOpacity": 0.1, "dashArray": "5, 5"
-    #                                }
-    #                            ).add_to(m_prodes)
-    #                        except Exception:
-    #                            pass
-#
-    #                    if not is_overview:
-    #                        b = selected_gdf.total_bounds
-    #                        m_prodes.fit_bounds([[b[1], b[0]], [b[3], b[2]]])
-    #                    
-    #                    
-#
-    #                    folium.LayerControl().add_to(m_prodes)
-    #                    st_folium(m_prodes, width=None, height=600, key="map_prodes")
-#
-    #                with col_info_p:
-    #                    if not is_overview:
-    #                        row_proj = selected_gdf.iloc[0]
-    #                        st.markdown("### 📋 Info")
-    #                        st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
-    #                        st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
-    #                        st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
-    #                        st.markdown(f"**Area:** {row_proj.get('vcsAcresHectares', 'N/A')}")
-    #                        st.markdown(f"**Tipo:** {row_proj.get('vcsAFOLUActivity', 'N/A')}")
-    #                        st.markdown(f"**Acreditação:** {row_proj.get('vcsCreditingPeriodTerm', 'N/A')}")
-    #                        st.markdown(f"**Protocolo:** {row_proj.get('vcsMethodology', 'N/A')}")
-    #                        st.markdown(f"**Status:** {row_proj.get('vcsProjectStatus', 'N/A')}")
-    #                        st.markdown(f"**Resumo:** {row_proj.get('description', 'N/A')}")
-    #                        
-    #                    else:
-    #                        st.info("💡 Selecione um projeto.")
-#
-    #                if not is_overview and bbox_str:
-    #                    st.divider()
-    #                    #col_g1, col_g2 = st.columns(2)
-    #                    col_g1, col_g2, col_g3 = st.columns(3)
-#
-    #                    with col_g1:
-    #                        st.markdown("### 📊 PRODES Legal AMZ — Incremento Anual na AOI")
-    #                        with st.spinner("Consultando TerraBrasilis WFS..."):
-    #                            df_prodes = terrabrasilis_wfs(
-    #                                "https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/yearly_deforestation/ows",
-    #                                "prodes-legal-amz:yearly_deforestation",
-    #                                bbox_str
-    #                            )
-    #                        if df_prodes.empty:
-    #                            st.warning("Sem dados PRODES para esta AOI.")
-    #                        else:
-    #                            if 'year' in df_prodes.columns:
-    #                                df_prodes['year'] = pd.to_numeric(df_prodes['year'], errors='coerce')
-    #                                df_prodes_year = df_prodes.groupby('year').size().reset_index(name='poligonos')
-    #                                fig_p = go.Figure()
-    #                                fig_p.add_trace(go.Bar(
-    #                                    x=df_prodes_year['year'],
-    #                                    y=df_prodes_year['poligonos'],
-    #                                    marker_color='#C0392B',
-    #                                    name='Polígonos PRODES'
-    #                                ))
-    #                                fig_p.update_layout(
-    #                                    xaxis_title="Ano", yaxis_title="Nº Polígonos",
-    #                                    height=300, template="plotly_white",
-    #                                    margin=dict(t=10, b=40, l=40, r=10),
-    #                                    hovermode='x unified'
-    #                                )
-    #                                st.plotly_chart(fig_p, use_container_width=True)
-#
-    #                            with st.expander("📋 Tabela PRODES"):
-    #                                st.dataframe(df_prodes, use_container_width=True, height=300)
-    #                                csv = df_prodes.to_csv(index=False).encode('utf-8')
-    #                                st.download_button("⬇️ Download CSV", data=csv,
-    #                                                   file_name="prodes_aoi.csv", mime="text/csv")
-    #                                
-    #                    with col_g2:
-    #                        st.markdown("### 📊 Incremento Anual — Área (km²)")
-    #                        if 'year' in df_prodes.columns and 'area_km' in df_prodes.columns:
-    #                            df_prodes['area_km'] = pd.to_numeric(df_prodes['area_km'], errors='coerce')
-    #                            df_prodes_area = df_prodes.groupby('year').agg(
-    #                                area_total=('area_km', 'sum')
-    #                            ).reset_index()
-    #                            fig_a = go.Figure()
-    #                            fig_a.add_trace(go.Bar(
-    #                                x=df_prodes_area['year'],
-    #                                y=df_prodes_area['area_total'],
-    #                                marker_color='#922B21',
-    #                                name='Área (km²)'
-    #                            ))
-    #                            fig_a.update_layout(
-    #                                xaxis_title="Ano", yaxis_title="km²",
-    #                                height=300, template="plotly_white",
-    #                                margin=dict(t=10, b=40, l=40, r=10),
-    #                                hovermode='x unified'
-    #                            )
-    #                            st.plotly_chart(fig_a, use_container_width=True)
-    #                        else:
-    #                            st.warning("Coluna `area_km` não encontrada.")
-#
-    #                    with col_g3:
-    #                        st.markdown("### 📊 Classe de Desmatamento")
-    #                        if not df_prodes.empty and 'class_name' in df_prodes.columns:
-    #                            class_counts = df_prodes['class_name'].value_counts().reset_index()
-    #                            class_counts.columns = ['Classe', 'Count']
-    #                            fig_cls = go.Figure()
-    #                            fig_cls.add_trace(go.Bar(
-    #                                x=class_counts['Classe'],
-    #                                y=class_counts['Count'],
-    #                                marker_color='#E74C3C'
-    #                            ))
-    #                            fig_cls.update_layout(
-    #                                xaxis_title="Classe", yaxis_title="Nº Polígonos",
-    #                                height=300, template="plotly_white",
-    #                                margin=dict(t=10, b=40, l=40, r=10)
-    #                            )
-    #                            st.plotly_chart(fig_cls, use_container_width=True)
-#
-    #            # ===================================
-    #            # TAB DETER AMAZÔNIA
-    #            # ===================================
-    #            with tab_deter_amz:
-    #                col_mapa_d, col_info_d = st.columns([8, 2])
-#
-    #                with col_mapa_d:
-    #                    st.markdown("### 🗺️ Mapa DETER Amazônia")
-#
-    #                    m_deter = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
-    #                    folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m_deter)
-    #                    
-    #                    # Bounding box da AOI
-    #                    if not is_overview:
-    #                        b = selected_gdf.total_bounds  # (minx, miny, maxx, maxy)
-    #                        bbox_coords = [
-    #                            [b[1], b[0]],  # SW
-    #                            [b[1], b[2]],  # SE
-    #                            [b[3], b[2]],  # NE
-    #                            [b[3], b[0]],  # NW
-    #                            [b[1], b[0]],  # fecha
-    #                        ]
-    #                        folium.PolyLine(
-    #                            locations=bbox_coords,
-    #                            color="#00FFFF",
-    #                            weight=2,
-    #                            dash_array="6 4",
-    #                            tooltip="Bounding Box (área de consulta WFS)",
-    #                            opacity=0.8
-    #                        ).add_to(m_deter)
-#
-    #                    folium.WmsTileLayer(
-    #                        url="https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/deter_amz/ows",
-    #                        layers="deter_amz",
-    #                        fmt="image/png",
-    #                        transparent=True,
-    #                        name="DETER AMZ",
-    #                        overlay=True,
-    #                        opacity=0.8
-    #                    ).add_to(m_deter)
-#
-    #                    for _, row in selected_gdf.iterrows():
-    #                        try:
-    #                            folium.GeoJson(
-    #                                data=mapping(row["geometry"]),
-    #                                style_function=lambda x: {
-    #                                    "fillColor": "transparent", "color": "#FF6600",
-    #                                    "weight": 3, "fillOpacity": 0.1, "dashArray": "5, 5"
-    #                                }
-    #                            ).add_to(m_deter)
-    #                        except Exception:
-    #                            pass
-#
-    #                    if not is_overview:
-    #                        b = selected_gdf.total_bounds
-    #                        m_deter.fit_bounds([[b[1], b[0]], [b[3], b[2]]])
-#
-    #                    folium.LayerControl().add_to(m_deter)
-    #                    st_folium(m_deter, width=None, height=600, key="map_deter_amz")
-#
-    #                with col_info_d:
-    #                    if not is_overview:
-    #                        row_proj = selected_gdf.iloc[0]
-    #                        st.markdown("### 📋 Info")
-    #                        st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
-    #                        st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
-    #                        st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
-    #                        st.markdown(f"**Area:** {row_proj.get('vcsAcresHectares', 'N/A')}")
-    #                        st.markdown(f"**Tipo:** {row_proj.get('vcsAFOLUActivity', 'N/A')}")
-    #                        st.markdown(f"**Acreditação:** {row_proj.get('vcsCreditingPeriodTerm', 'N/A')}")
-    #                        st.markdown(f"**Protocolo:** {row_proj.get('vcsMethodology', 'N/A')}")
-    #                        st.markdown(f"**Status:** {row_proj.get('vcsProjectStatus', 'N/A')}")
-    #                        st.markdown(f"**Resumo:** {row_proj.get('description', 'N/A')}")
-    #                        st.markdown("""
-    #                        <style>
-    #                        .deter-leg { font-size: 12px; line-height: 1.8; }
-    #                        .deter-item { display: flex; align-items: center; margin: 3px 0; }
-    #                        .deter-box { width: 16px; height: 16px; border-radius: 2px; margin-right: 8px; 
-    #                                     flex-shrink: 0; border: 1px solid #aaa; }
-    #                        </style>
-    #                        <div class='deter-leg'>
-    #                        <b>Avisos de Desmatamento<br>a partir de 2016</b><br><br>
-    #                        <div class='deter-item'><div class='deter-box' style='background:#d7191c'></div>Cicatriz de queimada</div>
-    #                        <div class='deter-item'><div class='deter-box' style='background:#868686'></div>Corte seletivo</div>
-    #                        <div class='deter-item'><div class='deter-box' style='background:#db83ff'></div>Corte seletivo desordenado</div>
-    #                        <div class='deter-item'><div class='deter-box' style='background:#ff7e00'></div>Corte seletivo geométrico</div>
-    #                        <div class='deter-item'><div class='deter-box' style='background:#ffffbf'></div>Degradação</div>
-    #                        <div class='deter-item'><div class='deter-box' style='background:#8a5f4b'></div>Desmatamento corte raso</div>
-    #                        <div class='deter-item'><div class='deter-box' style='background:#abdda4'></div>Desmatamento vegetação</div>
-    #                        <div class='deter-item'><div class='deter-box' style='background:#4223e5'></div>Mineração</div>
-    #                        </div>
-    #                        """, unsafe_allow_html=True)
-    #                
-    #                    else:
-    #                        st.info("💡 Selecione um projeto.")
-    #                #st.divider()
-    #                
-    #                if not is_overview and bbox_str:
-    #                    st.divider()
-    #                    st.markdown("### 📊 DETER AMZ — Alertas na AOI")
-    #                    with st.spinner("Consultando TerraBrasilis WFS..."):
-    #                        df_deter = terrabrasilis_wfs(
-    #                            "https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/deter_amz/ows",
-    #                            "deter-amz:deter_amz",
-    #                            bbox_str
-    #                        )
-#
-    #                    if df_deter.empty:
-    #                        st.warning("Sem alertas DETER para esta AOI.")
-    #                    else:
-    #                        #col_g1, col_g2, col_g3 = st.columns(3)
-    #                        
-    #                        col_g1, col_g2 = st.columns([2, 3])
-#
-    #                        with col_g1:
-    #                            st.markdown("### 📊 Alertas por Ano")
-    #                            if 'view_date' in df_deter.columns:
-    #                                df_deter['year'] = pd.to_datetime(
-    #                                    df_deter['view_date'], errors='coerce').dt.year
-    #                                df_deter_year = df_deter.groupby('year').agg(
-    #                                    alertas=('year', 'count'),
-    #                                    area_km2=('areauckm', 'sum')
-    #                                ).reset_index()
-    #                                fig_d = go.Figure()
-    #                                fig_d.add_trace(go.Bar(
-    #                                    x=df_deter_year['year'],
-    #                                    y=df_deter_year['alertas'],
-    #                                    marker_color='#E67E22', name='Alertas'
-    #                                ))
-    #                                fig_d.update_layout(
-    #                                    xaxis_title="Ano", yaxis_title="Nº Alertas",
-    #                                    height=300, template="plotly_white",
-    #                                    margin=dict(t=10, b=40, l=40, r=10),
-    #                                    hovermode='x unified'
-    #                                )
-    #                                st.plotly_chart(fig_d, use_container_width=True)
-#
-    #                            st.markdown("### 📊 Classe de Alerta")
-    #                            if 'classname' in df_deter.columns:
-    #                                class_d = df_deter['classname'].value_counts().reset_index()
-    #                                class_d.columns = ['Classe', 'Count']
-    #                                fig_cd = go.Figure()
-    #                                fig_cd.add_trace(go.Bar(
-    #                                    x=class_d['Classe'], y=class_d['Count'],
-    #                                    marker_color='#D35400'
-    #                                ))
-    #                                fig_cd.update_layout(
-    #                                    xaxis_title="Classe", yaxis_title="Alertas",
-    #                                    height=300, template="plotly_white",
-    #                                    margin=dict(t=10, b=40, l=40, r=10)
-    #                                )
-    #                                st.plotly_chart(fig_cd, use_container_width=True)
-#
-    #                        with col_g2:
-    #                            st.markdown("### 📊 Área por Classe ao Longo do Tempo (ha)")
-    #                            if 'classname' in df_deter.columns and 'areamunkm' in df_deter.columns and 'year' in df_deter.columns:
-    #                                df_deter['areamunkm'] = pd.to_numeric(df_deter['areamunkm'], errors='coerce')*100
-    #                                df_area_linha = df_deter.groupby(['year', 'classname']).agg(
-    #                                    area_total=('areamunkm', 'sum')
-    #                                ).reset_index()
-#
-    #                                DETER_COLORS = {
-    #                                    'CICATRIZ_DE_QUEIMADA':       '#d7191c',
-    #                                    'CORTE_SELETIVO':             '#868686',
-    #                                    'CS_DESORDENADO':             '#db83ff',
-    #                                    'CS_GEOMETRICO':              '#ff7e00',
-    #                                    'DEGRADACAO':                 '#ffffbf',
-    #                                    'DESMATAMENTO_CR':            '#8a5f4b',
-    #                                    'DESMATAMENTO_VEG':           '#abdda4',
-    #                                    'MINERACAO':                  '#4223e5',
-    #                                }
-#
-    #                                fig_da = go.Figure()
-    #                                for classe in sorted(df_area_linha['classname'].unique()):
-    #                                    df_cls = df_area_linha[df_area_linha['classname'] == classe]
-    #                                    cor = DETER_COLORS.get(classe.upper().replace(' ', '_'), '#999999')
-    #                                    fig_da.add_trace(go.Scatter(
-    #                                        x=df_cls['year'],
-    #                                        y=df_cls['area_total'],
-    #                                        mode='lines+markers',
-    #                                        name=classe,
-    #                                        line=dict(width=2, color=cor),
-    #                                        marker=dict(size=6, color=cor)
-    #                                    ))
-#
-    #                                fig_da.update_layout(
-    #                                    xaxis_title="Ano", yaxis_title="ha",
-    #                                    height=640, template="plotly_white",
-    #                                    margin=dict(t=10, b=40, l=40, r=10),
-    #                                    hovermode='x unified',
-    #                                    #legend=dict(font=dict(size=10), orientation='v')
-    #                                    legend=dict(font=dict(size=10), orientation='v', xanchor='auto', yanchor='auto') #Voltar aqui para alinhar tabelea
-    #                                )
-    #                                st.plotly_chart(fig_da, use_container_width=True)
-    #                            else:
-    #                                st.warning("Colunas necessárias não encontradas.")
-#
-    #                        with st.expander("📋 Tabela DETER AMZ"):
-    #                            st.dataframe(df_deter, use_container_width=True, height=300)
-    #                            csv = df_deter.to_csv(index=False).encode('utf-8')
-    #                            st.download_button("⬇️ Download CSV", data=csv,
-    #                                               file_name="deter_amz_aoi.csv", mime="text/csv")
-    #                    #if df_deter.empty:
-    #                    #    st.warning("Sem alertas DETER para esta AOI.")
-    #                    #else:
-    #                    #    col_g1, col_g2 = st.columns(2)
-##
-    #                    #    with col_g1:
-    #                    #        if 'view_date' in df_deter.columns:
-    #                    #            df_deter['year'] = pd.to_datetime(
-    #                    #                df_deter['view_date'], errors='coerce').dt.year
-    #                    #            df_deter_year = df_deter.groupby('year').agg(
-    #                    #                alertas=('year', 'count'),
-    #                    #                area_km2=('areauckm', 'sum')
-    #                    #            ).reset_index()
-    #                    #            fig_d = go.Figure()
-    #                    #            fig_d.add_trace(go.Bar(
-    #                    #                x=df_deter_year['year'],
-    #                    #                y=df_deter_year['alertas'],
-    #                    #                marker_color='#E67E22', name='Alertas'
-    #                    #            ))
-    #                    #            fig_d.update_layout(
-    #                    #                xaxis_title="Ano", yaxis_title="Nº Alertas",
-    #                    #                height=300, template="plotly_white",
-    #                    #                margin=dict(t=10, b=40, l=40, r=10),
-    #                    #                hovermode='x unified'
-    #                    #            )
-    #                    #            st.plotly_chart(fig_d, use_container_width=True)
-##
-    #                    #    with col_g2:
-    #                    #        if 'classname' in df_deter.columns:
-    #                    #            class_d = df_deter['classname'].value_counts().reset_index()
-    #                    #            class_d.columns = ['Classe', 'Count']
-    #                    #            fig_cd = go.Figure()
-    #                    #            fig_cd.add_trace(go.Bar(
-    #                    #                x=class_d['Classe'], y=class_d['Count'],
-    #                    #                marker_color='#D35400'
-    #                    #            ))
-    #                    #            fig_cd.update_layout(
-    #                    #                xaxis_title="Classe", yaxis_title="Alertas",
-    #                    #                height=300, template="plotly_white",
-    #                    #                margin=dict(t=10, b=40, l=40, r=10)
-    #                    #            )
-    #                    #            st.plotly_chart(fig_cd, use_container_width=True)
-##
-    #                    #    with st.expander("📋 Tabela DETER AMZ"):
-    #                    #        st.dataframe(df_deter, use_container_width=True, height=300)
-    #                    #        csv = df_deter.to_csv(index=False).encode('utf-8')
-    #                    #        st.download_button("⬇️ Download CSV", data=csv,
-    #                    #                           file_name="deter_amz_aoi.csv", mime="text/csv")
-#
-    #            # ===================================
-    #            # TAB DETER CERRADO
-    #            # ===================================
-    #            with tab_deter_cer:
-    #                col_mapa_c, col_info_c = st.columns([8, 2])
-#
-    #                with col_mapa_c:
-    #                    st.markdown("### 🗺️ Mapa DETER Cerrado")
-#
-    #                    m_cer = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
-    #                    folium.TileLayer('Esri.WorldImagery', name='Satélite', control=False).add_to(m_cer)
-#
-    #                    # Bounding box da AOI
-    #                    if not is_overview:
-    #                        b = selected_gdf.total_bounds  # (minx, miny, maxx, maxy)
-    #                        bbox_coords = [
-    #                            [b[1], b[0]],  # SW
-    #                            [b[1], b[2]],  # SE
-    #                            [b[3], b[2]],  # NE
-    #                            [b[3], b[0]],  # NW
-    #                            [b[1], b[0]],  # fecha
-    #                        ]
-    #                        folium.PolyLine(
-    #                            locations=bbox_coords,
-    #                            color="#00FFFF",
-    #                            weight=2,
-    #                            dash_array="6 4",
-    #                            tooltip="Bounding Box (área de consulta WFS)",
-    #                            opacity=0.8
-    #                        ).add_to(m_cer)
-#
-#
-    #                    folium.WmsTileLayer(
-    #                        url="https://terrabrasilis.dpi.inpe.br/geoserver/deter-cerrado-nb/deter_cerrado/ows",
-    #                        layers="deter_cerrado",
-    #                        fmt="image/png",
-    #                        transparent=True,
-    #                        name="DETER Cerrado",
-    #                        overlay=True,
-    #                        opacity=0.8
-    #                    ).add_to(m_cer)
-#
-    #                    for _, row in selected_gdf.iterrows():
-    #                        try:
-    #                            folium.GeoJson(
-    #                                data=mapping(row["geometry"]),
-    #                                style_function=lambda x: {
-    #                                    "fillColor": "transparent", "color": "#F1C40F",
-    #                                    "weight": 3, "fillOpacity": 0.1, "dashArray": "5, 5"
-    #                                }
-    #                            ).add_to(m_cer)
-    #                        except Exception:
-    #                            pass
-#
-    #                    if not is_overview:
-    #                        b = selected_gdf.total_bounds
-    #                        m_cer.fit_bounds([[b[1], b[0]], [b[3], b[2]]])
-#
-    #                    folium.LayerControl().add_to(m_cer)
-    #                    st_folium(m_cer, width=None, height=600, key="map_deter_cer")
-#
-    #                with col_info_c:
-    #                    if not is_overview:
-    #                        row_proj = selected_gdf.iloc[0]
-    #                        st.markdown("### 📋 Info")
-    #                        st.markdown(f"**Projeto:** {row_proj.get('resourceName_x', 'N/A')}")
-    #                        st.markdown(f"**ID:** {row_proj.get('resourceIdentifier', 'N/A')}")
-    #                        st.markdown(f"**Estado:** {row_proj.get('state_Recode', 'N/A')}")
-    #                        st.markdown(f"**Area:** {row_proj.get('vcsAcresHectares', 'N/A')}")
-    #                        st.markdown(f"**Tipo:** {row_proj.get('vcsAFOLUActivity', 'N/A')}")
-    #                        st.markdown(f"**Acreditação:** {row_proj.get('vcsCreditingPeriodTerm', 'N/A')}")
-    #                        st.markdown(f"**Protocolo:** {row_proj.get('vcsMethodology', 'N/A')}")
-    #                        st.markdown(f"**Status:** {row_proj.get('vcsProjectStatus', 'N/A')}")
-    #                        st.markdown(f"**Resumo:** {row_proj.get('description', 'N/A')}")
-#
-    #                    else:
-    #                        st.info("💡 Selecione um projeto.")
-#
-    #                if not is_overview and bbox_str:
-    #                    st.divider()
-    #                    st.markdown("### 📊 DETER Cerrado — Alertas na AOI")
-    #                    with st.spinner("Consultando TerraBrasilis WFS..."):
-    #                        df_cer = terrabrasilis_wfs(
-    #                            "https://terrabrasilis.dpi.inpe.br/geoserver/deter-cerrado-nb/deter_cerrado/ows",
-    #                            "deter-cerrado-nb:deter_cerrado",
-    #                            bbox_str
-    #                        )
-#
-    #                    if df_cer.empty:
-    #                        st.warning("Sem alertas DETER Cerrado para esta AOI.")
-    #                    else:
-    #                        st.dataframe(df_cer, use_container_width=True, height=300)
-    #                        csv = df_cer.to_csv(index=False).encode('utf-8')
-    #                        st.download_button("⬇️ Download CSV", data=csv,
-    #                                           file_name="deter_cerrado_aoi.csv", mime="text/csv")
+    # ── STORYTELLING 2: MAPBIOMAS (em desenvolvimento) ───────────────────
+    with story_tabs[2]:
+        st.markdown("## 🌿 Alertas MapBiomas")
+        st.info("🚧 Em desenvolvimento. Em breve disponível.")
 
-    # =====================================
-    # STORYTELLING 2: MAPBIOMAS
-    # =====================================
-
-    #with story_tabs[2]:
-    #    st.markdown("## 🌿 Alertas MapBiomas")
-#
-    #    MAPBIOMAS_EMAIL    = st.secrets["MAPBIOMAS_EMAIL"]
-    #    MAPBIOMAS_PASSWORD = st.secrets["MAPBIOMAS_PASSWORD"]
-#
-    #    mb_token = mapbiomas_get_token(MAPBIOMAS_EMAIL, MAPBIOMAS_PASSWORD)
-#
-    #    if not mb_token:
-    #        st.error("❌ Não foi possível autenticar no MapBiomas.")
-    #    else:
-    #        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    #        KML_DIR  = os.path.join(BASE_DIR, "kml")
-    #        gdf_mb, _ = carregar_geometrias(df_all, KML_DIR)
-#
-    #        if gdf_mb.empty:
-    #            st.warning("Nenhum KML válido encontrado.")
-    #        else:
-    #            gdf_mb_plot = gdf_mb[~gdf_mb["geometry"].is_empty & gdf_mb["geometry"].notnull()].copy()
-    #            gdf_mb_plot = gdf_mb_plot[gdf_mb_plot.is_valid]
-#
-    #            mb_options = ["🌎 Visão Geral (Todos os Projetos)"] + [
-    #                f"{row.get('resourceName_x', 'Sem nome')} — {row.get('state_Recode', 'N/A')}"
-    #                for _, row in gdf_mb_plot.iterrows()
-    #            ]
-#
-    #            mb_selected = st.selectbox("📍 Selecione um projeto:", options=mb_options, key="mb_project_selector")
-    #            mb_is_overview = mb_selected == "🌎 Visão Geral (Todos os Projetos)"
-#
-    #            if mb_is_overview:
-    #                st.info("💡 Selecione um projeto para ver os alertas MapBiomas.")
-    #            else:
-    #                mb_project_name = mb_selected.split(" — ")[0]
-    #                mb_gdf = gdf_mb_plot[gdf_mb_plot["resourceName_x"] == mb_project_name]
-#
-    #                if mb_gdf.empty:
-    #                    st.warning("Projeto não encontrado.")
-    #                else:
-    #                    bounds = mb_gdf.total_bounds
-    #                    bbox   = [float(bounds[0]), float(bounds[1]), float(bounds[2]), float(bounds[3])]
-#
-    #                    with st.spinner("Consultando MapBiomas Alerta..."):
-    #                        mb_data = mapbiomas_alerts(bbox, mb_token)
-#
-    #                    if not mb_data:
-    #                        st.warning("Sem dados disponíveis para este projeto.")
-    #                    else:
-    #                        summary    = mb_data.get('summary', {})
-    #                        collection = mb_data.get('collection', [])
-    #                        metadata   = mb_data.get('metadata', {})
-#
-    #                        col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-    #                        with col_m1:
-    #                            st.metric("Total de Alertas", f"{summary.get('total', 0):,}")
-    #                        with col_m2:
-    #                            st.metric("Área Total (ha)", f"{summary.get('area', 0):,.1f}")
-    #                        with col_m3:
-    #                            st.metric("Total de Páginas", f"{metadata.get('totalPages', 1)}")
-    #                        with col_m4:
-    #                            st.metric("Anos com Alertas", f"{len(summary.get('alertsByYear', []))}")
-#
-    #                        st.divider()
-#
-    #                        col_g1, col_g2 = st.columns(2)
-#
-    #                        with col_g1:
-    #                            st.markdown("### 📊 Alertas por Ano")
-    #                            df_by_year = pd.DataFrame(summary.get('alertsByYear', []))
-    #                            if not df_by_year.empty:
-    #                                fig_ay = go.Figure()
-    #                                fig_ay.add_trace(go.Bar(x=df_by_year['year'], y=df_by_year['value'],
-    #                                                        marker_color='#E67E22', name='Alertas'))
-    #                                fig_ay.update_layout(xaxis_title="Ano", yaxis_title="Alertas", height=300,
-    #                                                     template="plotly_white", margin=dict(t=10, b=40, l=40, r=10),
-    #                                                     hovermode='x unified')
-    #                                st.plotly_chart(fig_ay, use_container_width=True)
-#
-    #                        with col_g2:
-    #                            st.markdown("### 🌳 Área Desmatada por Ano (ha)")
-    #                            df_area_year = pd.DataFrame(summary.get('deforestationAreaByYear', []))
-    #                            if not df_area_year.empty:
-    #                                fig_area = go.Figure()
-    #                                fig_area.add_trace(go.Bar(x=df_area_year['year'], y=df_area_year['value'],
-    #                                                          marker_color='#C0392B', name='Área (ha)'))
-    #                                fig_area.update_layout(xaxis_title="Ano", yaxis_title="ha", height=300,
-    #                                                       template="plotly_white", margin=dict(t=10, b=40, l=40, r=10),
-    #                                                       hovermode='x unified')
-    #                                st.plotly_chart(fig_area, use_container_width=True)
-#
-    #                        st.divider()
-#
-    #                        if collection:
-    #                            st.markdown("### 📋 Lista de Alertas")
-    #                            df_col = pd.DataFrame(collection)
-#
-    #                            for col_list in ['sources', 'deforestationClasses', 'crossedBiomes', 'crossedStates']:
-    #                                if col_list in df_col.columns:
-    #                                    df_col[col_list] = df_col[col_list].apply(
-    #                                        lambda x: ', '.join(x) if isinstance(x, list) else x)
-#
-    #                            df_col = df_col.rename(columns={
-    #                                'alertCode': 'Código', 'areaHa': 'Área (ha)',
-    #                                'detectedAt': 'Detectado em', 'publishedAt': 'Publicado em',
-    #                                'sources': 'Fontes', 'deforestationClasses': 'Classe',
-    #                                'statusName': 'Status', 'crossedBiomes': 'Bioma', 'crossedStates': 'Estado'
-    #                            })
-#
-    #                            st.dataframe(df_col.style.format({'Área (ha)': '{:,.2f}'}),
-    #                                         use_container_width=True, height=400)
-#
-    #                            csv = df_col.to_csv(index=False).encode('utf-8')
-    #                            st.download_button(
-    #                                label="⬇️ Download Alertas (CSV)",
-    #                                data=csv,
-    #                                file_name=f"alertas_mapbiomas_{mb_project_name[:30]}.csv",
-    #                                mime='text/csv'
-    #                            )
-#
-    ## =====================================
-    # STORYTELLING 3: EVOLUÇÃO TEMPORAL
-    # =====================================
-
+    # ── STORYTELLING 3: EVOLUÇÃO TEMPORAL ───────────────────────────────
     with story_tabs[3]:
         st.markdown("## ⏱️ A Evolução dos Projetos no Tempo")
 
@@ -2088,16 +963,19 @@ with tabs[4]:
             df_timing['vcsRegistrationDate'] = pd.to_datetime(df_timing['vcsRegistrationDate'], errors='coerce')
             df_timing['Vintage_Year'] = df_timing['Vintage'].apply(
                 lambda x: int(x.split(' e ')[0][:4]) if isinstance(x, str) and ' e ' in x
-                else (int(str(x)[:4]) if pd.notna(x) else None))
+                else (int(str(x)[:4]) if pd.notna(x) else None)
+            )
             df_timing = df_timing.dropna(subset=['vcsRegistrationDate', 'Vintage_Year'])
-            df_timing['Registration_Year'] = df_timing['vcsRegistrationDate'].dt.year
-            df_timing['Years_to_Credit'] = df_timing['Vintage_Year'] - df_timing['Registration_Year']
+            df_timing['Registration_Year']  = df_timing['vcsRegistrationDate'].dt.year
+            df_timing['Years_to_Credit']    = df_timing['Vintage_Year'] - df_timing['Registration_Year']
             df_timing = df_timing[(df_timing['Years_to_Credit'] >= -5) & (df_timing['Years_to_Credit'] <= 10)]
 
             if len(df_timing) > 0:
-                fig_timing = px.histogram(df_timing, x='Years_to_Credit', nbins=20,
-                                          title='Distribuição do Tempo entre Registro e Emissão de Créditos',
-                                          color_discrete_sequence=['#26a69a'])
+                fig_timing = px.histogram(
+                    df_timing, x='Years_to_Credit', nbins=20,
+                    title='Distribuição do Tempo entre Registro e Emissão de Créditos',
+                    color_discrete_sequence=['#26a69a']
+                )
                 fig_timing.update_layout(showlegend=False, height=400)
                 st.plotly_chart(fig_timing, use_container_width=True)
 
@@ -2116,7 +994,8 @@ with tabs[4]:
             df_credits_year = df_credit.copy()
             df_credits_year['Vintage_Year'] = df_credits_year['Vintage'].apply(
                 lambda x: int(x.split(' e ')[0][:4]) if isinstance(x, str) and ' e ' in x
-                else (int(str(x)[:4]) if pd.notna(x) else None))
+                else (int(str(x)[:4]) if pd.notna(x) else None)
+            )
             df_credits_year = df_credits_year.dropna(subset=['Vintage_Year'])
             df_credits_year['totalVintageQuantity'] = pd.to_numeric(df_credits_year['totalVintageQuantity'], errors='coerce')
             credits_by_year = df_credits_year.groupby('Vintage_Year').agg(
@@ -2126,39 +1005,43 @@ with tabs[4]:
             credits_by_year = credits_by_year[credits_by_year['Ano'] >= 2000]
 
             fig_credits_evolution = go.Figure()
-            fig_credits_evolution.add_trace(go.Bar(x=credits_by_year['Ano'], y=credits_by_year['Total_Creditos'],
-                                                    name='Créditos Emitidos', marker_color='#26a69a', yaxis='y'))
-            fig_credits_evolution.add_trace(go.Scatter(x=credits_by_year['Ano'], y=credits_by_year['Num_Projetos'],
-                                                        name='Número de Projetos', marker_color='#ff6b6b',
-                                                        mode='lines+markers', yaxis='y2'))
+            fig_credits_evolution.add_trace(go.Bar(
+                x=credits_by_year['Ano'], y=credits_by_year['Total_Creditos'],
+                name='Créditos Emitidos', marker_color='#26a69a', yaxis='y'
+            ))
+            fig_credits_evolution.add_trace(go.Scatter(
+                x=credits_by_year['Ano'], y=credits_by_year['Num_Projetos'],
+                name='Número de Projetos', marker_color='#ff6b6b',
+                mode='lines+markers', yaxis='y2'
+            ))
             fig_credits_evolution.update_layout(
                 title='Emissão de Créditos e Número de Projetos ao Longo do Tempo',
                 xaxis_title='Ano', yaxis_title='Total de Créditos (VCUs)',
                 yaxis2=dict(title='Número de Projetos', overlaying='y', side='right'),
-                height=500, hovermode='x unified')
+                height=500, hovermode='x unified'
+            )
             st.plotly_chart(fig_credits_evolution, use_container_width=True)
 
-    # =====================================
-    # STORYTELLING 4: IMPACTO REGIONAL
-    # =====================================
-
+    # ── STORYTELLING 4: IMPACTO REGIONAL ────────────────────────────────
     with story_tabs[4]:
         st.markdown("## 🎯 O Impacto nos Territórios")
 
         if 'state_Recode' in df_all.columns:
             st.markdown("### 🗺️ Densidade de Projetos por Região")
             state_summary = df_all.groupby('state_Recode').agg({
-                'resourceName_x': 'count',
-                'vcsAcresHectares': lambda x: pd.to_numeric(x, errors='coerce').sum(),
+                'resourceName_x':                      'count',
+                'vcsAcresHectares':                    lambda x: pd.to_numeric(x, errors='coerce').sum(),
                 'vcsEstimatedAnnualEmissionReductions': lambda x: pd.to_numeric(x, errors='coerce').sum()
             }).reset_index()
             state_summary.columns = ['Estado', 'Num_Projetos', 'Area_Total', 'EAER_Total']
             state_summary = state_summary.sort_values('Num_Projetos', ascending=False).head(15)
 
-            fig_regional = px.scatter(state_summary, x='Area_Total', y='EAER_Total',
-                                       size='Num_Projetos', color='Num_Projetos', hover_name='Estado',
-                                       title='Relação entre Área, Impacto e Número de Projetos',
-                                       color_continuous_scale='Viridis', size_max=60)
+            fig_regional = px.scatter(
+                state_summary, x='Area_Total', y='EAER_Total',
+                size='Num_Projetos', color='Num_Projetos', hover_name='Estado',
+                title='Relação entre Área, Impacto e Número de Projetos',
+                color_continuous_scale='Viridis', size_max=60
+            )
             fig_regional.update_layout(height=500)
             st.plotly_chart(fig_regional, use_container_width=True)
 
@@ -2166,20 +1049,19 @@ with tabs[4]:
         st.markdown("### 🌳 Perfil de Atividades por Estado")
 
         if 'state_Recode' in df_all.columns and 'vcsAFOLUActivity' in df_all.columns:
-            top_states = df_all['state_Recode'].value_counts().head(10).index.tolist()
+            top_states        = df_all['state_Recode'].value_counts().head(10).index.tolist()
             df_activity_state = df_all[df_all['state_Recode'].isin(top_states)]
             activity_by_state = df_activity_state.groupby(['state_Recode', 'vcsAFOLUActivity']).size().reset_index(name='Count')
-            fig_activity_state = px.bar(activity_by_state, x='state_Recode', y='Count',
-                                         color='vcsAFOLUActivity', color_discrete_map=ACTIVITY_COLORS,
-                                         title='Distribuição de Tipos de Atividade nos Principais Estados',
-                                         barmode='stack')
+            fig_activity_state = px.bar(
+                activity_by_state, x='state_Recode', y='Count',
+                color='vcsAFOLUActivity', color_discrete_map=ACTIVITY_COLORS,
+                title='Distribuição de Tipos de Atividade nos Principais Estados',
+                barmode='stack'
+            )
             fig_activity_state.update_layout(height=500)
             st.plotly_chart(fig_activity_state, use_container_width=True)
 
-    # =====================================
-    # STORYTELLING 5: INSIGHTS
-    # =====================================
-
+    # ── STORYTELLING 5: INSIGHTS ─────────────────────────────────────────
     with story_tabs[5]:
         st.markdown("## 💡 Insights e Descobertas")
 
@@ -2215,11 +1097,13 @@ with tabs[4]:
             df_correlation = df_correlation[(df_correlation['Area'] > 0) & (df_correlation['EAER'] > 0)]
 
             if len(df_correlation) > 0:
-                fig_corr = px.scatter(df_correlation, x='Area', y='EAER', color='vcsAFOLUActivity',
-                                       hover_data=['resourceName_x', 'state_Recode'],
-                                       color_discrete_map=ACTIVITY_COLORS,
-                                       title='Relação entre Tamanho do Projeto e Impacto Climático',
-                                       log_x=True, log_y=True)
+                fig_corr = px.scatter(
+                    df_correlation, x='Area', y='EAER', color='vcsAFOLUActivity',
+                    hover_data=['resourceName_x', 'state_Recode'],
+                    color_discrete_map=ACTIVITY_COLORS,
+                    title='Relação entre Tamanho do Projeto e Impacto Climático',
+                    log_x=True, log_y=True
+                )
                 fig_corr.update_layout(height=500)
                 st.plotly_chart(fig_corr, use_container_width=True)
 
@@ -2230,8 +1114,10 @@ with tabs[4]:
 with tabs[5]:
     st.header("📁 Visualização dos Dados Brutos")
 
-    data_option = st.radio("Selecione o conjunto de dados:",
-                           ["Todos os Projetos", "Projetos com Créditos"], horizontal=True)
+    data_option = st.radio(
+        "Selecione o conjunto de dados:",
+        ["Todos os Projetos", "Projetos com Créditos"], horizontal=True
+    )
     df_display = df_all if data_option == "Todos os Projetos" else df_credit
 
     col1, col2 = st.columns([3, 1])
