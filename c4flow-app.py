@@ -14,10 +14,10 @@ from streamlit_folium import st_folium
 import numpy as np
 from scipy import stats
 from carbon4flow_gcp import render_aoi_tab
-#import os
-#import geopandas as gpd
-#from shapely.geometry import mapping
-#from shapely.errors import TopologicalError
+import os
+import geopandas as gpd
+from shapely.geometry import mapping
+from shapely.errors import TopologicalError
 
 # =====================================
 # CONFIGURAÇÃO DA PÁGINA
