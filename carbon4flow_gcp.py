@@ -21,6 +21,23 @@ REGRA DE JOIN: sempre por ID numérico.
   → normaliza tudo para str antes de comparar.
 """
 
+"""
+carbon4flow_gcp.py
+──────────────────
+Schema real confirmado:
+
+  index.parquet        → resource_id (str), path (str)
+  projetos/{id}.parquet → geometry (GeoPandas nativa Z), resource_id (str), project_name (str)
+  df_all               → resourceIdentifier (int64), resourceName_x (str), ...
+
+Regra de join: sempre por ID normalizado para str.
+
+AOI real:
+  - GFW   : polígono GeoJSON enviado via API POST  ✅ já implementado
+  - PRODES: WFS bbox → clip na AOI → recalcula área em km²
+  - DETER : WFS bbox → clip na AOI → recalcula área em ha
+"""
+
 import io
 import logging
 from typing import Optional, Tuple, List
@@ -31,7 +48,7 @@ import streamlit as st
 import folium
 from streamlit_folium import st_folium
 import plotly.graph_objects as go
-from shapely.geometry import mapping
+from shapely.geometry import mapping, shape
 from shapely.ops import unary_union, transform
 from google.cloud import storage
 from google.oauth2 import service_account
@@ -40,6 +57,10 @@ log = logging.getLogger(__name__)
 
 GCS_BUCKET = "edriano-verra-projects"
 GCS_INDEX  = "index.parquet"
+
+# CRS métrico para cálculo de área preciso no Brasil
+# SIRGAS 2000 / Brasil Policônico (EPSG:5880) — cobre todo o território
+CRS_AREA = "EPSG:5880"
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -50,8 +71,7 @@ GCS_INDEX  = "index.parquet"
 def _gcs_client() -> storage.Client:
     info  = dict(st.secrets["gcp_service_account"])
     creds = service_account.Credentials.from_service_account_info(
-        info,
-        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+        info, scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )
     return storage.Client(credentials=creds, project=creds.project_id)
 
@@ -66,10 +86,6 @@ def _blob_bytes(blob_path: str) -> bytes:
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def load_index() -> pd.DataFrame:
-    """
-    Carrega index.parquet.
-    Garante que resource_id é sempre str para joins consistentes.
-    """
     try:
         df = pd.read_parquet(io.BytesIO(_blob_bytes(GCS_INDEX)))
         df["resource_id"] = df["resource_id"].astype(str).str.strip()
@@ -93,16 +109,10 @@ def _raw_parquet(blob_path: str) -> Optional[bytes]:
 
 
 def load_project_geometry(resource_id: str) -> Optional[gpd.GeoDataFrame]:
-    """
-    Baixa projetos/{id}.parquet pelo resource_id (str).
-    Remove coordenada Z automaticamente.
-    """
     idx = load_index()
     rid = str(resource_id).strip()
     row = idx[idx["resource_id"] == rid]
-
     if row.empty:
-        log.warning(f"resource_id '{rid}' não encontrado no index.")
         return None
 
     raw = _raw_parquet(row.iloc[0]["path"])
@@ -111,31 +121,26 @@ def load_project_geometry(resource_id: str) -> Optional[gpd.GeoDataFrame]:
 
     try:
         gdf = gpd.read_parquet(io.BytesIO(raw))
-
         if gdf.crs is None:
             gdf = gdf.set_crs("EPSG:4326")
         elif gdf.crs.to_epsg() != 4326:
             gdf = gdf.to_crs("EPSG:4326")
 
-        # Remove Z (Polygon Z → Polygon 2D)
+        # Remove coordenada Z
         gdf["geometry"] = gdf["geometry"].apply(
             lambda g: transform(lambda x, y, z=None: (x, y), g)
             if g is not None and g.has_z else g
         )
         gdf["geometry"] = gdf["geometry"].buffer(0)
-        gdf = gdf[
-            gdf["geometry"].notnull() &
-            ~gdf["geometry"].is_empty &
-            gdf["geometry"].is_valid
-        ]
+        gdf = gdf[gdf["geometry"].notnull() & ~gdf["geometry"].is_empty & gdf["geometry"].is_valid]
         return gdf if not gdf.empty else None
-
     except Exception as e:
         log.error(f"Erro ao ler parquet do projeto {rid}: {e}")
         return None
 
 
 def get_dissolved_geometry(resource_id: str):
+    """Geometria AOI dissolvida em um único polígono 2D."""
     gdf = load_project_geometry(resource_id)
     if gdf is None or gdf.empty:
         return None
@@ -143,11 +148,13 @@ def get_dissolved_geometry(resource_id: str):
 
 
 def get_aoi_geojson(resource_id: str) -> Optional[dict]:
+    """GeoJSON da AOI real — para APIs GFW (POST)."""
     geom = get_dissolved_geometry(resource_id)
     return mapping(geom) if geom else None
 
 
 def get_aoi_bbox_str(resource_id: str) -> Optional[str]:
+    """'minx,miny,maxx,maxy' — para queries WFS (bbox inicial)."""
     geom = get_dissolved_geometry(resource_id)
     if geom is None:
         return None
@@ -156,15 +163,88 @@ def get_aoi_bbox_str(resource_id: str) -> Optional[str]:
 
 
 # ═══════════════════════════════════════════════════════════════════════
-# ENRIQUECE df_all PARA USO INTERNO
-# Normaliza resourceIdentifier → str para joins com GCS
+# CLIP AOI + RECÁLCULO DE ÁREA
+# ═══════════════════════════════════════════════════════════════════════
+
+def clip_and_recalculate(
+    df_wfs: pd.DataFrame,
+    aoi_geom,
+    geom_col: str = "geometry",
+    area_col_out: str = "area_km2_aoi",
+    unit: str = "km2",          # "km2" ou "ha"
+) -> pd.DataFrame:
+    """
+    Recebe DataFrame do WFS (com coluna geometry como dict GeoJSON ou objeto Shapely),
+    faz clip na AOI real e recalcula área dentro da AOI.
+
+    Parâmetros
+    ----------
+    df_wfs       : DataFrame retornado por terrabrasilis_wfs (properties apenas, sem geometry)
+                   OU GeoDataFrame com coluna geometry
+    aoi_geom     : geometria Shapely da AOI (EPSG:4326)
+    geom_col     : nome da coluna de geometria (se existir)
+    area_col_out : nome da nova coluna de área calculada
+    unit         : "km2" ou "ha"
+
+    Retorna
+    -------
+    DataFrame com coluna area_col_out adicionada (área dentro da AOI).
+    Se df_wfs não tiver geometria, retorna df_wfs inalterado.
+    """
+    if df_wfs.empty or aoi_geom is None:
+        return df_wfs
+
+    # Se já é GeoDataFrame, usa direto; senão tenta reconstruir
+    if isinstance(df_wfs, gpd.GeoDataFrame) and geom_col in df_wfs.columns:
+        gdf = df_wfs.copy()
+    elif geom_col in df_wfs.columns:
+        try:
+            geoms = df_wfs[geom_col].apply(
+                lambda g: shape(g) if isinstance(g, dict) else g
+            )
+            gdf = gpd.GeoDataFrame(df_wfs, geometry=geoms, crs="EPSG:4326")
+        except Exception:
+            return df_wfs
+    else:
+        # Sem geometria — não há como clipar
+        return df_wfs
+
+    if gdf.crs is None:
+        gdf = gdf.set_crs("EPSG:4326")
+    elif gdf.crs.to_epsg() != 4326:
+        gdf = gdf.to_crs("EPSG:4326")
+
+    # AOI como GeoDataFrame para o clip
+    aoi_gdf = gpd.GeoDataFrame(geometry=[aoi_geom], crs="EPSG:4326")
+
+    try:
+        gdf_clipped = gpd.clip(gdf, aoi_gdf)
+    except Exception as e:
+        log.warning(f"clip falhou: {e} — retornando sem clip")
+        return df_wfs
+
+    if gdf_clipped.empty:
+        return gdf_clipped.drop(columns=[geom_col], errors="ignore")
+
+    # Recalcula área no CRS métrico
+    gdf_metric = gdf_clipped.to_crs(CRS_AREA)
+    area_m2    = gdf_metric.geometry.area          # m²
+
+    if unit == "km2":
+        gdf_clipped[area_col_out] = area_m2 / 1_000_000
+    else:  # ha
+        gdf_clipped[area_col_out] = area_m2 / 10_000
+
+    # Remove coluna geometry do retorno (DataFrame limpo para exibição)
+    result = pd.DataFrame(gdf_clipped.drop(columns=[geom_col], errors="ignore"))
+    return result
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# NORMALIZAÇÃO df_all
 # ═══════════════════════════════════════════════════════════════════════
 
 def _prep_df_all(df_all: pd.DataFrame) -> pd.DataFrame:
-    """
-    Retorna cópia de df_all com resourceIdentifier como str,
-    pronto para join com index.resource_id (str).
-    """
     df = df_all.copy()
     df["resourceIdentifier"] = df["resourceIdentifier"].astype(str).str.strip()
     return df
@@ -175,11 +255,7 @@ def _prep_df_all(df_all: pd.DataFrame) -> pd.DataFrame:
 # ═══════════════════════════════════════════════════════════════════════
 
 def carregar_geometrias_gcp(df_all: pd.DataFrame) -> Tuple[gpd.GeoDataFrame, List[str]]:
-    """
-    Carrega geometrias de todos os projetos disponíveis no GCS
-    que também existem em df_all (join por ID numérico como str).
-    """
-    df = _prep_df_all(df_all)
+    df  = _prep_df_all(df_all)
     idx = load_index()
 
     if idx.empty:
@@ -191,8 +267,7 @@ def carregar_geometrias_gcp(df_all: pd.DataFrame) -> Tuple[gpd.GeoDataFrame, Lis
 
     if not ids:
         return gpd.GeoDataFrame(), [
-            f"Nenhum ID em comum. GCS tem {len(ids_gcs)} IDs, df_all tem {len(ids_df)} IDs. "
-            f"Exemplo GCS: {list(ids_gcs)[:3]} | Exemplo df_all: {list(ids_df)[:3]}"
+            f"Nenhum ID em comum. GCS: {list(ids_gcs)[:3]} | df_all: {list(ids_df)[:3]}"
         ]
 
     gdfs  = []
@@ -221,16 +296,13 @@ def carregar_geometrias_gcp(df_all: pd.DataFrame) -> Tuple[gpd.GeoDataFrame, Lis
                 if g is not None and g.has_z else g
             )
             gdf["geometry"] = gdf["geometry"].buffer(0)
-            gdf = gdf[
-                gdf["geometry"].notnull() &
-                ~gdf["geometry"].is_empty &
-                gdf["geometry"].is_valid
-            ]
+            gdf = gdf[gdf["geometry"].notnull() & ~gdf["geometry"].is_empty & gdf["geometry"].is_valid]
+
             if gdf.empty:
                 erros.append(f"{rid}: geometria vazia após sanitização")
                 continue
 
-            gdf["resourceIdentifier"] = rid   # str
+            gdf["resourceIdentifier"] = rid
             gdfs.append(gdf)
 
         except Exception as e:
@@ -243,7 +315,6 @@ def carregar_geometrias_gcp(df_all: pd.DataFrame) -> Tuple[gpd.GeoDataFrame, Lis
 
     gdf_combined = gpd.GeoDataFrame(pd.concat(gdfs, ignore_index=True), crs="EPSG:4326")
 
-    # Mescla metadados de df_all por ID (str ↔ str)
     meta_cols = [c for c in [
         "resourceIdentifier", "resourceName_x", "state_Recode",
         "vcsAFOLUActivity", "vcsProjectStatus", "vcsMethodology",
@@ -251,8 +322,7 @@ def carregar_geometrias_gcp(df_all: pd.DataFrame) -> Tuple[gpd.GeoDataFrame, Lis
     ] if c in df.columns]
 
     df_ref = df[meta_cols].drop_duplicates("resourceIdentifier")
-
-    extra = [c for c in meta_cols if c != "resourceIdentifier" and c in gdf_combined.columns]
+    extra  = [c for c in meta_cols if c != "resourceIdentifier" and c in gdf_combined.columns]
     gdf_combined = gdf_combined.drop(columns=extra, errors="ignore")
     gdf_combined = gdf_combined.merge(df_ref, on="resourceIdentifier", how="left")
     gdf_combined = gpd.GeoDataFrame(gdf_combined, geometry="geometry", crs="EPSG:4326")
@@ -273,31 +343,29 @@ def render_aoi_tab(
     terrabrasilis_wfs,
     ACTIVITY_COLORS: dict,
 ) -> None:
+
     st.markdown("## 📍 Análise Espacial por Projeto")
     st.info(
         "Geometrias carregadas do **Google Cloud Storage** (Parquet). "
-        "Projeto individual usa a **AOI real** para consultas GFW e WFS."
+        "Todos os cálculos de área (PRODES, DETER) usam **clip na AOI real**."
     )
 
     # ── Catálogo ──────────────────────────────────────────────────────
     with st.spinner("📋 Carregando catálogo..."):
-        idx = load_index()   # resource_id = str
+        idx = load_index()
 
     if idx.empty:
         st.error("❌ Não foi possível carregar o index.parquet do GCS.")
         return
 
-    # df_all com resourceIdentifier como str
     df = _prep_df_all(df_all)
 
-    # Metadados para enriquecer o catálogo
     meta_cols = [c for c in [
         "resourceName_x", "state_Recode", "vcsAFOLUActivity",
         "vcsProjectStatus", "vcsMethodology", "vcsCreditingPeriodTerm",
         "vcsAcresHectares", "description",
     ] if c in df.columns]
 
-    # Join: index.resource_id (str) ↔ df.resourceIdentifier (str)
     df_meta = (
         df[["resourceIdentifier"] + meta_cols]
         .drop_duplicates("resourceIdentifier")
@@ -311,10 +379,7 @@ def render_aoi_tab(
         estado = row.get("state_Recode")   or "N/A"
         return f"{nome} — {estado}"
 
-    options = ["🌎 Visão Geral (Todos os Projetos)"] + [
-        _label(r) for _, r in idx.iterrows()
-    ]
-
+    options     = ["🌎 Visão Geral (Todos os Projetos)"] + [_label(r) for _, r in idx.iterrows()]
     selected    = st.selectbox("📍 Selecione um projeto:", options, key="gcp_project_selector")
     is_overview = selected == "🌎 Visão Geral (Todos os Projetos)"
 
@@ -339,35 +404,26 @@ def render_aoi_tab(
         selected_rid = None
         bbox_str     = None
         aoi_geojson  = None
+        aoi_geom     = None   # ← Shapely geometry para clip
 
     else:
-        # Extrai resource_id a partir do label selecionado
-        # Label = "resourceName_x — state_Recode"
-        # Busca no idx pelo resourceName_x
         label_nome = selected.split(" — ")[0].strip()
-        row_idx = idx[idx["resourceName_x"] == label_nome]
-
-        # Fallback: busca pelo resource_id caso o nome coincida
+        row_idx    = idx[idx["resourceName_x"] == label_nome]
         if row_idx.empty:
             row_idx = idx[idx["resource_id"] == label_nome]
-
         if row_idx.empty:
             st.warning("Projeto não encontrado no catálogo.")
             return
 
         selected_rid = str(row_idx.iloc[0]["resource_id"]).strip()
 
-        with st.spinner(f"🗺️ Carregando geometria..."):
+        with st.spinner("🗺️ Carregando geometria..."):
             gdf_single = load_project_geometry(selected_rid)
 
         if gdf_single is None or gdf_single.empty:
-            st.warning(
-                f"⚠️ Geometria não disponível no GCS para o projeto ID `{selected_rid}`. "
-                "Verifique se o arquivo `projetos/{selected_rid}.parquet` existe no bucket."
-            )
+            st.warning(f"⚠️ Geometria não disponível no GCS para ID `{selected_rid}`.")
             return
 
-        # Injeta metadados
         for col in meta_cols:
             if col not in gdf_single.columns:
                 gdf_single[col] = row_idx.iloc[0].get(col, "N/A")
@@ -379,6 +435,7 @@ def render_aoi_tab(
         selected_gdf = gdf_single
         bbox_str     = get_aoi_bbox_str(selected_rid)
         aoi_geojson  = get_aoi_geojson(selected_rid)
+        aoi_geom     = get_dissolved_geometry(selected_rid)   # ← Shapely para clip
 
     # ── Helpers ───────────────────────────────────────────────────────
     def _info_panel(gdf):
@@ -399,15 +456,13 @@ def render_aoi_tab(
     def _base_map(border_color="#FF0000") -> folium.Map:
         m = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
         folium.TileLayer("Esri.WorldImagery", name="Satélite", control=False).add_to(m)
-
         if not is_overview:
             b = selected_gdf.total_bounds
             folium.PolyLine(
                 [[b[1],b[0]],[b[1],b[2]],[b[3],b[2]],[b[3],b[0]],[b[1],b[0]]],
                 color="#00FFFF", weight=2, dash_array="6 4",
-                tooltip="Bounding Box — área de consulta WFS",
+                tooltip="Bounding Box — área de consulta WFS inicial",
             ).add_to(m)
-
         for _, row in selected_gdf.iterrows():
             try:
                 folium.GeoJson(
@@ -419,11 +474,9 @@ def render_aoi_tab(
                 ).add_to(m)
             except Exception:
                 pass
-
         if not is_overview:
             b = selected_gdf.total_bounds
             m.fit_bounds([[b[1], b[0]], [b[3], b[2]]])
-
         return m
 
     def _bar(x, y, color, x_title="Ano", y_title="", height=300):
@@ -443,7 +496,7 @@ def render_aoi_tab(
         "🌳 GFW", "🔴 PRODES", "🟠 DETER Amazônia", "🟡 DETER Cerrado"
     ])
 
-    # ── GFW ──────────────────────────────────────────────────────────
+    # ── GFW (AOI real via POST) ───────────────────────────────────────
     with tab_gfw:
         col_mapa, col_info = st.columns([8, 2])
 
@@ -480,7 +533,7 @@ def render_aoi_tab(
             else:
                 st.markdown("### 📋 Info")
                 _info_panel(selected_gdf)
-                st.caption("✅ AOI real do GCS" if aoi_geojson else "⚠️ AOI indisponível")
+                st.caption("✅ GFW: AOI real (POST)" if aoi_geojson else "⚠️ AOI indisponível")
 
         if not is_overview and aoi_geojson:
             st.divider()
@@ -515,7 +568,7 @@ def render_aoi_tab(
         elif not is_overview:
             st.info("ℹ️ AOI não disponível — consultas GFW indisponíveis.")
 
-    # ── PRODES ────────────────────────────────────────────────────────
+    # ── PRODES (WFS bbox → clip AOI → recalcula área km²) ─────────────
     with tab_prodes:
         col_mapa_p, col_info_p = st.columns([8, 2])
 
@@ -547,18 +600,38 @@ def render_aoi_tab(
             else:
                 st.markdown("### 📋 Info")
                 _info_panel(selected_gdf)
+                st.caption("✅ PRODES: clip na AOI real + área recalculada em km²" if aoi_geom else "⚠️ AOI indisponível")
 
         if not is_overview and bbox_str:
             st.divider()
-            with st.spinner("Consultando TerraBrasilis (PRODES AMZ)..."):
-                df_prodes = terrabrasilis_wfs(
+            with st.spinner("Consultando TerraBrasilis WFS (PRODES AMZ)..."):
+                df_prodes_raw = terrabrasilis_wfs(
                     "https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/yearly_deforestation/ows",
-                    "prodes-legal-amz:yearly_deforestation", bbox_str,
+                    "prodes-legal-amz:yearly_deforestation",
+                    bbox_str,
                 )
 
+            # ── Clip AOI + recálculo de área ──────────────────────────
+            if not df_prodes_raw.empty and aoi_geom is not None:
+                with st.spinner("✂️ Aplicando clip na AOI real (PRODES)..."):
+                    df_prodes = clip_and_recalculate(
+                        df_prodes_raw, aoi_geom,
+                        geom_col="geometry",
+                        area_col_out="area_km2_aoi",
+                        unit="km2",
+                    )
+                if not df_prodes.empty:
+                    st.caption(
+                        f"📐 {len(df_prodes_raw)} polígonos na BBox → "
+                        f"**{len(df_prodes)} polígonos dentro da AOI** após clip."
+                    )
+            else:
+                df_prodes = df_prodes_raw
+
             col_g1, col_g2, col_g3 = st.columns(3)
+
             with col_g1:
-                st.markdown("### 📊 Polígonos por Ano")
+                st.markdown("### 📊 Polígonos por Ano (AOI)")
                 if df_prodes.empty:
                     st.warning("Sem dados PRODES para esta AOI.")
                 elif "year" in df_prodes.columns:
@@ -567,27 +640,38 @@ def render_aoi_tab(
                     st.plotly_chart(_bar(by_year["year"], by_year["n"], "#C0392B", y_title="Polígonos"), use_container_width=True)
 
             with col_g2:
-                st.markdown("### 📊 Área (km²) por Ano")
-                if not df_prodes.empty and "area_km" in df_prodes.columns:
-                    df_prodes["area_km"] = pd.to_numeric(df_prodes["area_km"], errors="coerce")
-                    by_area = df_prodes.groupby("year").agg(a=("area_km", "sum")).reset_index()
-                    st.plotly_chart(_bar(by_area["year"], by_area["a"], "#922B21", y_title="km²"), use_container_width=True)
-                elif not df_prodes.empty:
-                    st.warning("Coluna `area_km` não encontrada.")
+                st.markdown("### 📊 Área dentro da AOI (km²/ano)")
+                if not df_prodes.empty:
+                    # Prefere área recalculada; fallback para area_km original
+                    area_col = "area_km2_aoi" if "area_km2_aoi" in df_prodes.columns else "area_km"
+                    if area_col in df_prodes.columns and "year" in df_prodes.columns:
+                        df_prodes[area_col] = pd.to_numeric(df_prodes[area_col], errors="coerce")
+                        by_area = df_prodes.groupby("year").agg(a=(area_col, "sum")).reset_index()
+                        fig = go.Figure(go.Bar(x=by_area["year"], y=by_area["a"], marker_color="#922B21"))
+                        fig.update_layout(
+                            height=300, template="plotly_white",
+                            margin=dict(t=10, b=40, l=40, r=10),
+                            xaxis_title="Ano",
+                            yaxis_title="km² (dentro da AOI)" if area_col == "area_km2_aoi" else "km²",
+                            hovermode="x unified"
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.warning("Coluna de área não encontrada.")
 
             with col_g3:
-                st.markdown("### 📊 Classe")
+                st.markdown("### 📊 Classe de Desmatamento")
                 if not df_prodes.empty and "class_name" in df_prodes.columns:
                     cls = df_prodes["class_name"].value_counts().reset_index()
                     cls.columns = ["Classe", "n"]
                     st.plotly_chart(_bar(cls["Classe"], cls["n"], "#E74C3C", x_title="Classe", y_title="Polígonos"), use_container_width=True)
 
             if not df_prodes.empty:
-                with st.expander("📋 Tabela PRODES"):
+                with st.expander("📋 Tabela PRODES (AOI)"):
                     st.dataframe(df_prodes, use_container_width=True, height=280)
-                    st.download_button("⬇️ CSV", df_prodes.to_csv(index=False).encode("utf-8"), "prodes_aoi.csv", "text/csv")
+                    st.download_button("⬇️ CSV", df_prodes.to_csv(index=False).encode("utf-8"), "prodes_aoi_clip.csv", "text/csv")
 
-    # ── DETER AMAZÔNIA ────────────────────────────────────────────────
+    # ── DETER AMAZÔNIA (WFS bbox → clip AOI → recalcula área ha) ──────
     with tab_deter_amz:
         col_mapa_d, col_info_d = st.columns([8, 2])
 
@@ -608,6 +692,7 @@ def render_aoi_tab(
             else:
                 st.markdown("### 📋 Info")
                 _info_panel(selected_gdf)
+                st.caption("✅ DETER: clip na AOI real + área recalculada em ha" if aoi_geom else "⚠️ AOI indisponível")
                 st.markdown(
                     "<small><b>Legenda:</b><br>"
                     "🔴 Cicatriz queimada &nbsp;⬜ Corte seletivo<br>"
@@ -619,22 +704,42 @@ def render_aoi_tab(
 
         if not is_overview and bbox_str:
             st.divider()
-            with st.spinner("Consultando TerraBrasilis (DETER AMZ)..."):
-                df_deter = terrabrasilis_wfs(
+            with st.spinner("Consultando TerraBrasilis WFS (DETER AMZ)..."):
+                df_deter_raw = terrabrasilis_wfs(
                     "https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/deter_amz/ows",
                     "deter-amz:deter_amz", bbox_str,
                 )
 
+            # ── Clip AOI + recálculo de área ──────────────────────────
+            if not df_deter_raw.empty and aoi_geom is not None:
+                with st.spinner("✂️ Aplicando clip na AOI real (DETER AMZ)..."):
+                    df_deter = clip_and_recalculate(
+                        df_deter_raw, aoi_geom,
+                        geom_col="geometry",
+                        area_col_out="area_ha_aoi",
+                        unit="ha",
+                    )
+                if not df_deter.empty:
+                    st.caption(
+                        f"📐 {len(df_deter_raw)} alertas na BBox → "
+                        f"**{len(df_deter)} alertas dentro da AOI** após clip."
+                    )
+            else:
+                df_deter = df_deter_raw
+
             if df_deter.empty:
                 st.warning("Sem alertas DETER para esta AOI.")
             else:
+                # Processa coluna year se existir view_date
+                if "view_date" in df_deter.columns and "year" not in df_deter.columns:
+                    df_deter["year"] = pd.to_datetime(df_deter["view_date"], errors="coerce").dt.year
+
                 col_g1, col_g2 = st.columns([2, 3])
 
                 with col_g1:
-                    if "view_date" in df_deter.columns:
-                        df_deter["year"] = pd.to_datetime(df_deter["view_date"], errors="coerce").dt.year
+                    if "year" in df_deter.columns:
                         by_year = df_deter.groupby("year").size().reset_index(name="n")
-                        st.markdown("### 📊 Alertas por Ano")
+                        st.markdown("### 📊 Alertas por Ano (AOI)")
                         st.plotly_chart(_bar(by_year["year"], by_year["n"], "#E67E22", y_title="Alertas"), use_container_width=True)
 
                     if "classname" in df_deter.columns:
@@ -644,16 +749,27 @@ def render_aoi_tab(
                         st.plotly_chart(_bar(cls["Classe"], cls["n"], "#D35400", x_title="Classe", y_title="Alertas"), use_container_width=True)
 
                 with col_g2:
-                    st.markdown("### 📊 Área por Classe ao Longo do Tempo (ha)")
+                    st.markdown("### 📊 Área por Classe ao Longo do Tempo (ha — AOI)")
                     DETER_COLORS = {
                         "CICATRIZ_DE_QUEIMADA": "#d7191c", "CORTE_SELETIVO":  "#868686",
                         "CS_DESORDENADO":       "#db83ff", "CS_GEOMETRICO":   "#ff7e00",
                         "DEGRADACAO":           "#e6c300", "DESMATAMENTO_CR": "#8a5f4b",
                         "DESMATAMENTO_VEG":     "#abdda4", "MINERACAO":       "#4223e5",
                     }
-                    if all(c in df_deter.columns for c in ["classname", "areamunkm", "year"]):
-                        df_deter["areamunkm"] = pd.to_numeric(df_deter["areamunkm"], errors="coerce") * 100
-                        df_area = df_deter.groupby(["year", "classname"]).agg(ha=("areamunkm", "sum")).reset_index()
+
+                    # Prefere área recalculada; fallback para areamunkm original
+                    area_col = "area_ha_aoi" if "area_ha_aoi" in df_deter.columns else "areamunkm"
+
+                    if "classname" in df_deter.columns and area_col in df_deter.columns and "year" in df_deter.columns:
+                        df_deter[area_col] = pd.to_numeric(df_deter[area_col], errors="coerce")
+                        # areamunkm original está em km² (×100 = ha); area_ha_aoi já está em ha
+                        if area_col == "areamunkm":
+                            df_deter[area_col] = df_deter[area_col] * 100
+
+                        df_area = df_deter.groupby(["year", "classname"]).agg(
+                            ha=(area_col, "sum")
+                        ).reset_index()
+
                         fig = go.Figure()
                         for cls_name in sorted(df_area["classname"].unique()):
                             df_c = df_area[df_area["classname"] == cls_name]
@@ -666,18 +782,20 @@ def render_aoi_tab(
                         fig.update_layout(
                             height=600, template="plotly_white",
                             margin=dict(t=10, b=40, l=40, r=10),
-                            xaxis_title="Ano", yaxis_title="ha",
-                            hovermode="x unified", legend=dict(font=dict(size=10))
+                            xaxis_title="Ano",
+                            yaxis_title="ha (dentro da AOI)" if area_col == "area_ha_aoi" else "ha",
+                            hovermode="x unified",
+                            legend=dict(font=dict(size=10))
                         )
                         st.plotly_chart(fig, use_container_width=True)
                     else:
-                        st.warning("Colunas `classname` / `areamunkm` não encontradas.")
+                        st.warning("Colunas necessárias para o gráfico de área não encontradas.")
 
-                with st.expander("📋 Tabela DETER AMZ"):
+                with st.expander("📋 Tabela DETER AMZ (AOI)"):
                     st.dataframe(df_deter, use_container_width=True, height=280)
-                    st.download_button("⬇️ CSV", df_deter.to_csv(index=False).encode("utf-8"), "deter_amz_aoi.csv", "text/csv")
+                    st.download_button("⬇️ CSV", df_deter.to_csv(index=False).encode("utf-8"), "deter_amz_aoi_clip.csv", "text/csv")
 
-    # ── DETER CERRADO ─────────────────────────────────────────────────
+    # ── DETER CERRADO (WFS bbox → clip AOI → recalcula área ha) ───────
     with tab_deter_cer:
         col_mapa_c, col_info_c = st.columns([8, 2])
 
@@ -698,16 +816,35 @@ def render_aoi_tab(
             else:
                 st.markdown("### 📋 Info")
                 _info_panel(selected_gdf)
+                st.caption("✅ DETER Cerrado: clip na AOI real + área recalculada em ha" if aoi_geom else "⚠️ AOI indisponível")
 
         if not is_overview and bbox_str:
             st.divider()
-            with st.spinner("Consultando TerraBrasilis (DETER Cerrado)..."):
-                df_cer = terrabrasilis_wfs(
+            with st.spinner("Consultando TerraBrasilis WFS (DETER Cerrado)..."):
+                df_cer_raw = terrabrasilis_wfs(
                     "https://terrabrasilis.dpi.inpe.br/geoserver/deter-cerrado-nb/deter_cerrado/ows",
                     "deter-cerrado-nb:deter_cerrado", bbox_str,
                 )
+
+            # ── Clip AOI + recálculo de área ──────────────────────────
+            if not df_cer_raw.empty and aoi_geom is not None:
+                with st.spinner("✂️ Aplicando clip na AOI real (DETER Cerrado)..."):
+                    df_cer = clip_and_recalculate(
+                        df_cer_raw, aoi_geom,
+                        geom_col="geometry",
+                        area_col_out="area_ha_aoi",
+                        unit="ha",
+                    )
+                if not df_cer.empty:
+                    st.caption(
+                        f"📐 {len(df_cer_raw)} alertas na BBox → "
+                        f"**{len(df_cer)} alertas dentro da AOI** após clip."
+                    )
+            else:
+                df_cer = df_cer_raw
+
             if df_cer.empty:
                 st.warning("Sem alertas DETER Cerrado para esta AOI.")
             else:
                 st.dataframe(df_cer, use_container_width=True, height=300)
-                st.download_button("⬇️ CSV", df_cer.to_csv(index=False).encode("utf-8"), "deter_cerrado_aoi.csv", "text/csv")
+                st.download_button("⬇️ CSV", df_cer.to_csv(index=False).encode("utf-8"), "deter_cerrado_aoi_clip.csv", "text/csv")
