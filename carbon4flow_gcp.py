@@ -350,7 +350,7 @@ def render_aoi_tab(
 
     st.markdown("## 📍 Análise Espacial por Projeto")
     st.info(
-        "Geometrias _baixadas_ em *.KML*, _convertidas_ em *.Parquet *e carregadas do **Google Cloud Storage**. "
+        "Geometrias _baixadas_ em *.KML*, _convertidas_ em *.Parquet*e carregadas do **Google Cloud Storage**."  \n
         "🚧Os cálculos de área são estimativas, busca usar o clip na **AOI** (Área de interesse do projeto) e na **BBox** (Bounding Box)."
     )
 
@@ -381,7 +381,7 @@ def render_aoi_tab(
     def _label(row) -> str:
         nome   = row.get("resourceName_x") or row["resource_id"]
         estado = row.get("state_Recode")   or "N/A"
-        return f"{nome} — {estado}"
+        return f"{nome} | {estado}"
 
     options     = ["🌎 Visão Geral (Todos os Projetos)"] + [_label(r) for _, r in idx.iterrows()]
     selected    = st.selectbox("📍 Selecione um projeto:", options, key="gcp_project_selector")
@@ -411,7 +411,7 @@ def render_aoi_tab(
         aoi_geom     = None   # ← Shapely geometry para clip
 
     else:
-        label_nome = selected.split(" — ")[0].strip()
+        label_nome = selected.split(" | ")[0].strip()
         row_idx    = idx[idx["resourceName_x"] == label_nome]
         if row_idx.empty:
             row_idx = idx[idx["resource_id"] == label_nome]
@@ -453,7 +453,7 @@ def render_aoi_tab(
             ("Acreditação", "vcsCreditingPeriodTerm"),
             ("Protocolo",   "vcsMethodology"),
             ("Status",      "vcsProjectStatus"),
-            ("Resumo",      "description"),
+            #("Resumo",      "description"),
         ]:
             st.markdown(f"**{label}:** {row.get(col, 'N/A')}")
 
