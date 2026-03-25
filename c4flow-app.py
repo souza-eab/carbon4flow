@@ -352,11 +352,14 @@ st.sidebar.caption(f"Última atualização: {datetime.now().strftime('%d/%m/%Y %
 st.title("🌎 Carbon4Flow")
 st.title("🎯 Protótipo em desenvolvimento para estimativas sobre Projetos de Carbono.")
 st.markdown("""
-    🎲 Base de dados: 📥Verra |🔎Terrabrasils 🔴Prodes e 🟠Deter consultados via (OWS) | 🌳 GFW via api|
-    ⚠️ Necessita de validação dados espaciais, em breve buscaremos ⭐new features de validação|  
+    🎲 Base de dados: 📥Verra  \n|🔎Terrabrasils 🔴Prodes e 🟠Deter consultados via (OWS)  \n| 🌳 GFW via api \n |
+""")
+st.markdown("""
+    ⚠️ **Necessita de validação dados espaciais**, em breve buscaremos ⭐new features de validação|  
     Dev: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
 """)
-st.title("🚩É um protótipo e os resultados necessitam de validações")
+st.markdown("""
+    🚩É um protótipo e os resultados necessitam de validações""")
 
 if 'selected_state_overview' not in st.session_state:
     st.session_state.selected_state_overview = None
