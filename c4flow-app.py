@@ -350,7 +350,7 @@ st.sidebar.caption(f"Última atualização: {datetime.now().strftime('%d/%m/%Y %
 # =====================================
 
 st.title("🌎 Carbon4Flow")
-st.markdown("""🎯 O protótipo que revela localização, a geração de créditos e os cruzamentos espaciais dos projetos de Carbono no Brasil, integrando dados do PRODES, DETER e GFW, oferecendo uma visão abrangente de cada iniciativa""")
+st.markdown("""🎯 O protótipo que revela localização, a geração de créditos e os cruzamentos espaciais dos projetos de Carbono no Brasil, integrando dados do PRODES, DETER e GFW, oferecendo uma visão abrangente de cada iniciativa.""")
 st.markdown("""🎲 Base de dados: 📥Verra  |  🔎Terrabrasils 🔴Prodes¹ e 🟠Deter¹ consultados via (OWS)  | 🌳 GFW¹ (api-tiles)""")
 st.markdown("""
     ⚠️ **¹Necessita de validação dados espaciais**, em breve buscaremos ⭐new features de +validação, mais bases e novas funcionalidades.  \nDesenvolvedor: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
@@ -367,7 +367,7 @@ if 'selected_state_overview' not in st.session_state:
 tabs = st.tabs([
     "📊 Visão Geral",
     "🌎 [POI] Projetos no Brasil",
-    "💰 [POI] Proj.BR filtrado de quem solicitou/emitiu créditos/Vendas",
+    "💰 [POI] Projetos com lastro de créditos",
     "📈 Análises Safras/Vintage",
     "📖 Storytelling",
     "📁 Dados Brutos"
