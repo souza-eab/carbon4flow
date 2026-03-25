@@ -179,7 +179,9 @@ def gfw_radd_alerts(geojson, api_key):
 # FUNÇÕES TERRABRASILIS
 # =====================================
 
-@st.cache_data(show_spinner=False)
+# [MELHORIA PERF] ttl=3600 adicionado: sem TTL os dados WFS ficavam em cache
+# para sempre na sessão mas nunca expiravam entre sessões, gerando inconsistência.
+@st.cache_data(ttl=3600, show_spinner=False)
 def terrabrasilis_wfs(url, type_name, bbox, max_features=50000):
     try:
         r = requests.get(url, params={
@@ -304,15 +306,24 @@ file_id_credit = st.sidebar.text_input(
 )
 
 if st.sidebar.button("🔄 Recarregar Dados", use_container_width=True):
-    st.cache_data.clear()
+    # [MELHORIA] Antes: st.cache_data.clear() apagava TODOS os caches,
+    # incluindo geometrias do GCS que acabam de ser baixadas.
+    # Agora invalida seletivamente apenas os dados do Google Drive.
+    load_parquet_from_gdrive.clear()
     st.rerun()
 
 st.sidebar.divider()
 
 st.markdown("""
     <style>
-        [data-testid="stSidebar"] input,
-        [data-testid="stSidebar"] button { display: none !important; }
+        /* [MELHORIA] Antes: display:none em TODOS os inputs e buttons da sidebar —
+           qualquer novo controle adicionado ficaria invisível sem razão aparente.
+           Agora ocultamos apenas os campos de ID de arquivo pelo atributo aria-label,
+           preservando visibilidade de futuros controles adicionados à sidebar. */
+        [data-testid="stSidebar"] [data-testid="stTextInput"]:has(input[aria-label="ID - Todos os Projetos"]),
+        [data-testid="stSidebar"] [data-testid="stTextInput"]:has(input[aria-label="ID - Projetos com Créditos"]) {
+            display: none !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -495,32 +506,40 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
         st.warning("⚠️ Nenhum projeto encontrado com os filtros selecionados.")
         return
 
+    # [MELHORIA] Função auxiliar deduplica o HTML de popup que antes era
+    # copiado identicamente nos blocos "Clusters" e "Pontos".
+    def _popup_html(row) -> str:
+        return f"""
+        <div style="font-family: Arial; font-size: 11px; width: 250px;">
+            <h4 style="margin: 0 0 15px 0;">{row.get('resourceName_x', 'N/A')}</h4>
+            <b>ID:</b> {row.get('resourceIdentifier', 'N/A')}<br>
+            <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>
+            <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
+            <b>Protocolos:</b> {row.get('vcsMethodology', 'N/A')}<br>
+            <b>Tipo:</b> {row.get('vcsAFOLUActivity', 'N/A')}<br>
+            <b>Acreditação:</b> {row.get('vcsCreditingPeriodTerm', 'N/A')}<br>
+            <b>Area:</b> {row.get('vcsAcresHectares', 'N/A')}<br>
+            <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
+        </div>
+        """
+
     center = [df_map["new_latitude"].mean(), df_map["new_longitude"].mean()]
     m = folium.Map(location=center, zoom_start=4, tiles="CartoDB dark_matter")
+
+    # [MELHORIA] Cap de 300 marcadores no modo Pontos para evitar HTML pesado
+    # que pode travar o browser com datasets grandes.
+    _PONTOS_CAP = 300
 
     if map_type == "Clusters":
         marker_cluster = MarkerCluster().add_to(m)
         for _, row in df_map.iterrows():
-            lat, lon  = row["new_latitude"], row["new_longitude"]
-            activity  = row.get("vcsAFOLUActivity", "Unknown")
-            color     = ACTIVITY_COLORS.get(activity, "#808080")
-            popup_html = f"""
-            <div style="font-family: Arial; font-size: 11px; width: 250px;">
-                <h4 style="margin: 0 0 15px 0;">{row.get('resourceName_x', 'N/A')}</h4>
-                <b>ID:</b> {row.get('resourceIdentifier', 'N/A')}<br>
-                <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>
-                <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
-                <b>Protocolos:</b> {row.get('vcsMethodology', 'N/A')}<br>
-                <b>Tipo:</b> {row.get('vcsAFOLUActivity', 'N/A')}<br>
-                <b>Acreditação:</b> {row.get('vcsCreditingPeriodTerm', 'N/A')}<br>
-                <b>Area:</b> {row.get('vcsAcresHectares', 'N/A')}<br>
-                <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
-            </div>
-            """
+            lat, lon = row["new_latitude"], row["new_longitude"]
+            activity = row.get("vcsAFOLUActivity", "Unknown")
+            color    = ACTIVITY_COLORS.get(activity, "#808080")
             folium.CircleMarker(
                 location=[lat, lon], radius=6, color=color, fill=True,
                 fill_color=color, fill_opacity=0.7,
-                popup=folium.Popup(popup_html, max_width=300)
+                popup=folium.Popup(_popup_html(row), max_width=300)
             ).add_to(marker_cluster)
 
     elif map_type == "Heatmap":
@@ -530,26 +549,20 @@ def create_interactive_map(df: pd.DataFrame, title: str, map_key: str):
         ).add_to(m)
 
     else:
-        for _, row in df_map.iterrows():
+        df_pontos = df_map
+        if len(df_map) > _PONTOS_CAP:
+            st.warning(
+                f"⚠️ Modo **Pontos** limitado a {_PONTOS_CAP} projetos para evitar lentidão no browser "
+                f"({len(df_map):,} projetos no filtro atual). Use **Clusters** para visualizar todos."
+            )
+            df_pontos = df_map.head(_PONTOS_CAP)
+        for _, row in df_pontos.iterrows():
             activity = row.get("vcsAFOLUActivity", "Unknown")
             color    = ACTIVITY_COLORS.get(activity, "#808080")
-            popup_html = f"""
-            <div style="font-family: Arial; font-size: 11px; width: 250px;">
-                <h4 style="margin: 0 0 15px 0;">{row.get('resourceName_x', 'N/A')}</h4>
-                <b>ID:</b> {row.get('resourceIdentifier', 'N/A')}<br>
-                <b>Status:</b> {row.get('vcsProjectStatus', 'N/A')}<br>
-                <b>Estado:</b> {row.get('state_Recode', 'N/A')}<br>
-                <b>Protocolos:</b> {row.get('vcsMethodology', 'N/A')}<br>
-                <b>Tipo:</b> {row.get('vcsAFOLUActivity', 'N/A')}<br>
-                <b>Acreditação:</b> {row.get('vcsCreditingPeriodTerm', 'N/A')}<br>
-                <b>Area:</b> {row.get('vcsAcresHectares', 'N/A')}<br>
-                <b>EAER:</b> {row.get('vcsEstimatedAnnualEmissionReductions', 'N/A')}
-            </div>
-            """
             folium.CircleMarker(
                 location=[row["new_latitude"], row["new_longitude"]],
                 radius=5, color=color, fill=True, fill_color=color, fill_opacity=0.6,
-                popup=folium.Popup(popup_html, max_width=300)
+                popup=folium.Popup(_popup_html(row), max_width=300)
             ).add_to(m)
 
     st_folium(m, width=None, height=600, key=f"map_{map_key}")
