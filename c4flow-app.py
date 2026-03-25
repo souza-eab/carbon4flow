@@ -350,10 +350,12 @@ st.sidebar.caption(f"Última atualização: {datetime.now().strftime('%d/%m/%Y %
 # =====================================
 
 st.title("🌎 Carbon4Flow")
+st.title("🎯 Protótipo em desenvolvimento para estimativas sobre Projetos de Carbono.")
 st.markdown("""
-Dashboard interativo para estimativas sobre Projetos de Carbono. Dados: Verra.  
+🎲 Base de dados: 📥Verra |⚠️OBS: Terrabrasils Prodes e Deter consultados via (OWS) e necessita validação, em atualizações buscaremos new features| GFW via api|  
 Dev: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
 """)
+st.title("🚩É um protótipo e os resultados necessitam de validações")
 
 if 'selected_state_overview' not in st.session_state:
     st.session_state.selected_state_overview = None
