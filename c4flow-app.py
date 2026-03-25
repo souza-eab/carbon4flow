@@ -181,6 +181,11 @@ def gfw_radd_alerts(geojson, api_key):
 
 # [MELHORIA PERF] ttl=3600 adicionado: sem TTL os dados WFS ficavam em cache
 # para sempre na sessão mas nunca expiravam entre sessões, gerando inconsistência.
+#
+# [MELHORIA CLIP] Agora inclui a coluna 'geometry' (dict GeoJSON) no DataFrame
+# retornado, além das properties. O CRS declarado pelo servidor é preservado em
+# '_wfs_crs' para que clip_and_recalculate possa reprojetar corretamente.
+# Confirmado: TerraBrasilis/DETER retorna EPSG:4674 (SIRGAS 2000).
 @st.cache_data(ttl=3600, show_spinner=False)
 def terrabrasilis_wfs(url, type_name, bbox, max_features=50000):
     try:
@@ -194,10 +199,35 @@ def terrabrasilis_wfs(url, type_name, bbox, max_features=50000):
             "maxFeatures":  str(max_features)
         }, timeout=60)
         if r.status_code == 200:
-            data = r.json()
+            data  = r.json()
             feats = data.get('features', [])
-            if feats:
-                return pd.DataFrame([f['properties'] for f in feats])
+            if not feats:
+                return pd.DataFrame()
+
+            # Detecta CRS declarado pelo servidor (ex: "urn:ogc:def:crs:EPSG::4674")
+            # GeoJSON padrão é 4326; TerraBrasilis usa 4674 (SIRGAS 2000)
+            crs_raw = (
+                data.get('crs', {})
+                    .get('properties', {})
+                    .get('name', 'EPSG:4326')
+            )
+            # Normaliza URN para código EPSG legível pelo GeoPandas
+            # ex: "urn:ogc:def:crs:EPSG::4674" → "EPSG:4674"
+            if 'EPSG::' in crs_raw:
+                crs_str = 'EPSG:' + crs_raw.split('EPSG::')[-1]
+            elif 'EPSG:' in crs_raw:
+                crs_str = 'EPSG:' + crs_raw.split('EPSG:')[-1]
+            else:
+                crs_str = 'EPSG:4326'
+
+            rows = []
+            for f in feats:
+                row = dict(f['properties'])
+                row['geometry'] = f.get('geometry')   # dict GeoJSON ou None
+                row['_wfs_crs'] = crs_str              # CRS para uso em clip
+                rows.append(row)
+
+            return pd.DataFrame(rows)
         return pd.DataFrame()
     except Exception:
         return pd.DataFrame()
