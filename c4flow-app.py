@@ -854,7 +854,7 @@ with tabs[4]:
     st.header("📖 A História dos Projetos de Carbono no Brasil")
 
     story_tabs = st.tabs([
-        "🌍 Panorama Geral",
+        "🌎 Panorama Geral",
         "📍 Dados AOI",
         "🌿 MapBiomas",
         "📊 Evolução Temporal",
@@ -870,10 +870,11 @@ with tabs[4]:
         with col1:
             st.markdown("""
             ### Do Desmatamento aos Créditos de Carbono
+            - ⬇️ **Reduções** e suas Unidades de Carbono Verificadas (VCUs)            
             - 💰 **Valoriza economicamente** a floresta em pé
             - 🌳 **Preserva a biodiversidade**
             - 👥 **Beneficia comunidades** locais
-            - 🌍 **Combate as mudanças climáticas** globais
+            - 🗺️ **Combate as mudanças climáticas** globais
             """)
         with col2:
             st.markdown("""
