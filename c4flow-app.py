@@ -340,7 +340,7 @@ if "Vintage" not in df_credit.columns:
 st.sidebar.success("✅ Dados carregados com sucesso!")
 st.sidebar.metric("Total de Projetos", f"{len(df_all):,}")
 st.sidebar.metric(
-    "Projetos com VCUs",
+    "Projetos que já emitiram VCUs",
     f"{df_credit['resourceName_x'].nunique():,}" if 'resourceName_x' in df_credit.columns else f"{len(df_credit):,}"
 )
 st.sidebar.caption(f"Última atualização: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
