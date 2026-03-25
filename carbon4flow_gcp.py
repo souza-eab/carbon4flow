@@ -35,8 +35,8 @@ Regra de join: sempre por ID normalizado para str.
 
 AOI AOI (Área de interesse do projeto):
   - GFW   : polígono GeoJSON enviado via API POST  ✅ já implementado
-  - PRODES: WFS bbox → clip na AOI → recalcula área em km² ⚠️ Em desenvolvimento
-  - DETER : WFS bbox → clip na AOI → recalcula área em ha  ⚠️ Em desenvolvimento
+  - PRODES: WFS bbox → clip na AOI → recalcula área em km² ⚠️ Em desenvolvimento | Implementado
+  - DETER : WFS bbox → clip na AOI → recalcula área em ha  ⚠️ Em desenvolvimento | Implementado
 
  
   - Versão 0.0.3 - 25/03/2026
