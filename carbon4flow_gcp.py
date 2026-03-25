@@ -453,7 +453,7 @@ def render_aoi_tab(
             ("Acreditação", "vcsCreditingPeriodTerm"),
             ("Protocolo",   "vcsMethodology"),
             ("Status",      "vcsProjectStatus"),
-            #("Resumo",      "description"),
+            ("Resumo",      "description"),
         ]:
             st.markdown(f"**{label}:** {row.get(col, 'N/A')}")
 
