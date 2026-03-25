@@ -350,7 +350,7 @@ st.sidebar.caption(f"Última atualização: {datetime.now().strftime('%d/%m/%Y %
 # =====================================
 
 st.title("🌎 Carbon4Flow")
-st.markdown("""🎯 O protótipo que revela onde estão, quanto geram de créditos e os cruzamentos espaciais dos projetos de Carbono no Brasil.""")
+st.markdown("""🎯 O protótipo que revela onde estão, quanto geram de créditos e os cruzamentos espaciais dos projetos de AFOLU Carbono no Brasil.""")
 st.markdown("""🎲 Base de dados: 📥Verra  |  🔎Terrabrasils 🔴Prodes¹ e 🟠Deter¹ consultados via (OWS)  | 🌳 GFW¹ (api-tiles)""")
 st.markdown("""
     ⚠️ **¹Necessita de validação dados espaciais**, em breve buscaremos ⭐new features de +validação, mais bases e novas funcionalidades.  \nDesenvolvedor: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
