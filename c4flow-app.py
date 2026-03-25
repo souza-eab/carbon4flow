@@ -350,11 +350,10 @@ st.sidebar.caption(f"Última atualização: {datetime.now().strftime('%d/%m/%Y %
 # =====================================
 
 st.title("🌎 Carbon4Flow")
-st.title("🎯 Protótipo para estimativas sobre Projetos de Carbono.")
+st.title("🎯 Protótipo para +info sobre Projetos de Carbono no Brasil")
 st.markdown("""🎲 Base de dados: 📥Verra  |  🔎Terrabrasils 🔴Prodes¹ e 🟠Deter¹ consultados via (OWS)  | 🌳 GFW¹ via api |""")
 st.markdown("""
-    ⚠️ **¹Necessita de validação dados espaciais**,  \n em breve buscaremos ⭐new features de +validação, mais bases e novas funcionalidades.  \n   
-    Dev: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
+    ⚠️ **¹Necessita de validação dados espaciais**, em breve buscaremos ⭐new features de +validação, mais bases e novas funcionalidades.  \nDesenvolvedor: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
 """)
 st.markdown("""🚩É um protótipo e os resultados necessitam de validações""")
 
