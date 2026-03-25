@@ -350,12 +350,12 @@ st.sidebar.caption(f"Última atualização: {datetime.now().strftime('%d/%m/%Y %
 # =====================================
 
 st.title("🌎 Carbon4Flow")
-st.title("🎯 Protótipo para +info sobre Projetos de Carbono no Brasil")
+st.title("🎯 o protótipo que revela localização, a geração de créditos e os cruzamentos espaciais dos projetos de Carbono no Brasil, integrando dados do PRODES, DETER e GFW, oferecendo uma visão abrangente do statuts e potencial de cada iniciativa")
 st.markdown("""🎲 Base de dados: 📥Verra  |  🔎Terrabrasils 🔴Prodes¹ e 🟠Deter¹ consultados via (OWS)  | 🌳 GFW¹ (api-tiles)""")
 st.markdown("""
     ⚠️ **¹Necessita de validação dados espaciais**, em breve buscaremos ⭐new features de +validação, mais bases e novas funcionalidades.  \nDesenvolvedor: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
 """)
-st.markdown("""🚩É um protótipo e os resultados necessitam de validações""")
+st.markdown("""🚩É um protótipo e os resultados necessitam de validações | 😊+Recente |> 📈 Análises Safras/Vintage e 📖 Storytelling > 📍Dados AOI""")
 
 if 'selected_state_overview' not in st.session_state:
     st.session_state.selected_state_overview = None
@@ -366,9 +366,9 @@ if 'selected_state_overview' not in st.session_state:
 
 tabs = st.tabs([
     "📊 Visão Geral",
-    "🌎 Mapa - Todos os Projetos BR",
-    "💰 Mapa - Com lastro de Créditos/Vendas",
-    "📈 Análises de Vintage",
+    "🌎 [POI] Projetos no Brasil",
+    "💰 [POI] Proj.BR filtrado de quem solicitou/emitiu créditos/Vendas",
+    "📈 Análises Safras/Vintage",
     "📖 Storytelling",
     "📁 Dados Brutos"
 ])
@@ -591,7 +591,7 @@ with tabs[2]:
 # =====================================
 
 with tabs[3]:
-    st.header("📈 Análise de VCUs por Vintage")
+    st.header("📈 Análise VCUs (Unidades de Carbono Verificadas) por Safra/Vintage")
 
     with st.spinner("🔄 Processando análise de vintage..."):
         estatisticas = analise_vcu_por_vintage(df_credit)
