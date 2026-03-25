@@ -39,7 +39,12 @@ AOI AOI (Área de interesse do projeto):
   - DETER : WFS bbox → clip na AOI → recalcula área em ha  ⚠️ Em desenvolvimento | Implementado
 
  
-  - Versão 0.0.3 - 25/03/2026
+  - Versão 0.0.4 - 25/03/2026
+  CHANGELOG v0.0.4:
+  - [PERF] cache em carregar_geometrias_gcp (ttl=1800) — evita re-download a cada interação
+  - [PERF] _get_aoi_bundle: dissolve único por resource_id, compartilhado entre geojson/bbox/geom
+  - [CONF] clip_and_recalculate: aviso explícito na UI quando clip não ocorre (sem geometria)
+  - [CONF] Nota sobre validação do fator areamunkm→ha adicionada ao código
 """
 
 import io
@@ -143,27 +148,50 @@ def load_project_geometry(resource_id: str) -> Optional[gpd.GeoDataFrame]:
         return None
 
 
-def get_dissolved_geometry(resource_id: str):
-    """Geometria AOI dissolvida em um único polígono 2D."""
+# ═══════════════════════════════════════════════════════════════════════
+# [MELHORIA] AOI BUNDLE — dissolve único por resource_id
+# Antes: get_dissolved_geometry, get_aoi_geojson e get_aoi_bbox_str
+# eram chamadas separadamente em render_aoi_tab, cada uma refazendo
+# o unary_union do zero. Agora um único @st.cache_data faz o dissolve
+# uma só vez e retorna os três derivados juntos.
+# ═══════════════════════════════════════════════════════════════════════
+
+@st.cache_data(ttl=1800, show_spinner=False)
+def _get_aoi_bundle(resource_id: str) -> dict:
+    """
+    Retorna dict com:
+      - geom    : Shapely geometry (dissolvida, 2D) — para clip
+      - geojson : dict GeoJSON — para APIs GFW (POST)
+      - bbox_str: 'minx,miny,maxx,maxy' — para queries WFS
+    Retorna None em todos os campos se a geometria não estiver disponível.
+    """
     gdf = load_project_geometry(resource_id)
     if gdf is None or gdf.empty:
-        return None
-    return unary_union(gdf.geometry)
+        return {"geom": None, "geojson": None, "bbox_str": None}
+
+    geom = unary_union(gdf.geometry)
+    b    = geom.bounds
+    return {
+        "geom":     geom,
+        "geojson":  mapping(geom),
+        "bbox_str": f"{b[0]},{b[1]},{b[2]},{b[3]}",
+    }
+
+
+# Mantém funções públicas para compatibilidade com código externo
+def get_dissolved_geometry(resource_id: str):
+    """Geometria AOI dissolvida em um único polígono 2D."""
+    return _get_aoi_bundle(resource_id)["geom"]
 
 
 def get_aoi_geojson(resource_id: str) -> Optional[dict]:
     """GeoJSON da AOI real — para APIs GFW (POST)."""
-    geom = get_dissolved_geometry(resource_id)
-    return mapping(geom) if geom else None
+    return _get_aoi_bundle(resource_id)["geojson"]
 
 
 def get_aoi_bbox_str(resource_id: str) -> Optional[str]:
     """'minx,miny,maxx,maxy' — para queries WFS (bbox inicial)."""
-    geom = get_dissolved_geometry(resource_id)
-    if geom is None:
-        return None
-    b = geom.bounds
-    return f"{b[0]},{b[1]},{b[2]},{b[3]}"
+    return _get_aoi_bundle(resource_id)["bbox_str"]
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -176,7 +204,7 @@ def clip_and_recalculate(
     geom_col: str = "geometry",
     area_col_out: str = "area_km2_aoi",
     unit: str = "km2",          # "km2" ou "ha"
-) -> pd.DataFrame:
+) -> Tuple[pd.DataFrame, bool]:
     """
     Recebe DataFrame do WFS (com coluna geometry como dict GeoJSON ou objeto Shapely),
     faz clip na AOI real e recalcula área dentro da AOI.
@@ -192,11 +220,16 @@ def clip_and_recalculate(
 
     Retorna
     -------
-    DataFrame com coluna area_col_out adicionada (área dentro da AOI).
-    Se df_wfs não tiver geometria, retorna df_wfs inalterado.
+    (DataFrame, clip_realizado: bool)
+      - DataFrame com coluna area_col_out adicionada (área dentro da AOI).
+      - clip_realizado=False quando o clip não pôde ser executado
+        (sem coluna geometry ou aoi_geom=None) — neste caso os dados
+        representam a BBox completa, não a AOI.
     """
+    # [MELHORIA CONFIABILIDADE] Retorna flag indicando se clip foi realizado,
+    # para que a UI possa avisar o usuário quando os dados são da BBox inteira.
     if df_wfs.empty or aoi_geom is None:
-        return df_wfs
+        return df_wfs, False
 
     # Se já é GeoDataFrame, usa direto; senão tenta reconstruir
     if isinstance(df_wfs, gpd.GeoDataFrame) and geom_col in df_wfs.columns:
@@ -208,10 +241,18 @@ def clip_and_recalculate(
             )
             gdf = gpd.GeoDataFrame(df_wfs, geometry=geoms, crs="EPSG:4326")
         except Exception:
-            return df_wfs
+            # Sem geometria válida — não há como clipar
+            log.warning("clip_and_recalculate: falha ao reconstruir geometria — retornando sem clip")
+            return df_wfs, False
     else:
-        # Sem geometria — não há como clipar
-        return df_wfs
+        # [MELHORIA CONFIABILIDADE] Coluna geometry ausente — situação comum quando
+        # terrabrasilis_wfs retorna apenas f['properties']. Retorna flag False
+        # para que a UI exiba aviso ao usuário.
+        log.warning(
+            f"clip_and_recalculate: coluna '{geom_col}' ausente no DataFrame "
+            f"— dados representam BBox inteira, não AOI."
+        )
+        return df_wfs, False
 
     if gdf.crs is None:
         gdf = gdf.set_crs("EPSG:4326")
@@ -225,10 +266,10 @@ def clip_and_recalculate(
         gdf_clipped = gpd.clip(gdf, aoi_gdf)
     except Exception as e:
         log.warning(f"clip falhou: {e} — retornando sem clip")
-        return df_wfs
+        return df_wfs, False
 
     if gdf_clipped.empty:
-        return gdf_clipped.drop(columns=[geom_col], errors="ignore")
+        return gdf_clipped.drop(columns=[geom_col], errors="ignore"), True
 
     # Recalcula área no CRS métrico
     gdf_metric = gdf_clipped.to_crs(CRS_AREA)
@@ -241,7 +282,7 @@ def clip_and_recalculate(
 
     # Remove coluna geometry do retorno (DataFrame limpo para exibição)
     result = pd.DataFrame(gdf_clipped.drop(columns=[geom_col], errors="ignore"))
-    return result
+    return result, True
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -256,8 +297,11 @@ def _prep_df_all(df_all: pd.DataFrame) -> pd.DataFrame:
 
 # ═══════════════════════════════════════════════════════════════════════
 # CARREGAR TODAS AS GEOMETRIAS (Visão Geral)
+# [MELHORIA PERF] Adicionado @st.cache_data(ttl=1800) para evitar que
+# qualquer interação com widgets re-execute o loop de download.
 # ═══════════════════════════════════════════════════════════════════════
 
+@st.cache_data(ttl=1800, show_spinner=False)
 def carregar_geometrias_gcp(df_all: pd.DataFrame) -> Tuple[gpd.GeoDataFrame, List[str]]:
     df  = _prep_df_all(df_all)
     idx = load_index()
@@ -408,7 +452,7 @@ def render_aoi_tab(
         selected_rid = None
         bbox_str     = None
         aoi_geojson  = None
-        aoi_geom     = None   # ← Shapely geometry para clip
+        aoi_geom     = None
 
     else:
         label_nome = selected.split(" | ")[0].strip()
@@ -437,9 +481,15 @@ def render_aoi_tab(
         center       = [(bounds[1] + bounds[3]) / 2, (bounds[0] + bounds[2]) / 2]
         zoom_start   = 10
         selected_gdf = gdf_single
-        bbox_str     = get_aoi_bbox_str(selected_rid)
-        aoi_geojson  = get_aoi_geojson(selected_rid)
-        aoi_geom     = get_dissolved_geometry(selected_rid)   # ← Shapely para clip
+
+        # [MELHORIA PERF] Uma única chamada a _get_aoi_bundle substitui
+        # as três chamadas anteriores (get_aoi_bbox_str, get_aoi_geojson,
+        # get_dissolved_geometry) que refaziam o unary_union cada uma.
+        with st.spinner("📐 Calculando AOI..."):
+            aoi_bundle = _get_aoi_bundle(selected_rid)
+        bbox_str    = aoi_bundle["bbox_str"]
+        aoi_geojson = aoi_bundle["geojson"]
+        aoi_geom    = aoi_bundle["geom"]
 
     # ── Helpers ───────────────────────────────────────────────────────
     def _info_panel(gdf):
@@ -542,10 +592,32 @@ def render_aoi_tab(
         if not is_overview and aoi_geojson:
             st.divider()
             col_g1, col_g2, col_g3 = st.columns(3)
+
+            # [MELHORIA PERF] As 3 chamadas GFW agora rodam em paralelo com
+            # ThreadPoolExecutor em vez de sequencialmente (antes: até 180 s
+            # no pior caso com 3 timeouts de 60 s cada).
+            import concurrent.futures
+
+            def _fetch_loss():
+                return gfw_tree_cover_loss(aoi_geojson, GFW_API_KEY)
+
+            def _fetch_glad():
+                return gfw_glad_alerts(aoi_geojson, GFW_API_KEY)
+
+            def _fetch_radd():
+                return gfw_radd_alerts(aoi_geojson, GFW_API_KEY)
+
+            with st.spinner("Consultando GFW (Tree Cover Loss, GLAD e RADD em paralelo)..."):
+                with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+                    fut_loss = executor.submit(_fetch_loss)
+                    fut_glad = executor.submit(_fetch_glad)
+                    fut_radd = executor.submit(_fetch_radd)
+                    df_loss = fut_loss.result()
+                    df_glad = fut_glad.result()
+                    df_radd = fut_radd.result()
+
             with col_g1:
                 st.markdown("### 📊 Tree Cover Loss")
-                with st.spinner("Consultando GFW..."):
-                    df_loss = gfw_tree_cover_loss(aoi_geojson, GFW_API_KEY)
                 if df_loss.empty:
                     st.warning("Sem dados para esta AOI.")
                 else:
@@ -553,8 +625,6 @@ def render_aoi_tab(
 
             with col_g2:
                 st.markdown("### 🟡 GLAD Alerts")
-                with st.spinner("Consultando GLAD..."):
-                    df_glad = gfw_glad_alerts(aoi_geojson, GFW_API_KEY)
                 if df_glad.empty:
                     st.warning("Sem dados para esta AOI.")
                 else:
@@ -562,8 +632,6 @@ def render_aoi_tab(
 
             with col_g3:
                 st.markdown("### 🟠 RADD Alerts")
-                with st.spinner("Consultando RADD..."):
-                    df_radd = gfw_radd_alerts(aoi_geojson, GFW_API_KEY)
                 if df_radd.empty:
                     st.warning("Sem dados para esta AOI.")
                 else:
@@ -618,19 +686,28 @@ def render_aoi_tab(
             # ── Clip AOI + recálculo de área ──────────────────────────
             if not df_prodes_raw.empty and aoi_geom is not None:
                 with st.spinner("✂️ Aplicando clip na AOI (PRODES)..."):
-                    df_prodes = clip_and_recalculate(
+                    df_prodes, clip_ok_prodes = clip_and_recalculate(
                         df_prodes_raw, aoi_geom,
                         geom_col="geometry",
                         area_col_out="area_km2_aoi",
                         unit="km2",
                     )
-                if not df_prodes.empty:
+                # [MELHORIA CONFIABILIDADE] Aviso explícito quando clip não ocorreu
+                if not clip_ok_prodes:
+                    st.warning(
+                        "⚠️ **Clip não realizado:** o WFS retornou dados sem coluna de geometria. "
+                        "Os valores de área exibidos são da **BBox inteira**, não da AOI do projeto."
+                    )
+                elif not df_prodes.empty:
                     st.caption(
                         f"📐 {len(df_prodes_raw)} polígonos na BBox → "
                         f"**{len(df_prodes)} polígonos dentro da AOI** após clip."
                     )
             else:
                 df_prodes = df_prodes_raw
+                clip_ok_prodes = False
+                if not df_prodes_raw.empty:
+                    st.warning("⚠️ AOI indisponível — área exibida refere-se à BBox inteira.")
 
             col_g1, col_g2, col_g3 = st.columns(3)
 
@@ -644,9 +721,9 @@ def render_aoi_tab(
                     st.plotly_chart(_bar(by_year["year"], by_year["n"], "#C0392B", y_title="Polígonos"), use_container_width=True)
 
             with col_g2:
-                st.markdown("### 📊 Área dentro da AOI (km²/ano)")
+                area_label = "km² (AOI)" if clip_ok_prodes else "km² (BBox — sem clip)"
+                st.markdown(f"### 📊 Área dentro da AOI ({area_label})")
                 if not df_prodes.empty:
-                    # Prefere área recalculada; fallback para area_km original
                     area_col = "area_km2_aoi" if "area_km2_aoi" in df_prodes.columns else "area_km"
                     if area_col in df_prodes.columns and "year" in df_prodes.columns:
                         df_prodes[area_col] = pd.to_numeric(df_prodes[area_col], errors="coerce")
@@ -656,7 +733,7 @@ def render_aoi_tab(
                             height=300, template="plotly_white",
                             margin=dict(t=10, b=40, l=40, r=10),
                             xaxis_title="Ano",
-                            yaxis_title="km² (dentro da AOI)" if area_col == "area_km2_aoi" else "km²",
+                            yaxis_title=area_label,
                             hovermode="x unified"
                         )
                         st.plotly_chart(fig, use_container_width=True)
@@ -717,19 +794,28 @@ def render_aoi_tab(
             # ── Clip AOI + recálculo de área ──────────────────────────
             if not df_deter_raw.empty and aoi_geom is not None:
                 with st.spinner("✂️ Aplicando clip na AOI (DETER AMZ)..."):
-                    df_deter = clip_and_recalculate(
+                    df_deter, clip_ok_deter = clip_and_recalculate(
                         df_deter_raw, aoi_geom,
                         geom_col="geometry",
                         area_col_out="area_ha_aoi",
                         unit="ha",
                     )
-                if not df_deter.empty:
+                # [MELHORIA CONFIABILIDADE] Aviso explícito quando clip não ocorreu
+                if not clip_ok_deter:
+                    st.warning(
+                        "⚠️ **Clip não realizado:** o WFS retornou dados sem coluna de geometria. "
+                        "Os valores de área exibidos são da **BBox inteira**, não da AOI do projeto."
+                    )
+                elif not df_deter.empty:
                     st.caption(
                         f"📐 {len(df_deter_raw)} alertas na BBox → "
                         f"**{len(df_deter)} alertas dentro da AOI** após clip."
                     )
             else:
                 df_deter = df_deter_raw
+                clip_ok_deter = False
+                if not df_deter_raw.empty:
+                    st.warning("⚠️ AOI indisponível — área exibida refere-se à BBox inteira.")
 
             if df_deter.empty:
                 st.warning("Sem alertas DETER para esta AOI.")
@@ -753,7 +839,8 @@ def render_aoi_tab(
                         st.plotly_chart(_bar(cls["Classe"], cls["n"], "#D35400", x_title="Classe", y_title="Alertas"), use_container_width=True)
 
                 with col_g2:
-                    st.markdown("### 📊 Área por Classe ao Longo do Tempo (ha — AOI)")
+                    area_label_deter = "ha (AOI)" if clip_ok_deter else "ha (BBox — sem clip)"
+                    st.markdown(f"### 📊 Área por Classe ao Longo do Tempo ({area_label_deter})")
                     DETER_COLORS = {
                         "CICATRIZ_DE_QUEIMADA": "#d7191c", "CORTE_SELETIVO":  "#868686",
                         "CS_DESORDENADO":       "#db83ff", "CS_GEOMETRICO":   "#ff7e00",
@@ -766,7 +853,11 @@ def render_aoi_tab(
 
                     if "classname" in df_deter.columns and area_col in df_deter.columns and "year" in df_deter.columns:
                         df_deter[area_col] = pd.to_numeric(df_deter[area_col], errors="coerce")
-                        # areamunkm original está em km² (×100 = ha); area_ha_aoi já está em ha
+                        # [NOTA CONFIABILIDADE] O campo areamunkm do TerraBrasilis/DETER
+                        # representa km² do município interceptado, não do polígono de alerta.
+                        # A conversão ×100 para ha é uma aproximação — confirmar na documentação
+                        # oficial do INPE/TerraBrasilis antes de usar em análises formais.
+                        # Ref: https://terrabrasilis.dpi.inpe.br/
                         if area_col == "areamunkm":
                             df_deter[area_col] = df_deter[area_col] * 100
 
@@ -787,7 +878,7 @@ def render_aoi_tab(
                             height=600, template="plotly_white",
                             margin=dict(t=10, b=40, l=40, r=10),
                             xaxis_title="Ano",
-                            yaxis_title="ha (dentro da AOI)" if area_col == "area_ha_aoi" else "ha",
+                            yaxis_title=area_label_deter,
                             hovermode="x unified",
                             legend=dict(font=dict(size=10))
                         )
@@ -833,19 +924,28 @@ def render_aoi_tab(
             # ── Clip AOI + recálculo de área ──────────────────────────
             if not df_cer_raw.empty and aoi_geom is not None:
                 with st.spinner("✂️ Aplicando clip na AOI (DETER Cerrado)..."):
-                    df_cer = clip_and_recalculate(
+                    df_cer, clip_ok_cer = clip_and_recalculate(
                         df_cer_raw, aoi_geom,
                         geom_col="geometry",
                         area_col_out="area_ha_aoi",
                         unit="ha",
                     )
-                if not df_cer.empty:
+                # [MELHORIA CONFIABILIDADE] Aviso explícito quando clip não ocorreu
+                if not clip_ok_cer:
+                    st.warning(
+                        "⚠️ **Clip não realizado:** o WFS retornou dados sem coluna de geometria. "
+                        "Os valores de área exibidos são da **BBox inteira**, não da AOI do projeto."
+                    )
+                elif not df_cer.empty:
                     st.caption(
                         f"📐 {len(df_cer_raw)} alertas na BBox → "
                         f"**{len(df_cer)} alertas dentro da AOI** após clip."
                     )
             else:
                 df_cer = df_cer_raw
+                clip_ok_cer = False
+                if not df_cer_raw.empty:
+                    st.warning("⚠️ AOI indisponível — área exibida refere-se à BBox inteira.")
 
             if df_cer.empty:
                 st.warning("Sem alertas DETER Cerrado para esta AOI.")
