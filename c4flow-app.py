@@ -352,8 +352,9 @@ st.sidebar.caption(f"Última atualização: {datetime.now().strftime('%d/%m/%Y %
 st.title("🌎 Carbon4Flow")
 st.title("🎯 Protótipo em desenvolvimento para estimativas sobre Projetos de Carbono.")
 st.markdown("""
-🎲 Base de dados: 📥Verra |⚠️OBS: Terrabrasils Prodes e Deter consultados via (OWS) e necessita validação, em atualizações buscaremos new features| GFW via api|  
-Dev: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
+    🎲 Base de dados: 📥Verra |🔎Terrabrasils 🔴Prodes e 🟠Deter consultados via (OWS) | 🌳 GFW via api|
+    ⚠️ Necessita de validação dados espaciais, em breve buscaremos ⭐new features de validação|  
+    Dev: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
 """)
 st.title("🚩É um protótipo e os resultados necessitam de validações")
 
