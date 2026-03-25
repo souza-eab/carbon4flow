@@ -350,7 +350,7 @@ def render_aoi_tab(
 
     st.markdown("## 📍 Análise Espacial por Projeto")
     st.info(
-        "Geometrias _baixadas_ em *.KML*, _convertidas_ em *.Parquet*e carregadas do **Google Cloud Storage**."  \n
+        "Geometrias _baixadas_ em *.KML*, _convertidas_ em *.Parquet*e carregadas do **Google Cloud Storage**."
         "🚧Os cálculos de área são estimativas, busca usar o clip na **AOI** (Área de interesse do projeto) e na **BBox** (Bounding Box)."
     )
 
