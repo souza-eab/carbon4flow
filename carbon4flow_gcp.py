@@ -1,7 +1,7 @@
 """
 carbon4flow_gcp.py
 ──────────────────
-Schema real confirmado:
+Schema real confirmado eg.:
 
   index.parquet
     resource_id  → str  ex: "5295"
@@ -21,6 +21,7 @@ REGRA DE JOIN: sempre por ID numérico.
   → normaliza tudo para str antes de comparar.
 """
 
+
 """
 carbon4flow_gcp.py
 ──────────────────
@@ -32,10 +33,13 @@ Schema real confirmado:
 
 Regra de join: sempre por ID normalizado para str.
 
-AOI real:
+AOI AOI (Área de interesse do projeto):
   - GFW   : polígono GeoJSON enviado via API POST  ✅ já implementado
-  - PRODES: WFS bbox → clip na AOI → recalcula área em km²
-  - DETER : WFS bbox → clip na AOI → recalcula área em ha
+  - PRODES: WFS bbox → clip na AOI → recalcula área em km² ⚠️ Em desenvolvimento
+  - DETER : WFS bbox → clip na AOI → recalcula área em ha  ⚠️ Em desenvolvimento
+
+ 
+  - Versão 0.0.3 - 25/03/2026
 """
 
 import io
@@ -346,8 +350,8 @@ def render_aoi_tab(
 
     st.markdown("## 📍 Análise Espacial por Projeto")
     st.info(
-        "Geometrias carregadas do **Google Cloud Storage** (Parquet). "
-        "Todos os cálculos de área (PRODES, DETER) usam **clip na AOI real**."
+        "Geometrias _baixadas_ em *.KML*, _convertidas_ em *.Parquet *e carregadas do **Google Cloud Storage**. "
+        "🚧Os cálculos de área são estimativas, busca usar o clip na **AOI** (Área de interesse do projeto) e na **BBox** (Bounding Box)."
     )
 
     # ── Catálogo ──────────────────────────────────────────────────────
@@ -533,7 +537,7 @@ def render_aoi_tab(
             else:
                 st.markdown("### 📋 Info")
                 _info_panel(selected_gdf)
-                st.caption("✅ GFW: AOI real (POST)" if aoi_geojson else "⚠️ AOI indisponível")
+                st.caption("✅ GFW: AOI (POST)" if aoi_geojson else "⚠️ AOI indisponível")
 
         if not is_overview and aoi_geojson:
             st.divider()
@@ -600,7 +604,7 @@ def render_aoi_tab(
             else:
                 st.markdown("### 📋 Info")
                 _info_panel(selected_gdf)
-                st.caption("✅ PRODES: clip na AOI real + área recalculada em km²" if aoi_geom else "⚠️ AOI indisponível")
+                st.caption("✅ PRODES: clip na AOI  e área recalculada em km²" if aoi_geom else "⚠️ AOI indisponível")
 
         if not is_overview and bbox_str:
             st.divider()
@@ -613,7 +617,7 @@ def render_aoi_tab(
 
             # ── Clip AOI + recálculo de área ──────────────────────────
             if not df_prodes_raw.empty and aoi_geom is not None:
-                with st.spinner("✂️ Aplicando clip na AOI real (PRODES)..."):
+                with st.spinner("✂️ Aplicando clip na AOI (PRODES)..."):
                     df_prodes = clip_and_recalculate(
                         df_prodes_raw, aoi_geom,
                         geom_col="geometry",
@@ -692,7 +696,7 @@ def render_aoi_tab(
             else:
                 st.markdown("### 📋 Info")
                 _info_panel(selected_gdf)
-                st.caption("✅ DETER: clip na AOI real + área recalculada em ha" if aoi_geom else "⚠️ AOI indisponível")
+                st.caption("✅ DETER: clip na AOI  e área recalculada em ha" if aoi_geom else "⚠️ AOI indisponível")
                 st.markdown(
                     "<small><b>Legenda:</b><br>"
                     "🔴 Cicatriz queimada &nbsp;⬜ Corte seletivo<br>"
@@ -712,7 +716,7 @@ def render_aoi_tab(
 
             # ── Clip AOI + recálculo de área ──────────────────────────
             if not df_deter_raw.empty and aoi_geom is not None:
-                with st.spinner("✂️ Aplicando clip na AOI real (DETER AMZ)..."):
+                with st.spinner("✂️ Aplicando clip na AOI (DETER AMZ)..."):
                     df_deter = clip_and_recalculate(
                         df_deter_raw, aoi_geom,
                         geom_col="geometry",
@@ -816,7 +820,7 @@ def render_aoi_tab(
             else:
                 st.markdown("### 📋 Info")
                 _info_panel(selected_gdf)
-                st.caption("✅ DETER Cerrado: clip na AOI real + área recalculada em ha" if aoi_geom else "⚠️ AOI indisponível")
+                st.caption("✅ DETER Cerrado: clip na AOI e área recalculada em ha" if aoi_geom else "⚠️ AOI indisponível")
 
         if not is_overview and bbox_str:
             st.divider()
@@ -828,7 +832,7 @@ def render_aoi_tab(
 
             # ── Clip AOI + recálculo de área ──────────────────────────
             if not df_cer_raw.empty and aoi_geom is not None:
-                with st.spinner("✂️ Aplicando clip na AOI real (DETER Cerrado)..."):
+                with st.spinner("✂️ Aplicando clip na AOI (DETER Cerrado)..."):
                     df_cer = clip_and_recalculate(
                         df_cer_raw, aoi_geom,
                         geom_col="geometry",
