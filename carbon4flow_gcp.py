@@ -211,10 +211,11 @@ def clip_and_recalculate(
 
     Parâmetros
     ----------
-    df_wfs       : DataFrame retornado por terrabrasilis_wfs (properties apenas, sem geometry)
-                   OU GeoDataFrame com coluna geometry
+    df_wfs       : DataFrame retornado por terrabrasilis_wfs.
+                   Espera coluna 'geometry' (dict GeoJSON) e '_wfs_crs' (str EPSG).
+                   Se ausentes, retorna sem clip com flag False.
     aoi_geom     : geometria Shapely da AOI (EPSG:4326)
-    geom_col     : nome da coluna de geometria (se existir)
+    geom_col     : nome da coluna de geometria
     area_col_out : nome da nova coluna de área calculada
     unit         : "km2" ou "ha"
 
@@ -226,12 +227,17 @@ def clip_and_recalculate(
         (sem coluna geometry ou aoi_geom=None) — neste caso os dados
         representam a BBox completa, não a AOI.
     """
-    # [MELHORIA CONFIABILIDADE] Retorna flag indicando se clip foi realizado,
-    # para que a UI possa avisar o usuário quando os dados são da BBox inteira.
     if df_wfs.empty or aoi_geom is None:
         return df_wfs, False
 
-    # Se já é GeoDataFrame, usa direto; senão tenta reconstruir
+    # Detecta CRS que veio do WFS (salvo pela terrabrasilis_wfs como '_wfs_crs')
+    # Fallback para EPSG:4326 se coluna não existir (compatibilidade com dados antigos)
+    wfs_crs = df_wfs["_wfs_crs"].iloc[0] if "_wfs_crs" in df_wfs.columns else "EPSG:4326"
+
+    # Colunas internas que não devem ir para o DataFrame final
+    _internal_cols = ["_wfs_crs"]
+
+    # Se já é GeoDataFrame, usa direto; senão tenta reconstruir a partir da coluna geometry
     if isinstance(df_wfs, gpd.GeoDataFrame) and geom_col in df_wfs.columns:
         gdf = df_wfs.copy()
     elif geom_col in df_wfs.columns:
@@ -239,21 +245,20 @@ def clip_and_recalculate(
             geoms = df_wfs[geom_col].apply(
                 lambda g: shape(g) if isinstance(g, dict) else g
             )
-            gdf = gpd.GeoDataFrame(df_wfs, geometry=geoms, crs="EPSG:4326")
-        except Exception:
-            # Sem geometria válida — não há como clipar
-            log.warning("clip_and_recalculate: falha ao reconstruir geometria — retornando sem clip")
-            return df_wfs, False
+            gdf = gpd.GeoDataFrame(df_wfs, geometry=geoms, crs=wfs_crs)
+        except Exception as e:
+            log.warning(f"clip_and_recalculate: falha ao reconstruir geometria ({e}) — retornando sem clip")
+            return df_wfs.drop(columns=_internal_cols, errors="ignore"), False
     else:
-        # [MELHORIA CONFIABILIDADE] Coluna geometry ausente — situação comum quando
-        # terrabrasilis_wfs retorna apenas f['properties']. Retorna flag False
-        # para que a UI exiba aviso ao usuário.
         log.warning(
             f"clip_and_recalculate: coluna '{geom_col}' ausente no DataFrame "
             f"— dados representam BBox inteira, não AOI."
         )
-        return df_wfs, False
+        return df_wfs.drop(columns=_internal_cols, errors="ignore"), False
 
+    # Garante EPSG:4326 para o clip (AOI está em 4326)
+    # EPSG:4674 (SIRGAS 2000) e EPSG:4326 (WGS 84) são praticamente idênticos
+    # mas reprojetamos formalmente para evitar warnings do GeoPandas
     if gdf.crs is None:
         gdf = gdf.set_crs("EPSG:4326")
     elif gdf.crs.to_epsg() != 4326:
@@ -266,10 +271,12 @@ def clip_and_recalculate(
         gdf_clipped = gpd.clip(gdf, aoi_gdf)
     except Exception as e:
         log.warning(f"clip falhou: {e} — retornando sem clip")
-        return df_wfs, False
+        return df_wfs.drop(columns=_internal_cols, errors="ignore"), False
 
+    # Remove colunas internas antes de retornar
+    drop_cols = [geom_col] + _internal_cols
     if gdf_clipped.empty:
-        return gdf_clipped.drop(columns=[geom_col], errors="ignore"), True
+        return gdf_clipped.drop(columns=drop_cols, errors="ignore"), True
 
     # Recalcula área no CRS métrico
     gdf_metric = gdf_clipped.to_crs(CRS_AREA)
@@ -280,8 +287,8 @@ def clip_and_recalculate(
     else:  # ha
         gdf_clipped[area_col_out] = area_m2 / 10_000
 
-    # Remove coluna geometry do retorno (DataFrame limpo para exibição)
-    result = pd.DataFrame(gdf_clipped.drop(columns=[geom_col], errors="ignore"))
+    # Remove coluna geometry e colunas internas do retorno (DataFrame limpo para exibição)
+    result = pd.DataFrame(gdf_clipped.drop(columns=drop_cols, errors="ignore"))
     return result, True
 
 
