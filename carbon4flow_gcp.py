@@ -517,7 +517,8 @@ def render_aoi_tab(
     def _base_map(border_color="#FF0000") -> folium.Map:
         m = folium.Map(location=center, zoom_start=zoom_start, tiles=None)
         #folium.TileLayer("Esri.WorldImagery", name="Satélite", control=False).add_to(m)
-        folium.TileLayer("Cartodb dark_matter", name="CartodB dark_matter", control=False).add_to(m)      
+        #folium.TileLayer("Cartodb dark_matter", name="CartodB dark_matter", control=False).add_to(m)      
+        folium.TileLayer("CartoDB.Positron", name="CartoDB.Positron", control=False).add_to(m)      
         if not is_overview:
             b = selected_gdf.total_bounds
             folium.PolyLine(
