@@ -321,18 +321,19 @@ ACTIVITY_COLORS = {
 
 # Dicionário de cores para cada status
 STATUS_COLORS = {
-    'Inactive': 'red',
-    'On Hold - see notification letter': 'yellow',
-    'Registered': '#266b2e',
-    'Registration and verification approval requested': '#3e8947',
-    'Registration requested': '#5bac78',
-    'Rejected by Administrator': 'red',
-    'Under development': '#a5d6c9',
-    'Under validation': '#7ac0a4',
-    'Verification approval requested': '#15431d',
-    'Withdrawn': 'red',
-    'Registration request denied': 'red',
-    'Verification approval request denied': 'red',
+    'Inactive': 'red', #OK
+    'On Hold - see notification letter': 'yellow', #OK
+    'Registered': '#266b2e', #OK
+    'Registration and verification approval requested': '#3e8947', #OK
+    'Registration requested': '#5bac78', #OK
+    'Rejected by Administrator': 'red', #OK
+    'Under development': '#a5d6c9', #OK
+    'Under validation': '#7ac0a4', #OK
+    'Verification approval requested': '#15431d', #OK
+    'Withdrawn': 'red', #OK
+    'Registration request denied': 'red', #?
+    'Verification approval request denied': 'red', #?
+    'Registration and verification approval request denied': 'red', #OK
     'Late to verify': 'red',
     'Unknown':           "#808080"
 }
