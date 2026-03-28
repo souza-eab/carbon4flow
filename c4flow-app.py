@@ -186,7 +186,7 @@ def gfw_radd_alerts(geojson, api_key):
 # retornado, além das properties. O CRS declarado pelo servidor é preservado em
 # '_wfs_crs' para que clip_and_recalculate possa reprojetar corretamente.
 # Confirmado: TerraBrasilis/DETER retorna EPSG:4674 (SIRGAS 2000).
-@st.cache_data(ttl=3600, show_spinner=False)
+@st.cache_data(ttl=300, show_spinner=False)
 def terrabrasilis_wfs(url, type_name, bbox, max_features=50000):
     try:
         r = requests.get(url, params={
@@ -236,7 +236,7 @@ def terrabrasilis_wfs(url, type_name, bbox, max_features=50000):
 # FUNÇÕES MAPBIOMAS
 # =====================================
 
-@st.cache_data(ttl=3600, show_spinner=False)
+@st.cache_data(ttl=300, show_spinner=False)
 def mapbiomas_get_token(email, password):
     mutation = """
     mutation($email: String!, $password: String!) {
