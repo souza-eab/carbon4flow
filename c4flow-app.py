@@ -309,13 +309,34 @@ ACTIVITY_COLORS = {
     'Unknown':     "#808080"
 }
 
+#STATUS_COLORS = {
+#    'Registered':        "#2ecc71",
+#    'Under Validation':  "#f39c12",
+#    'Under Development': "#3498db",
+#    'Inactive':          "#95a5a6",
+#    'Unknown':           "#808080"
+#}
+
+
+
+# Dicionário de cores para cada status
 STATUS_COLORS = {
-    'Registered':        "#2ecc71",
-    'Under Validation':  "#f39c12",
-    'Under Development': "#3498db",
-    'Inactive':          "#95a5a6",
+    'Inactive': 'red',
+    'On Hold - see notification letter': 'yellow',
+    'Registered': '#266b2e',
+    'Registration and verification approval requested': '#3e8947',
+    'Registration requested': '#5bac78',
+    'Rejected by Administrator': 'red',
+    'Under development': '#a5d6c9',
+    'Under validation': '#7ac0a4',
+    'Verification approval requested': '#15431d',
+    'Withdrawn': 'red',
+    'Registration request denied': 'red',
+    'Verification approval request denied': 'red',
+    'Late to verify': 'red',
     'Unknown':           "#808080"
 }
+
 
 # =====================================
 # SIDEBAR
