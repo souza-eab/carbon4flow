@@ -108,7 +108,7 @@ def load_index() -> pd.DataFrame:
 # GEOMETRIA POR PROJETO
 # ═══════════════════════════════════════════════════════════════════════
 
-@st.cache_data(ttl=1800, show_spinner=False)
+@st.cache_data(ttl=300, show_spinner=False)
 def _raw_parquet(blob_path: str) -> Optional[bytes]:
     try:
         return _blob_bytes(blob_path)
@@ -156,7 +156,7 @@ def load_project_geometry(resource_id: str) -> Optional[gpd.GeoDataFrame]:
 # uma só vez e retorna os três derivados juntos.
 # ═══════════════════════════════════════════════════════════════════════
 
-@st.cache_data(ttl=1800, show_spinner=False)
+@st.cache_data(ttl=300, show_spinner=False)
 def _get_aoi_bundle(resource_id: str) -> dict:
     """
     Retorna dict com:
