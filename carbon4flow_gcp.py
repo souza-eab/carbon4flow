@@ -566,7 +566,7 @@ def render_aoi_tab(
         with col_mapa:
             st.markdown("### 🗺️ Mapa GFW")
             c1, c2, c3 = st.columns(3)
-            show_loss = c1.toggle("🔴 Tree Cover Loss", value=True,  key="gcp_loss")
+            show_loss = c1.toggle("🔴 Tree Cover Loss", value=False,  key="gcp_loss")
             show_glad = c2.toggle("🟡 GLAD Alerts",     value=False, key="gcp_glad")
             show_radd = c3.toggle("🟠 RADD Alerts",     value=False, key="gcp_radd")
 
