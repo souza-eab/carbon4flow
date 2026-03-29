@@ -39,14 +39,7 @@ AOI AOI (Área de interesse do projeto):
   - DETER : WFS bbox → clip na AOI → recalcula área em ha  ⚠️ Em desenvolvimento | Implementado
 
  
-  - Versão 0.0.5 - 28/03/2026
-  CHANGELOG v0.0.5:
-  - [PERF] _fetch_and_clip_wfs: nova função cacheada (ttl=900) que une terrabrasilis_wfs +
-           clip_and_recalculate em uma única chamada por (resource_id, fonte).
-           Evita re-execução das queries WFS e do clip geoespacial ao navegar entre abas.
-  - [PERF] render_aoi_tab: tabs PRODES, DETER AMZ e DETER Cerrado agora chamam
-           _fetch_and_clip_wfs em vez de terrabrasilis_wfs + clip_and_recalculate diretamente.
-
+  - Versão 0.0.4 - 25/03/2026
   CHANGELOG v0.0.4:
   - [PERF] cache em carregar_geometrias_gcp (ttl=1800) — evita re-download a cada interação
   - [PERF] _get_aoi_bundle: dissolve único por resource_id, compartilhado entre geojson/bbox/geom
@@ -66,7 +59,6 @@ from streamlit_folium import st_folium
 import plotly.graph_objects as go
 from shapely.geometry import mapping, shape
 from shapely.ops import unary_union, transform
-from shapely import wkb as shapely_wkb
 from google.cloud import storage
 from google.oauth2 import service_account
 
@@ -298,64 +290,6 @@ def clip_and_recalculate(
     # Remove coluna geometry e colunas internas do retorno (DataFrame limpo para exibição)
     result = pd.DataFrame(gdf_clipped.drop(columns=drop_cols, errors="ignore"))
     return result, True
-
-
-# ═══════════════════════════════════════════════════════════════════════
-# [PERF v0.0.5] WFS + CLIP CACHEADOS POR PROJETO E FONTE
-# Antes: terrabrasilis_wfs() e clip_and_recalculate() eram chamados
-# diretamente dentro das tabs. Como o Streamlit re-executa render_aoi_tab()
-# inteiro a cada troca de aba, as queries WFS (~5-20s cada) e o clip
-# geoespacial (~1-3s) rodavam repetidamente sem cache.
-# Agora: _fetch_and_clip_wfs() agrupa as duas operações em uma única
-# função @st.cache_data com chave (resource_id, fonte), garantindo que
-# o resultado é reutilizado em qualquer navegação subsequente entre abas.
-# ═══════════════════════════════════════════════════════════════════════
-
-@st.cache_data(ttl=900, show_spinner=False)
-def _fetch_and_clip_wfs(
-    resource_id: str,
-    fonte: str,                  # chave de cache semântica: "prodes" | "deter_amz" | "deter_cer"
-    wfs_url: str,
-    wfs_typename: str,
-    bbox_str: str,
-    aoi_geom_wkb: Optional[bytes],  # geometria serializada (Shapely não é hashável pelo cache)
-    area_col_out: str,
-    unit: str,
-    terrabrasilis_wfs_fn,
-) -> Tuple[pd.DataFrame, bool]:
-    """
-    Executa terrabrasilis_wfs + clip_and_recalculate em uma única chamada cacheada.
-
-    Parâmetros
-    ----------
-    resource_id     : ID do projeto (usado como chave de cache)
-    fonte           : string descritiva da fonte — apenas para compor a chave de cache
-    wfs_url         : URL base do endpoint WFS
-    wfs_typename    : typeName do layer WFS
-    bbox_str        : BBox 'minx,miny,maxx,maxy'
-    aoi_geom_wkb    : geometria AOI serializada via .wkb (bytes) — None se indisponível
-    area_col_out    : nome da coluna de área recalculada no resultado
-    unit            : "km2" ou "ha"
-    terrabrasilis_wfs_fn : referência à função terrabrasilis_wfs (injetada para evitar
-                           dependência circular de importação)
-
-    Retorna
-    -------
-    (DataFrame resultado, clip_realizado: bool)
-    """
-    df_raw = terrabrasilis_wfs_fn(wfs_url, wfs_typename, bbox_str)
-
-    if df_raw.empty:
-        return df_raw, False
-
-    aoi_geom = shapely_wkb.loads(aoi_geom_wkb) if aoi_geom_wkb is not None else None
-
-    return clip_and_recalculate(
-        df_raw, aoi_geom,
-        geom_col="geometry",
-        area_col_out=area_col_out,
-        unit=unit,
-    )
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -751,34 +685,38 @@ def render_aoi_tab(
 
         if not is_overview and bbox_str:
             st.divider()
-
-            # [PERF v0.0.5] _fetch_and_clip_wfs: query WFS + clip cacheados por (resource_id, fonte)
-            aoi_geom_wkb = shapely_wkb.dumps(aoi_geom) if aoi_geom is not None else None
             with st.spinner("Consultando TerraBrasilis WFS (PRODES AMZ)..."):
-                df_prodes, clip_ok_prodes = _fetch_and_clip_wfs(
-                    resource_id     = selected_rid,
-                    fonte           = "prodes",
-                    wfs_url         = "https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/yearly_deforestation/ows",
-                    wfs_typename    = "prodes-legal-amz:yearly_deforestation",
-                    bbox_str        = bbox_str,
-                    aoi_geom_wkb    = aoi_geom_wkb,
-                    area_col_out    = "area_km2_aoi",
-                    unit            = "km2",
-                    terrabrasilis_wfs_fn = terrabrasilis_wfs,
+                df_prodes_raw = terrabrasilis_wfs(
+                    "https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/yearly_deforestation/ows",
+                    "prodes-legal-amz:yearly_deforestation",
+                    bbox_str,
                 )
 
-            # Aviso quando clip não ocorreu
-            if not clip_ok_prodes and not df_prodes.empty:
-                st.warning(
-                    "⚠️ **Clip não realizado:** o WFS retornou dados sem coluna de geometria. "
-                    "Os valores de área exibidos são da **BBox inteira**, não da AOI do projeto."
-                )
-            elif clip_ok_prodes and not df_prodes.empty:
-                st.caption(
-                    f"📐 **{len(df_prodes)} polígonos dentro da AOI** após clip."
-                )
-            elif df_prodes.empty and not clip_ok_prodes:
-                st.warning("⚠️ AOI indisponível — área exibida refere-se à BBox inteira.")
+            # ── Clip AOI + recálculo de área ──────────────────────────
+            if not df_prodes_raw.empty and aoi_geom is not None:
+                with st.spinner("✂️ Aplicando clip na AOI (PRODES)..."):
+                    df_prodes, clip_ok_prodes = clip_and_recalculate(
+                        df_prodes_raw, aoi_geom,
+                        geom_col="geometry",
+                        area_col_out="area_km2_aoi",
+                        unit="km2",
+                    )
+                # [MELHORIA CONFIABILIDADE] Aviso explícito quando clip não ocorreu
+                if not clip_ok_prodes:
+                    st.warning(
+                        "⚠️ **Clip não realizado:** o WFS retornou dados sem coluna de geometria. "
+                        "Os valores de área exibidos são da **BBox inteira**, não da AOI do projeto."
+                    )
+                elif not df_prodes.empty:
+                    st.caption(
+                        f"📐 {len(df_prodes_raw)} polígonos na BBox → "
+                        f"**{len(df_prodes)} polígonos dentro da AOI** após clip."
+                    )
+            else:
+                df_prodes = df_prodes_raw
+                clip_ok_prodes = False
+                if not df_prodes_raw.empty:
+                    st.warning("⚠️ AOI indisponível — área exibida refere-se à BBox inteira.")
 
             col_g1, col_g2, col_g3 = st.columns(3)
 
@@ -856,33 +794,37 @@ def render_aoi_tab(
 
         if not is_overview and bbox_str:
             st.divider()
-
-            # [PERF v0.0.5] _fetch_and_clip_wfs: query WFS + clip cacheados por (resource_id, fonte)
-            aoi_geom_wkb = shapely_wkb.dumps(aoi_geom) if aoi_geom is not None else None
             with st.spinner("Consultando TerraBrasilis WFS (DETER AMZ)..."):
-                df_deter, clip_ok_deter = _fetch_and_clip_wfs(
-                    resource_id     = selected_rid,
-                    fonte           = "deter_amz",
-                    wfs_url         = "https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/deter_amz/ows",
-                    wfs_typename    = "deter-amz:deter_amz",
-                    bbox_str        = bbox_str,
-                    aoi_geom_wkb    = aoi_geom_wkb,
-                    area_col_out    = "area_ha_aoi",
-                    unit            = "ha",
-                    terrabrasilis_wfs_fn = terrabrasilis_wfs,
+                df_deter_raw = terrabrasilis_wfs(
+                    "https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/deter_amz/ows",
+                    "deter-amz:deter_amz", bbox_str,
                 )
 
-            if not clip_ok_deter and not df_deter.empty:
-                st.warning(
-                    "⚠️ **Clip não realizado:** o WFS retornou dados sem coluna de geometria. "
-                    "Os valores de área exibidos são da **BBox inteira**, não da AOI do projeto."
-                )
-            elif clip_ok_deter and not df_deter.empty:
-                st.caption(
-                    f"📐 **{len(df_deter)} alertas dentro da AOI** após clip."
-                )
-            elif df_deter.empty and not clip_ok_deter:
-                st.warning("⚠️ AOI indisponível — área exibida refere-se à BBox inteira.")
+            # ── Clip AOI + recálculo de área ──────────────────────────
+            if not df_deter_raw.empty and aoi_geom is not None:
+                with st.spinner("✂️ Aplicando clip na AOI (DETER AMZ)..."):
+                    df_deter, clip_ok_deter = clip_and_recalculate(
+                        df_deter_raw, aoi_geom,
+                        geom_col="geometry",
+                        area_col_out="area_ha_aoi",
+                        unit="ha",
+                    )
+                # [MELHORIA CONFIABILIDADE] Aviso explícito quando clip não ocorreu
+                if not clip_ok_deter:
+                    st.warning(
+                        "⚠️ **Clip não realizado:** o WFS retornou dados sem coluna de geometria. "
+                        "Os valores de área exibidos são da **BBox inteira**, não da AOI do projeto."
+                    )
+                elif not df_deter.empty:
+                    st.caption(
+                        f"📐 {len(df_deter_raw)} alertas na BBox → "
+                        f"**{len(df_deter)} alertas dentro da AOI** após clip."
+                    )
+            else:
+                df_deter = df_deter_raw
+                clip_ok_deter = False
+                if not df_deter_raw.empty:
+                    st.warning("⚠️ AOI indisponível — área exibida refere-se à BBox inteira.")
 
             if df_deter.empty:
                 st.warning("Sem alertas DETER para esta AOI.")
@@ -982,33 +924,37 @@ def render_aoi_tab(
 
         if not is_overview and bbox_str:
             st.divider()
-
-            # [PERF v0.0.5] _fetch_and_clip_wfs: query WFS + clip cacheados por (resource_id, fonte)
-            aoi_geom_wkb = shapely_wkb.dumps(aoi_geom) if aoi_geom is not None else None
             with st.spinner("Consultando TerraBrasilis WFS (DETER Cerrado)..."):
-                df_cer, clip_ok_cer = _fetch_and_clip_wfs(
-                    resource_id     = selected_rid,
-                    fonte           = "deter_cer",
-                    wfs_url         = "https://terrabrasilis.dpi.inpe.br/geoserver/deter-cerrado-nb/deter_cerrado/ows",
-                    wfs_typename    = "deter-cerrado-nb:deter_cerrado",
-                    bbox_str        = bbox_str,
-                    aoi_geom_wkb    = aoi_geom_wkb,
-                    area_col_out    = "area_ha_aoi",
-                    unit            = "ha",
-                    terrabrasilis_wfs_fn = terrabrasilis_wfs,
+                df_cer_raw = terrabrasilis_wfs(
+                    "https://terrabrasilis.dpi.inpe.br/geoserver/deter-cerrado-nb/deter_cerrado/ows",
+                    "deter-cerrado-nb:deter_cerrado", bbox_str,
                 )
 
-            if not clip_ok_cer and not df_cer.empty:
-                st.warning(
-                    "⚠️ **Clip não realizado:** o WFS retornou dados sem coluna de geometria. "
-                    "Os valores de área exibidos são da **BBox inteira**, não da AOI do projeto."
-                )
-            elif clip_ok_cer and not df_cer.empty:
-                st.caption(
-                    f"📐 **{len(df_cer)} alertas dentro da AOI** após clip."
-                )
-            elif df_cer.empty and not clip_ok_cer:
-                st.warning("⚠️ AOI indisponível — área exibida refere-se à BBox inteira.")
+            # ── Clip AOI + recálculo de área ──────────────────────────
+            if not df_cer_raw.empty and aoi_geom is not None:
+                with st.spinner("✂️ Aplicando clip na AOI (DETER Cerrado)..."):
+                    df_cer, clip_ok_cer = clip_and_recalculate(
+                        df_cer_raw, aoi_geom,
+                        geom_col="geometry",
+                        area_col_out="area_ha_aoi",
+                        unit="ha",
+                    )
+                # [MELHORIA CONFIABILIDADE] Aviso explícito quando clip não ocorreu
+                if not clip_ok_cer:
+                    st.warning(
+                        "⚠️ **Clip não realizado:** o WFS retornou dados sem coluna de geometria. "
+                        "Os valores de área exibidos são da **BBox inteira**, não da AOI do projeto."
+                    )
+                elif not df_cer.empty:
+                    st.caption(
+                        f"📐 {len(df_cer_raw)} alertas na BBox → "
+                        f"**{len(df_cer)} alertas dentro da AOI** após clip."
+                    )
+            else:
+                df_cer = df_cer_raw
+                clip_ok_cer = False
+                if not df_cer_raw.empty:
+                    st.warning("⚠️ AOI indisponível — área exibida refere-se à BBox inteira.")
 
             if df_cer.empty:
                 st.warning("Sem alertas DETER Cerrado para esta AOI.")
