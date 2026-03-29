@@ -843,7 +843,7 @@ with tabs[3]:
                     cols_flow = [
                         'issuanceDate', 'tbl_type', 'resourceName_y', 'quantity',
                         'retiredCancelled', 'additionalCertifications',
-                        'retirementBeneficiary', 'retirementReason', 'retirementDetails', 'Vintage'
+                        'retirementBeneficiary', 'retirementReason', 'retirementDetails', 'Vintage', 'serialNumbers'
                     ]
                     cols_flow_exist   = [c for c in cols_flow if c in df_flow.columns]
                     df_flow_display   = df_flow[cols_flow_exist]
