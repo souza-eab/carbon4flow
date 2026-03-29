@@ -785,7 +785,7 @@ def render_aoi_tab(
                 st.caption("✅ DETER: clip na AOI  e área recalculada em ha" if aoi_geom else "⚠️ AOI indisponível")
                 st.markdown(
                     "<small><b>Legenda:</b><br>"
-                    "🔴 Cicatriz queimada &nbsp;⬜ Corte seletivo<br>"
+                    "🔴 Cicatriz queimada &nbsp;🔘 Corte seletivo<br>"
                     "🟣 CS desordenado &nbsp;🟠 CS geométrico<br>"
                     "🟡 Degradação &nbsp;🟤 Desmatamento CR<br>"
                     "🟢 Desmatamento veg &nbsp;🔵 Mineração</small>",
