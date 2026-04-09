@@ -12,6 +12,127 @@ import numpy as np
 from scipy import stats
 from carbon4flow_gcp import render_aoi_tab
 
+
+# =====================================
+# CONFIGURAÇÃO QUEM SÃO OS USUÁRIOS 
+# =====================================
+
+import re
+import streamlit as st
+from datetime import datetime, timezone, timedelta
+from c4flow_audit import init_session, log_event
+ 
+# ── Constantes ────────────────────────────────────────────────
+_TIMEOUT_MINUTOS = 30
+_EMAIL_REGEX     = re.compile(r"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$")
+ 
+# ── Validação de email ─────────────────────────────────────────
+def _email_valido(email: str) -> bool:
+    """Validação simples via regex — sem lib externa."""
+    return bool(_EMAIL_REGEX.match(email.strip()))
+ 
+ 
+# ── Tela de consentimento e entrada ───────────────────────────
+def _render_gate():
+    """
+    Renderiza a tela de barreira de entrada.
+    Bloqueia o restante do app via st.stop().
+    """
+    # Centraliza o formulário com colunas
+    _, col, _ = st.columns([1, 2, 1])
+ 
+    with col:
+        st.image("https://em-content.zobj.net/source/twitter/376/globe-showing-americas_1f30e.png", width=64)
+        st.title("Carbon4Flow")
+        st.markdown("#### Acesso à plataforma")
+        st.divider()
+ 
+        st.markdown(
+            "Para acessar o Carbon4Flow, informe seu email institucional. "
+            "Seus dados são tratados conforme a **LGPD** — nenhuma informação "
+            "pessoal é armazenada em texto claro."
+        )
+ 
+        # Campo de email
+        email_input = st.text_input(
+            "Email",
+            placeholder="seu@email.com",
+            label_visibility="collapsed",
+        )
+ 
+        # Checkbox de consentimento — LGPD art. 7 e 8
+        consentiu = st.checkbox(
+            "Li e concordo com o uso dos meus dados de acesso "
+            "para fins de auditoria e segurança, conforme a LGPD. "
+            "Posso solicitar a exclusão dos meus dados a qualquer momento.",
+            value=False,
+        )
+ 
+        st.divider()
+ 
+        # Botão de entrada
+        if st.button("Acessar →", use_container_width=True, type="primary"):
+            if not email_input.strip():
+                st.error("Informe seu email para continuar.")
+            elif not _email_valido(email_input.strip()):
+                st.error("Email inválido. Verifique e tente novamente.")
+            elif not consentiu:
+                st.warning("É necessário aceitar os termos para continuar.")
+            else:
+                # Tudo válido — inicializa sessão e loga evento 'login'
+                init_session(email_input.strip())
+                st.rerun()
+ 
+        st.caption("🔒 Seus dados são anonimizados via hash irreversível antes de qualquer registro.")
+ 
+    # Bloqueia execução do restante do app
+    st.stop()
+ 
+ 
+# ── Verificação de timeout ─────────────────────────────────────
+def _check_timeout():
+    """
+    Verifica se a sessão expirou por inatividade (30 min).
+    Atualiza o timestamp a cada interação do usuário.
+    Se expirou: loga 'timeout', limpa session_state e para.
+    """
+    ultimo = st.session_state.get("last_heartbeat")
+    if ultimo is None:
+        return
+ 
+    agora    = datetime.now(timezone.utc)
+    inativo  = (agora - ultimo).total_seconds() / 60
+ 
+    if inativo >= _TIMEOUT_MINUTOS:
+        log_event("timeout")
+        # Limpa sessão — mantém apenas chaves internas do Streamlit
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        st.warning("⏱️ Sua sessão expirou por inatividade. Faça o acesso novamente.")
+        st.stop()
+ 
+    # Atualiza timestamp a cada interação (rerun do Streamlit)
+    st.session_state["last_heartbeat"] = agora
+ 
+ 
+# ── Ponto de entrada principal ────────────────────────────────
+def _check_session():
+    """
+    Função principal da barreira. Deve ser chamada uma única vez,
+    logo após os imports e antes de st.set_page_config.
+ 
+    Fluxo:
+      - Sessão não iniciada   → exibe barreira (_render_gate)
+      - Sessão expirada       → loga timeout, limpa e para
+      - Sessão ativa          → atualiza last_heartbeat e continua
+    """
+    autenticado = st.session_state.get("autenticado", False)
+ 
+    if not autenticado:
+        _render_gate()   # contém st.stop() — nada abaixo executa
+    else:
+        _check_timeout() # verifica inatividade a cada interação
+ 
 # =====================================
 # CONFIGURAÇÃO DA PÁGINA
 # =====================================
