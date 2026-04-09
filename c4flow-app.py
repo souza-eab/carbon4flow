@@ -15,7 +15,7 @@ import json
 import logging
 from datetime import datetime, timezone, timedelta
 import streamlit as st
-from streamlit_autorefresh import st_autorefres
+#from streamlit_autorefresh import st_autorefres
 from google.cloud import storage
 from google.oauth2 import service_account
  
