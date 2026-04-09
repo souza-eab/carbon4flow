@@ -11,6 +11,13 @@ from streamlit_folium import st_folium
 import numpy as np
 from scipy import stats
 from carbon4flow_gcp import render_aoi_tab
+import json
+import logging
+from datetime import datetime, timezone, timedelta
+import streamlit as st
+from google.cloud import storage
+from google.oauth2 import service_account
+ 
 
 
 # =====================================
@@ -134,6 +141,148 @@ def _check_session():
         _check_timeout() # verifica inatividade a cada interação
 
 _check_session()
+
+
+
+log = logging.getLogger(__name__)
+ 
+# ── Constantes ────────────────────────────────────────────────
+_BUCKET          = "edriano-verra-projects"
+_PREFIX          = "rate_limit/"
+_MAX_TENTATIVAS  = 5
+_JANELA_MINUTOS  = 10
+ 
+ 
+# ── Cliente GCS — reutiliza credenciais existentes ────────────
+@st.cache_resource(show_spinner=False)
+def _gcs_client() -> storage.Client:
+    """
+    Reutiliza o mesmo service account do carbon4flow_gcp.py.
+    cache_resource garante instância única por worker.
+    """
+    info  = dict(st.secrets["gcp_service_account"])
+    creds = service_account.Credentials.from_service_account_info(
+        info, scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    )
+    return storage.Client(credentials=creds, project=creds.project_id)
+ 
+ 
+# ── Hash do IP — reutiliza salt do audit ──────────────────────
+def _hash_ip(ip: str) -> str:
+    """
+    HMAC-SHA256(ip, salt) — mesmo salt do c4flow_audit.py.
+    Garante que o mesmo IP gera o mesmo hash nos dois módulos.
+    """
+    import hmac, hashlib
+    salt = st.secrets["audit"]["salt"].encode("utf-8")
+    return hmac.new(salt, ip.encode("utf-8"), hashlib.sha256).hexdigest()
+ 
+ 
+def _get_ip() -> str:
+    """Captura IP real do usuário (mesmo padrão do c4flow_audit.py)."""
+    try:
+        headers   = st.context.headers
+        forwarded = headers.get("X-Forwarded-For", "")
+        if forwarded:
+            return forwarded.split(",")[0].strip()
+        return headers.get("Remote-Addr", "unknown")
+    except Exception:
+        return "unknown"
+ 
+ 
+# ── GCS helpers ───────────────────────────────────────────────
+def _blob_path(hash_ip: str) -> str:
+    return f"{_PREFIX}{hash_ip}.json"
+ 
+ 
+def _ler_estado(hash_ip: str) -> list:
+    """
+    Lê o arquivo JSON do IP no GCS.
+    Retorna lista de timestamps ISO das tentativas recentes.
+    Retorna [] se arquivo não existe ou erro.
+    """
+    try:
+        blob  = _gcs_client().bucket(_BUCKET).blob(_blob_path(hash_ip))
+        dados = json.loads(blob.download_as_text())
+        return dados.get("tentativas", [])
+    except Exception:
+        return []
+ 
+ 
+def _salvar_estado(hash_ip: str, tentativas: list) -> None:
+    """Persiste a lista de timestamps no GCS."""
+    try:
+        blob = _gcs_client().bucket(_BUCKET).blob(_blob_path(hash_ip))
+        blob.upload_from_string(
+            json.dumps({"tentativas": tentativas}),
+            content_type="application/json",
+        )
+    except Exception as e:
+        log.error(f"[rate_limit] Falha ao salvar estado: {e}")
+ 
+ 
+def _deletar_estado(hash_ip: str) -> None:
+    """Remove o arquivo do IP após login bem-sucedido."""
+    try:
+        blob = _gcs_client().bucket(_BUCKET).blob(_blob_path(hash_ip))
+        blob.delete()
+    except Exception:
+        pass  # arquivo pode não existir — sem problema
+ 
+ 
+# ── Lógica principal ──────────────────────────────────────────
+def check_rate_limit() -> None:
+    """
+    Verifica se o IP atual excedeu o limite de tentativas.
+ 
+    Fluxo:
+      1. Captura e hasha o IP
+      2. Lê tentativas recentes do GCS
+      3. Descarta timestamps fora da janela de 10 minutos
+      4. Se >= 5 tentativas na janela → bloqueia com st.stop()
+      5. Registra nova tentativa e salva no GCS
+ 
+    Deve ser chamada no início de _render_gate(), antes de
+    renderizar qualquer elemento do formulário.
+    """
+    ip      = _get_ip()
+    hip     = _hash_ip(ip)
+    agora   = datetime.now(timezone.utc)
+    janela  = agora - timedelta(minutes=_JANELA_MINUTOS)
+ 
+    # Carrega tentativas e filtra as que ainda estão na janela
+    tentativas = _ler_estado(hip)
+    tentativas = [
+        t for t in tentativas
+        if datetime.fromisoformat(t) > janela
+    ]
+ 
+    if len(tentativas) >= _MAX_TENTATIVAS:
+        # Calcula quanto tempo falta para liberar
+        mais_antiga  = datetime.fromisoformat(tentativas[0])
+        libera_em    = mais_antiga + timedelta(minutes=_JANELA_MINUTOS)
+        espera_min   = max(1, int((libera_em - agora).total_seconds() / 60))
+ 
+        st.error(
+            f"🚫 Muitas tentativas de acesso deste endereço. "
+            f"Tente novamente em **{espera_min} minuto(s)**."
+        )
+        st.stop()
+ 
+    # Registra esta tentativa e persiste
+    tentativas.append(agora.isoformat())
+    _salvar_estado(hip, tentativas)
+ 
+ 
+def release_rate_limit() -> None:
+    """
+    Remove o registro de tentativas do IP após login bem-sucedido.
+    Deve ser chamada logo antes do st.rerun() em _render_gate().
+    """
+    ip  = _get_ip()
+    hip = _hash_ip(ip)
+    _deletar_estado(hip)
+
 
 # =====================================
 # CONFIGURAÇÃO DA PÁGINA
