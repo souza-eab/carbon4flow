@@ -15,4 +15,4 @@ pyarrow>=15.0.0
 altair>=5
 requests
 google-cloud-bigquery
-streamlit-autorefresh
+streamlit-autorefresh>=1.0.1
