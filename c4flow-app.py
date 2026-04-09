@@ -15,6 +15,7 @@ import json
 import logging
 from datetime import datetime, timezone, timedelta
 import streamlit as st
+from streamlit_autorefresh import st_autorefres
 from google.cloud import storage
 from google.oauth2 import service_account
  
@@ -143,6 +144,9 @@ def _check_session():
 _check_session()
 
 
+# =====================================
+# CONFIGURAÇÃO RATE LIMIT
+# =====================================
 
 log = logging.getLogger(__name__)
  
@@ -282,6 +286,105 @@ def release_rate_limit() -> None:
     ip  = _get_ip()
     hip = _hash_ip(ip)
     _deletar_estado(hip)
+
+
+
+# =====================================
+# CONFIGURAÇÃO RATE LIMIT
+# =====================================
+
+from c4flow_audit import log_event
+ 
+log = logging.getLogger(__name__)
+ 
+# ── Constantes ────────────────────────────────────────────────
+_HEARTBEAT_MINUTOS  = 10
+_HEARTBEAT_MS       = _HEARTBEAT_MINUTOS * 60 * 1000  # st_autorefresh usa ms
+ 
+ 
+# ── Heartbeat ─────────────────────────────────────────────────
+def _maybe_heartbeat() -> None:
+    """
+    Verifica se já passou o intervalo desde o último heartbeat.
+    Se sim, loga evento 'heartbeat' no BigQuery.
+ 
+    Chamada a cada rerun — só insere quando o intervalo foi atingido,
+    evitando inserções duplicadas a cada interação do usuário.
+    """
+    ultimo = st.session_state.get("last_heartbeat")
+    if ultimo is None:
+        return
+ 
+    agora    = datetime.now(timezone.utc)
+    decorrido = (agora - ultimo).total_seconds() / 60
+ 
+    if decorrido >= _HEARTBEAT_MINUTOS:
+        log_event("heartbeat")
+        st.session_state["last_heartbeat"] = agora
+        log.info(f"[heartbeat] sessão {st.session_state.get('session_id', '?')[:8]}... — {decorrido:.1f} min ativos")
+ 
+ 
+# ── Logout explícito ──────────────────────────────────────────
+def _render_logout_button() -> None:
+    """
+    Botão de logout discreto na sidebar.
+    Loga evento 'logout' com duração total da sessão e limpa o estado.
+    """
+    st.sidebar.divider()
+    if st.sidebar.button("🚪 Encerrar sessão", use_container_width=True):
+        log_event("logout")
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        st.rerun()
+ 
+ 
+# ── Exibição de info de sessão na sidebar (opcional) ──────────
+def _render_session_info() -> None:
+    """
+    Exibe tempo de sessão ativo na sidebar.
+    Discreto — apenas para o usuário saber que está autenticado.
+    """
+    start = st.session_state.get("session_start")
+    if start is None:
+        return
+ 
+    agora    = datetime.now(timezone.utc)
+    duracao  = agora - start
+    minutos  = int(duracao.total_seconds() / 60)
+    horas    = minutos // 60
+    mins     = minutos % 60
+ 
+    if horas > 0:
+        label = f"{horas}h {mins}min"
+    else:
+        label = f"{mins} min"
+ 
+    st.sidebar.caption(f"🟢 Sessão ativa há {label}")
+ 
+ 
+# ── Ponto de entrada principal ────────────────────────────────
+def render_heartbeat() -> None:
+    """
+    Função principal do módulo. Deve ser chamada uma vez,
+    após st.set_page_config e _check_session().
+ 
+    Responsabilidades:
+      1. Registra autorefresh a cada 10 minutos
+      2. Verifica e dispara heartbeat se intervalo atingido
+      3. Renderiza info de sessão e botão de logout na sidebar
+    """
+    # Autorefresh silencioso — dispara rerun a cada 10 min
+    # limit=0 → sem limite de refreshes
+    # key única por sessão evita conflito com outros st_autorefresh no app
+    st_autorefresh(
+        interval=_HEARTBEAT_MS,
+        limit=None,
+        key="heartbeat_autorefresh",
+    )
+ 
+    _maybe_heartbeat()
+    _render_session_info()
+    _render_logout_button()
 
 
 # =====================================
