@@ -132,7 +132,9 @@ def _check_session():
         _render_gate()   # contém st.stop() — nada abaixo executa
     else:
         _check_timeout() # verifica inatividade a cada interação
- 
+
+_check_session()
+
 # =====================================
 # CONFIGURAÇÃO DA PÁGINA
 # =====================================
