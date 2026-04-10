@@ -813,7 +813,8 @@ tabs = st.tabs([
     "💰 [POI] Projetos com lastro de créditos",
     "📈 Análises Safras/Vintage",
     "📖 Storytelling",
-    "📁 Dados Brutos"
+    "📁 Dados Brutos",
+    "🔒 Privacidade"
 ])
 
 # =====================================
@@ -1614,3 +1615,142 @@ with tabs[5]:
             for j, col in enumerate(cols):
                 if i + j < len(cols_list):
                     col.text(f"• {cols_list[i + j]}")
+
+
+# =====================================
+# ABA 7: Privacidade
+# =====================================
+
+import streamlit as st
+from c4flow_audit import delete_user_data, _hmac_hash
+ 
+# ── Constantes ────────────────────────────────────────────────
+_CONTATO_RESPONSAVEL = "edriano.souza@ipam.org.br"
+_RETENCAO_DIAS       = 90
+ 
+ 
+# ── Seção: o que coletamos ────────────────────────────────────
+def _render_info() -> None:
+    st.markdown("## 🔒 Privacidade e Proteção de Dados")
+    st.markdown(
+        "O Carbon4Flow registra dados mínimos de acesso para fins de "
+        "auditoria e segurança, em conformidade com a **Lei Geral de "
+        "Proteção de Dados (LGPD — Lei nº 13.709/2018)**."
+    )
+ 
+    st.divider()
+    st.markdown("### 📋 O que é coletado")
+ 
+    col1, col2 = st.columns(2)
+ 
+    with col1:
+        st.markdown("""
+        | Dado | Formato armazenado |
+        |---|---|
+        | Email | Hash irreversível (HMAC-SHA256) |
+        | Endereço IP | Hash irreversível (HMAC-SHA256) |
+        | ID da sessão | UUID anônimo |
+        | Evento de acesso | login / heartbeat / logout / timeout |
+        | Duração da sessão | Em segundos |
+        | Navegador | User-Agent bruto |
+        | Versão do app | Ex: 0.0.4 |
+        """)
+ 
+    with col2:
+        st.info(
+            f"📅 **Retenção:** {_RETENCAO_DIAS} dias\n\n"
+            "🔐 **Armazenamento:** Google BigQuery (projeto ee-souza)\n\n"
+            "🚫 **Nunca armazenamos:** email, IP ou nome em texto claro\n\n"
+            f"📩 **Responsável:** {_CONTATO_RESPONSAVEL}"
+        )
+ 
+    st.divider()
+    st.markdown("### ⚖️ Seus direitos (Art. 18 LGPD)")
+    st.markdown("""
+    - **Acesso:** saber quais dados seus estão registrados
+    - **Exclusão:** solicitar a remoção de todos os seus registros
+    - **Revogação:** retirar o consentimento a qualquer momento
+    - **Portabilidade:** solicitar seus dados em formato estruturado
+ 
+    Para exercer qualquer um desses direitos, entre em contato:
+    """
+    )
+    st.markdown(f"📩 **{_CONTATO_RESPONSAVEL}**")
+ 
+ 
+# ── Seção: exclusão de dados ──────────────────────────────────
+def _render_exclusao() -> None:
+    st.divider()
+    st.markdown("### 🗑️ Solicitar exclusão dos meus dados")
+ 
+    st.warning(
+        "⚠️ Esta ação é **irreversível**. Todos os registros de acesso "
+        "associados ao seu email serão permanentemente removidos do BigQuery."
+    )
+ 
+    # Verifica se há sessão ativa para comparação
+    hash_sessao = st.session_state.get("hash_email")
+    if not hash_sessao:
+        st.error("Sessão não identificada. Faça o acesso novamente para solicitar exclusão.")
+        return
+ 
+    email_input = st.text_input(
+        "Confirme seu email para prosseguir",
+        placeholder="seu@email.com",
+        key="privacy_email_input",
+    )
+ 
+    confirmou = st.checkbox(
+        "Confirmo que desejo excluir permanentemente todos os meus dados de acesso.",
+        key="privacy_confirm_checkbox",
+    )
+ 
+    if st.button("🗑️ Excluir meus dados", type="primary", key="privacy_delete_btn"):
+        if not email_input.strip():
+            st.error("Informe seu email para continuar.")
+            return
+ 
+        # Compara hash do email digitado com hash da sessão atual
+        # O email em texto claro nunca é usado além desta comparação
+        hash_digitado = _hmac_hash(email_input.strip())
+ 
+        if hash_digitado != hash_sessao:
+            st.error(
+                "O email informado não corresponde ao email desta sessão. "
+                "Você só pode excluir os seus próprios dados."
+            )
+            return
+ 
+        if not confirmou:
+            st.warning("Marque a caixa de confirmação para prosseguir.")
+            return
+ 
+        # Tudo validado — executa exclusão
+        with st.spinner("Removendo seus dados..."):
+            sucesso, linhas = delete_user_data(email_input.strip())
+ 
+        if sucesso:
+            st.success(
+                f"✅ {linhas} registro(s) removido(s) com sucesso. "
+                "Seus dados de acesso foram permanentemente excluídos."
+            )
+            # Encerra sessão após exclusão — consistência de estado
+            st.info("Sua sessão será encerrada. Você pode acessar novamente a qualquer momento.")
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
+        else:
+            st.error(
+                "Ocorreu um erro ao processar a exclusão. "
+                f"Entre em contato com {_CONTATO_RESPONSAVEL}."
+            )
+ 
+ 
+# ── Ponto de entrada principal ────────────────────────────────
+def render_privacy_tab() -> None:
+    """
+    Renderiza a aba completa de privacidade.
+    Deve ser chamada dentro do bloco with tabs[6].
+    """
+    _render_info()
+    _render_exclusao()
