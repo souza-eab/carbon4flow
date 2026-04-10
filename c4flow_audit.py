@@ -5,16 +5,18 @@ Módulo de auditoria de acesso do Carbon4Flow.
 
 Responsabilidades:
   - Anonimizar email e IP via HMAC-SHA256 com salt (st.secrets)
+  - Criptografar email em texto claro via Fernet AES-256 (st.secrets)
   - Gerar session_id único por sessão
   - Inserir eventos na tabela BigQuery access_events
   - Expor funções simples para o app: init_session, log_event
 
 Tabela destino:
-  ee-souza.carbon4flow_audit.access_events
+  ee-souza759.carbon4flow_audit.access_events
 
 Secrets necessários em .streamlit/secrets.toml:
   [audit]
-  salt = "string-secreta-longa-e-aleatoria"
+  salt        = "string-secreta-longa-e-aleatoria"
+  encrypt_key = "chave-fernet-gerada-com-Fernet.generate_key()"
 
 Eventos possíveis:
   'login'      → disparado na barreira de entrada após consentimento
@@ -25,8 +27,13 @@ Eventos possíveis:
 Notas LGPD:
   - Email e IP nunca são armazenados em texto claro
   - HMAC-SHA256 com salt torna os hashes irreversíveis sem o salt
-  - Salt armazenado apenas em st.secrets, nunca no repositório
+  - email_enc é criptografado com Fernet — só decifrável com encrypt_key
+  - encrypt_key armazenada apenas em st.secrets, nunca no repositório
   - Retenção automática de 90 dias via partition_expiration_days no BigQuery
+
+CHANGELOG:
+  - Adicionado campo email_enc (Fernet AES-256) para identificação admin
+  - project ID corrigido para ee-souza759
 """
 
 import hmac
@@ -37,6 +44,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 import streamlit as st
+from cryptography.fernet import Fernet
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
@@ -44,8 +52,8 @@ from google.oauth2 import service_account
 # Configuração
 # ─────────────────────────────────────────────
 
-_PROJECT    = "ee-souza759"
-_TABLE      = f"{_PROJECT}.carbon4flow_audit.access_events"
+_PROJECT     = "ee-souza759"
+_TABLE       = f"{_PROJECT}.carbon4flow_audit.access_events"
 _APP_VERSION = "0.0.4"  # atualizar a cada deploy
 
 log = logging.getLogger(__name__)
@@ -73,7 +81,7 @@ def _bq_client() -> bigquery.Client:
 
 
 # ─────────────────────────────────────────────
-# Anonimização
+# Anonimização — HMAC-SHA256
 # ─────────────────────────────────────────────
 
 def _hmac_hash(value: str) -> str:
@@ -90,6 +98,53 @@ def _hmac_hash(value: str) -> str:
     return hmac.new(salt, value.encode("utf-8"), hashlib.sha256).hexdigest()
 
 
+def hmac_hash(value: str) -> str:
+    """Versão pública do hash para uso externo (ex: aba de privacidade)."""
+    return _hmac_hash(value)
+
+
+# ─────────────────────────────────────────────
+# Criptografia — Fernet AES-256
+# ─────────────────────────────────────────────
+
+@st.cache_resource(show_spinner=False)
+def _fernet() -> Fernet:
+    """
+    Instância Fernet usando encrypt_key dos secrets.
+    cache_resource garante instância única por worker.
+    """
+    key = st.secrets["audit"]["encrypt_key"].encode("utf-8")
+    return Fernet(key)
+
+
+def _encrypt_email(email: str) -> str:
+    """
+    Criptografa o email com Fernet AES-256.
+    Retorna string base64 — armazenável como STRING no BigQuery.
+    Só decifrável com a encrypt_key correta.
+    """
+    return _fernet().encrypt(email.encode("utf-8")).decode("utf-8")
+
+
+def decrypt_email(token: str) -> str:
+    """
+    Decifra um email_enc da tabela BigQuery.
+
+    USO LOCAL — rode no script decrypt_emails.py, nunca no app em produção.
+
+    Parâmetro:
+      token : valor do campo email_enc vindo do BigQuery
+
+    Retorna o email em texto claro.
+    Levanta InvalidToken se a chave estiver errada ou o token corrompido.
+    """
+    return _fernet().decrypt(token.encode("utf-8")).decode("utf-8")
+
+
+# ─────────────────────────────────────────────
+# Captura de contexto
+# ─────────────────────────────────────────────
+
 def _get_ip() -> str:
     """
     Tenta capturar o IP real do usuário.
@@ -97,11 +152,9 @@ def _get_ip() -> str:
     Retorna 'unknown' se não conseguir — nunca quebra o fluxo.
     """
     try:
-        headers = st.context.headers
+        headers   = st.context.headers
         forwarded = headers.get("X-Forwarded-For", "")
         if forwarded:
-            # X-Forwarded-For pode ter lista "client, proxy1, proxy2"
-            # o primeiro item é o IP real do cliente
             return forwarded.split(",")[0].strip()
         return headers.get("Remote-Addr", "unknown")
     except Exception:
@@ -126,6 +179,7 @@ def init_session(email: str) -> str:
 
     - Gera session_id único (UUID v4)
     - Armazena hash do email (nunca o email em texto claro)
+    - Criptografa email para gravação no BigQuery
     - Registra timestamp de início
     - Dispara evento 'login' no BigQuery
 
@@ -136,11 +190,12 @@ def init_session(email: str) -> str:
     """
     session_id = str(uuid.uuid4())
 
-    st.session_state["session_id"]    = session_id
-    st.session_state["hash_email"]    = _hmac_hash(email)
-    st.session_state["session_start"] = datetime.now(timezone.utc)
+    st.session_state["session_id"]     = session_id
+    st.session_state["hash_email"]     = _hmac_hash(email)
+    st.session_state["email_enc"]      = _encrypt_email(email)
+    st.session_state["session_start"]  = datetime.now(timezone.utc)
     st.session_state["last_heartbeat"] = datetime.now(timezone.utc)
-    st.session_state["autenticado"]   = True
+    st.session_state["autenticado"]    = True
 
     log_event("login")
     return session_id
@@ -170,13 +225,11 @@ def log_event(evento: str) -> bool:
 
     Retorna True se o insert foi bem-sucedido, False caso contrário.
     Nunca levanta exceção — falha silenciosa para não quebrar o app.
-
-    Requer que init_session() já tenha sido chamada (exceto no próprio login,
-    onde os valores são passados diretamente via st.session_state logo antes).
     """
     try:
         now        = datetime.now(timezone.utc)
         hash_email = st.session_state.get("hash_email", "unknown")
+        email_enc  = st.session_state.get("email_enc", None)
         session_id = st.session_state.get("session_id", "unknown")
         duracao    = get_session_duration() if evento in ("logout", "timeout") else None
 
@@ -184,6 +237,7 @@ def log_event(evento: str) -> bool:
             "timestamp_utc":    now.isoformat(),
             "event_date":       now.date().isoformat(),
             "hash_email":       hash_email,
+            "email_enc":        email_enc,
             "hash_ip":          _hmac_hash(_get_ip()),
             "session_id":       session_id,
             "evento":           evento,
@@ -217,11 +271,6 @@ def delete_user_data(email: str) -> tuple[bool, int]:
     e executa DELETE por hash — o email nunca é usado na query.
 
     Retorna (sucesso: bool, linhas_removidas: int).
-
-    ATENÇÃO: BigQuery cobra por bytes processados no DELETE.
-    Como a tabela é particionada por event_date sem filtro obrigatório,
-    o DELETE varre todas as partições. Para tabelas grandes, considere
-    adicionar um índice de datas por usuário.
     """
     try:
         hash_email = _hmac_hash(email)
@@ -238,7 +287,7 @@ def delete_user_data(email: str) -> tuple[bool, int]:
         )
 
         job = _bq_client().query(query, job_config=job_config)
-        job.result()  # aguarda conclusão
+        job.result()
 
         rows_deleted = job.num_dml_affected_rows or 0
         log.info(f"[audit] LGPD delete: {rows_deleted} registros removidos para hash {hash_email[:8]}...")
@@ -247,14 +296,3 @@ def delete_user_data(email: str) -> tuple[bool, int]:
     except Exception as e:
         log.error(f"[audit] Falha ao executar delete LGPD: {e}")
         return False, 0
-
-
-
-# ─────────────────────────────────────────────
-# def HASH
-# ─────────────────────────────────────────────
-def hmac_hash(value: str) -> str:
-    """Versão pública do hash para uso externo (ex: aba de privacidade)."""
-    return _hmac_hash(value)
-
-
