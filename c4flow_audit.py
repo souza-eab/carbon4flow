@@ -247,3 +247,14 @@ def delete_user_data(email: str) -> tuple[bool, int]:
     except Exception as e:
         log.error(f"[audit] Falha ao executar delete LGPD: {e}")
         return False, 0
+
+
+
+# ─────────────────────────────────────────────
+# def HASH
+# ─────────────────────────────────────────────
+def hmac_hash(value: str) -> str:
+    """Versão pública do hash para uso externo (ex: aba de privacidade)."""
+    return _hmac_hash(value)
+
+
