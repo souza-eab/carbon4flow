@@ -414,9 +414,12 @@ def load_parquet_from_gdrive(file_id: str) -> pd.DataFrame:
         response.raise_for_status()
         df = pd.read_parquet(BytesIO(response.content))
         return df
+    #except Exception as e:
+        #st.error(f"❌ Erro ao carregar dados: {str(e)}")
+        #return None
     except Exception as e:
-        st.error(f"❌ Erro ao carregar dados: {str(e)}")
-        return None
+        st.error(f"[audit] {e}")  # ← temporário para diagnóstico
+        return False
 
 def clean_numeric_columns(df: pd.DataFrame, columns: list) -> pd.DataFrame:
     df_clean = df.copy()
