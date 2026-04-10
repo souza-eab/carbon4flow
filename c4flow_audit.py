@@ -44,7 +44,7 @@ from google.oauth2 import service_account
 # Configuração
 # ─────────────────────────────────────────────
 
-_PROJECT    = "ee-souza"
+_PROJECT    = "ee-souza759"
 _TABLE      = f"{_PROJECT}.carbon4flow_audit.access_events"
 _APP_VERSION = "0.0.4"  # atualizar a cada deploy
 
