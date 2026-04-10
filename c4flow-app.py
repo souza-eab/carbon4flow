@@ -1664,7 +1664,7 @@ def _render_info() -> None:
     with col2:
         st.info(
             f"📅 **Retenção:** {_RETENCAO_DIAS} dias\n\n"
-            "🔐 **Armazenamento:** Google BigQuery (projeto ee-souza)\n\n"
+            "🔐 **Armazenamento:** Google BigQuery ()\n\n"
             "🚫 **Nunca armazenamos:** email, IP ou nome em texto claro\n\n"
             f"📩 **Responsável:** {_CONTATO_RESPONSAVEL}"
         )
