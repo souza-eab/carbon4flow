@@ -1617,14 +1617,13 @@ with tabs[5]:
                     col.text(f"• {cols_list[i + j]}")
 
 
+ 
+
 # =====================================
 # ABA 7: Privacidade
 # =====================================
 
-with tabs[6]:
-    render_privacy_tab()
- 
- 
+
 import streamlit as st
 #from c4flow_audit import delete_user_data, _hmac_hash
 from c4flow_audit import delete_user_data, hmac_hash
@@ -1760,3 +1759,11 @@ def render_privacy_tab() -> None:
     """
     _render_info()
     _render_exclusao()
+
+
+# =====================================
+# ABA 7: Privacidade
+# =====================================
+
+with tabs[6]:
+    render_privacy_tab()
