@@ -16,3 +16,4 @@ altair>=5
 requests
 google-cloud-bigquery
 streamlit-autorefresh>=1.0.1
+cryptography
