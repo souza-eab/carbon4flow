@@ -1624,9 +1624,10 @@ with tabs[5]:
 with tabs[6]:
     render_privacy_tab()
  
-import streamlit as st
-from c4flow_audit import delete_user_data, _hmac_hash
- 
+#import streamlit as st
+#from c4flow_audit import delete_user_data, _hmac_hash
+from c4flow_audit import delete_user_data, hmac_hash
+
 # ── Constantes ────────────────────────────────────────────────
 _CONTATO_RESPONSAVEL = "edriano.souza@ipam.org.br"
 _RETENCAO_DIAS       = 90
