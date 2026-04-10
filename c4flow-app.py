@@ -1621,13 +1621,14 @@ with tabs[5]:
 # ABA 7: Privacidade
 # =====================================
 
+with tabs[6]:
+    render_privacy_tab()
  
-#import streamlit as st
+ 
+import streamlit as st
 #from c4flow_audit import delete_user_data, _hmac_hash
 from c4flow_audit import delete_user_data, hmac_hash
 
-with tabs[6]:
-    render_privacy_tab()
 
 # ── Constantes ────────────────────────────────────────────────
 _CONTATO_RESPONSAVEL = "edriano.souza@ipam.org.br"
