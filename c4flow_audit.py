@@ -6,9 +6,9 @@ Módulo de auditoria de acesso do Carbon4Flow.
 Responsabilidades:
   - Anonimizar email e IP via HMAC-SHA256 com salt (st.secrets)
   - Criptografar email em texto claro via Fernet AES-256 (st.secrets)
+  - Capturar geolocalização aproximada via ipinfo.io (país, estado, cidade)
   - Gerar session_id único por sessão
   - Inserir eventos na tabela BigQuery access_events
-  - Expor funções simples para o app: init_session, log_event
 
 Tabela destino:
   ee-souza759.carbon4flow_audit.access_events
@@ -17,6 +17,7 @@ Secrets necessários em .streamlit/secrets.toml:
   [audit]
   salt        = "string-secreta-longa-e-aleatoria"
   encrypt_key = "chave-fernet-gerada-com-Fernet.generate_key()"
+  ipinfo_token = "token-do-ipinfo.io"
 
 Eventos possíveis:
   'login'      → disparado na barreira de entrada após consentimento
@@ -28,11 +29,12 @@ Notas LGPD:
   - Email e IP nunca são armazenados em texto claro
   - HMAC-SHA256 com salt torna os hashes irreversíveis sem o salt
   - email_enc é criptografado com Fernet — só decifrável com encrypt_key
-  - encrypt_key armazenada apenas em st.secrets, nunca no repositório
+  - Localização (país, estado, cidade) coletada com consentimento explícito
   - Retenção automática de 90 dias via partition_expiration_days no BigQuery
 
 CHANGELOG:
-  - Adicionado campo email_enc (Fernet AES-256) para identificação admin
+  - Adicionado campo email_enc (Fernet AES-256)
+  - Adicionados campos pais, estado, cidade via ipinfo.io
   - project ID corrigido para ee-souza759
 """
 
@@ -43,6 +45,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Optional
 
+import requests as _requests
 import streamlit as st
 from cryptography.fernet import Fernet
 from google.cloud import bigquery
@@ -60,15 +63,11 @@ log = logging.getLogger(__name__)
 
 
 # ─────────────────────────────────────────────
-# Cliente BigQuery — reutiliza credenciais GCP
+# Cliente BigQuery
 # ─────────────────────────────────────────────
 
 @st.cache_resource(show_spinner=False)
 def _bq_client() -> bigquery.Client:
-    """
-    Reutiliza o service account já configurado para o GCS.
-    Adiciona o escopo BigQuery às credenciais.
-    """
     info  = dict(st.secrets["gcp_service_account"])
     creds = service_account.Credentials.from_service_account_info(
         info,
@@ -85,15 +84,6 @@ def _bq_client() -> bigquery.Client:
 # ─────────────────────────────────────────────
 
 def _hmac_hash(value: str) -> str:
-    """
-    HMAC-SHA256(value, salt).
-
-    Mais seguro que SHA-256(value + salt) pois o HMAC
-    usa o salt como chave criptográfica — resistente a
-    ataques de extensão de comprimento (length extension attacks).
-
-    Retorna string hex de 64 chars.
-    """
     salt = st.secrets["audit"]["salt"].encode("utf-8")
     return hmac.new(salt, value.encode("utf-8"), hashlib.sha256).hexdigest()
 
@@ -109,36 +99,58 @@ def hmac_hash(value: str) -> str:
 
 @st.cache_resource(show_spinner=False)
 def _fernet() -> Fernet:
-    """
-    Instância Fernet usando encrypt_key dos secrets.
-    cache_resource garante instância única por worker.
-    """
     key = st.secrets["audit"]["encrypt_key"].encode("utf-8")
     return Fernet(key)
 
 
 def _encrypt_email(email: str) -> str:
-    """
-    Criptografa o email com Fernet AES-256.
-    Retorna string base64 — armazenável como STRING no BigQuery.
-    Só decifrável com a encrypt_key correta.
-    """
     return _fernet().encrypt(email.encode("utf-8")).decode("utf-8")
 
 
 def decrypt_email(token: str) -> str:
     """
     Decifra um email_enc da tabela BigQuery.
-
     USO LOCAL — rode no script decrypt_emails.py, nunca no app em produção.
-
-    Parâmetro:
-      token : valor do campo email_enc vindo do BigQuery
-
-    Retorna o email em texto claro.
-    Levanta InvalidToken se a chave estiver errada ou o token corrompido.
     """
     return _fernet().decrypt(token.encode("utf-8")).decode("utf-8")
+
+
+# ─────────────────────────────────────────────
+# Geolocalização — ipinfo.io
+# ─────────────────────────────────────────────
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def _get_geo(ip: str) -> dict:
+    """
+    Consulta ipinfo.io para obter país, estado e cidade a partir do IP.
+
+    Cache de 1 hora por IP — evita chamadas repetidas do mesmo usuário.
+    Retorna dict com pais, estado, cidade.
+    Retorna valores 'unknown' se falhar — nunca quebra o fluxo.
+
+    Plano gratuito: 50.000 requests/mês.
+    """
+    if ip in ("unknown", "127.0.0.1", "::1"):
+        return {"pais": "unknown", "estado": "unknown", "cidade": "unknown"}
+
+    try:
+        token = st.secrets["audit"]["ipinfo_token"]
+        r = _requests.get(
+            f"https://ipinfo.io/{ip}/json",
+            headers={"Authorization": f"Bearer {token}"},
+            timeout=5,
+        )
+        if r.status_code == 200:
+            data = r.json()
+            return {
+                "pais":   data.get("country", "unknown"),
+                "estado": data.get("region",  "unknown"),
+                "cidade": data.get("city",    "unknown"),
+            }
+        return {"pais": "unknown", "estado": "unknown", "cidade": "unknown"}
+    except Exception as e:
+        log.warning(f"[geo] Falha ao consultar ipinfo.io: {e}")
+        return {"pais": "unknown", "estado": "unknown", "cidade": "unknown"}
 
 
 # ─────────────────────────────────────────────
@@ -146,11 +158,6 @@ def decrypt_email(token: str) -> str:
 # ─────────────────────────────────────────────
 
 def _get_ip() -> str:
-    """
-    Tenta capturar o IP real do usuário.
-    No Streamlit Cloud o IP real vem via X-Forwarded-For.
-    Retorna 'unknown' se não conseguir — nunca quebra o fluxo.
-    """
     try:
         headers   = st.context.headers
         forwarded = headers.get("X-Forwarded-For", "")
@@ -162,7 +169,6 @@ def _get_ip() -> str:
 
 
 def _get_user_agent() -> str:
-    """Captura o User-Agent do navegador."""
     try:
         return st.context.headers.get("User-Agent", "unknown")
     except Exception:
@@ -180,15 +186,15 @@ def init_session(email: str) -> str:
     - Gera session_id único (UUID v4)
     - Armazena hash do email (nunca o email em texto claro)
     - Criptografa email para gravação no BigQuery
+    - Captura geolocalização via ipinfo.io
     - Registra timestamp de início
     - Dispara evento 'login' no BigQuery
-
-    Deve ser chamada uma única vez, logo após o consentimento
-    e validação do email na barreira de entrada.
 
     Retorna o session_id gerado.
     """
     session_id = str(uuid.uuid4())
+    ip         = _get_ip()
+    geo        = _get_geo(ip)
 
     st.session_state["session_id"]     = session_id
     st.session_state["hash_email"]     = _hmac_hash(email)
@@ -196,16 +202,13 @@ def init_session(email: str) -> str:
     st.session_state["session_start"]  = datetime.now(timezone.utc)
     st.session_state["last_heartbeat"] = datetime.now(timezone.utc)
     st.session_state["autenticado"]    = True
+    st.session_state["geo"]            = geo  # cache na sessão — não consulta de novo
 
     log_event("login")
     return session_id
 
 
 def get_session_duration() -> Optional[int]:
-    """
-    Retorna duração da sessão em segundos desde o login.
-    Retorna None se a sessão não foi inicializada.
-    """
     start = st.session_state.get("session_start")
     if start is None:
         return None
@@ -232,6 +235,7 @@ def log_event(evento: str) -> bool:
         email_enc  = st.session_state.get("email_enc", None)
         session_id = st.session_state.get("session_id", "unknown")
         duracao    = get_session_duration() if evento in ("logout", "timeout") else None
+        geo        = st.session_state.get("geo", {"pais": None, "estado": None, "cidade": None})
 
         row = {
             "timestamp_utc":    now.isoformat(),
@@ -244,6 +248,9 @@ def log_event(evento: str) -> bool:
             "duracao_segundos": duracao,
             "user_agent":       _get_user_agent(),
             "app_version":      _APP_VERSION,
+            "pais":             geo.get("pais"),
+            "estado":           geo.get("estado"),
+            "cidade":           geo.get("cidade"),
         }
 
         errors = _bq_client().insert_rows_json(_TABLE, [row])
@@ -266,10 +273,6 @@ def log_event(evento: str) -> bool:
 def delete_user_data(email: str) -> tuple[bool, int]:
     """
     Remove todos os registros do usuário da tabela BigQuery.
-
-    Recebe o email em texto claro, gera o hash internamente
-    e executa DELETE por hash — o email nunca é usado na query.
-
     Retorna (sucesso: bool, linhas_removidas: int).
     """
     try:
