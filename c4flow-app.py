@@ -793,11 +793,11 @@ st.sidebar.caption(f"Última atualização: {datetime.now().strftime('%d/%m/%Y %
 
 
 st.sidebar.divider()
-st.markdown("""🎲 Base de dados:  📥Verra  |  🔎Terrabrasils 🔴Prodes¹ e 🟠Deter¹ consultados via (OWS)  |  🌳 GFW¹ (api-tiles)""")
-st.markdown("""
+st.sidebar.metric("""🎲 Base de dados:  📥Verra  |  🔎Terrabrasils 🔴Prodes¹ e 🟠Deter¹ consultados via (OWS)  |  🌳 GFW¹ (api-tiles)""")
+st.sidebar.metric("""
     ⚠️ **¹Necessita de validação dados espaciais**, em breve buscaremos ⭐new features de +validação, mais bases e novas funcionalidades.  \nDesenvolvedor: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
 """)
-st.markdown("""🚩É um protótipo e os resultados necessitam de validações! || 😊+Recente: 📈 Análises Safras/Vintage e 📖 Storytelling > 📍Dados AOI""")
+st.sidebar.metric("""🚩É um protótipo e os resultados necessitam de validações! || 😊+Recente: 📈 Análises Safras/Vintage e 📖 Storytelling > 📍Dados AOI""")
 
 
 # =====================================
