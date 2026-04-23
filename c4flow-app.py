@@ -816,7 +816,7 @@ st.sidebar.divider()
 # =====================================
 
 st.title("🌎 Carbon4Flow")
-st.markdown("""Revelamos onde estão, quanto geram de créditos e cruzamentos espaciais dos projetos de Carbono (AFOLU) no Brasil.""")
+st.markdown("""Revelamos onde estão, quanto geram de créditos e cruzamentos espaciais dos projetos de Carbono (AFOLU) no Brasil. 🎲Dados: Verra""")
 
 #st.markdown("""🚩É um protótipo e os resultados necessitam de validações! || 😊+Recente: 📈 Análises Safras/Vintage e 📖 Storytelling > 📍Dados AOI""")
 
