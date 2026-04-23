@@ -56,7 +56,7 @@ def _render_gate():
         st.divider()
  
         st.markdown(
-            "Para acessar o Carbon4Flow, informe seu email institucional. "
+            "Para acessar o Carbon4Flow, informe seu email válido/institucional. "
             "Seus dados são tratados conforme a **LGPD** — nenhuma informação "
             "pessoal é armazenada em texto claro."
         )
