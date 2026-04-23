@@ -414,7 +414,7 @@ st.set_page_config(
 
 st.logo(
     "https://raw.githubusercontent.com/souza-eab/carbon4flow/main/img/ipam_logo.png",
-    size="small",
+    size="large", # "small": 20px max height | "medium" (default): 24px max height | "large": 32px max height
     link="https://ipam.org.br",
     icon_image="https://raw.githubusercontent.com/souza-eab/carbon4flow/main/img/QR_CODE_C4FLOW.png"
 )
