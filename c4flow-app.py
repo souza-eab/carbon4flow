@@ -816,14 +816,14 @@ st.sidebar.divider()
 # =====================================
 
 st.title("🌎 Carbon4Flow")
-st.markdown("""Revelamos onde estão, quanto geram de créditos e cruzamentos espaciais dos projetos de Carbono (AFOLU) no Brasil. 🎲Dados: Verra""")
+st.markdown("""Revelamos onde estão, quanto geram de créditos e cruzamentos espaciais dos projetos de Carbono (AFOLU) no Brasil.""")
 
 #st.markdown("""🚩É um protótipo e os resultados necessitam de validações! || 😊+Recente: 📈 Análises Safras/Vintage e 📖 Storytelling > 📍Dados AOI""")
 
-#st.markdown("""🎲 Base de dados:  📥Verra  |  🔎Terrabrasils 🔴Prodes¹ e 🟠Deter¹ consultados via (OWS)  |  🌳 GFW¹ (api-tiles)""")
-#st.markdown("""
-#    ⚠️ **¹Necessita de validação dados espaciais**, em breve buscaremos ⭐new features de +validação, mais bases e novas funcionalidades.  \nDesenvolvedor: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
-#""")
+st.markdown("""🎲 Base de dados:  📥Verra  |  🔎Terrabrasils 🔴Prodes¹ e 🟠Deter¹ consultados via (OWS)  |  🌳 GFW¹ (api-tiles)""")
+st.markdown("""
+    ⚠️ **¹Necessita de validação dados espaciais**, em breve buscaremos ⭐new features de +validação, mais bases e novas funcionalidades.  \nDesenvolvedor: Edriano Souza. Reporting Issues: edriano.souza@ipam.org.br
+""")
 #st.markdown("""🚩É um protótipo e os resultados necessitam de validações! || 😊+Recente: 📈 Análises Safras/Vintage e 📖 Storytelling > 📍Dados AOI""")
 
 if 'selected_state_overview' not in st.session_state:
