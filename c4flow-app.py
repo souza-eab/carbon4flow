@@ -404,11 +404,19 @@ st.set_page_config(
 
 #st.logo(image, *, size="medium", link=None, icon_image=None)
 # img/ipam_logo.png
+# Add Logo
+#st.logo(
+#    "https://github.com/souza-eab/carbon4flow/blob/main/img/ipam_logo.png",
+#    size = "small",
+#    link="https://ipam.org.br",
+#    icon_image="https://github.com/souza-eab/carbon4flow/blob/main/img/QR_CODE_C4FLOW.png"
+#)
+
 st.logo(
-    "https://github.com/souza-eab/carbon4flow/blob/main/img/ipam_logo.png",
-    size = "small",
+    "https://raw.githubusercontent.com/souza-eab/carbon4flow/main/img/ipam_logo.png",
+    size="small",
     link="https://ipam.org.br",
-    icon_image="https://github.com/souza-eab/carbon4flow/blob/main/img/QR_CODE_C4FLOW.png"
+    icon_image="https://raw.githubusercontent.com/souza-eab/carbon4flow/main/img/QR_CODE_C4FLOW.png"
 )
 # =====================================
 # FUNÇÕES AUXILIARES
