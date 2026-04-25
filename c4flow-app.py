@@ -1547,7 +1547,7 @@ with tabs[4]:
             #### 1. Concentração Geográfica
             A maioria dos projetos se concentra em poucos estados com histórico de desmatamento elevado.
             #### 2. Predominância REDD+
-            Projetos REDD+ são os mais comuns, refletindo a urgência do combate ao desmatamento.
+            Projetos REDD+ são os mais comuns, refletindo a urgência do combate ao desmatamento e degradação.
             #### 3. Ciclo de Maturação
             Em média, projetos levam alguns anos entre registro e emissão dos primeiros créditos.
             """)
