@@ -867,7 +867,9 @@ with tabs[0]:
             st.metric("Projetos Registrados", f"{active_count:,}")
     with col5:
         if "vcsProjectStatus" in df_credit.columns:
-            active_count = len(df_credit[df_credit["vcsProjectStatus"] != ""])
+            ##active_count = len(df_credit[df_credit["vcsProjectStatus"] != ""])
+            active_count = (len(df_credit[df_credit["resourceName_x"].isin(df_credit["resourceName_x"])])
+            if st.session_state.selected_state_overview else len(df_credit)
             st.metric("Projetos Cred. Apos", f"{active_count:,}")
  
     with col3:
