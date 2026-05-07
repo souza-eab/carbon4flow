@@ -858,7 +858,7 @@ with tabs[0]:
             st.session_state.selected_state_overview = None
             st.rerun()
 
-    col1, col2, col3, col4, col5 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
         st.metric("Total de Projetos", f"{len(df_overview):,}")
     with col2:
@@ -874,6 +874,7 @@ with tabs[0]:
 
     with col5
         st.metric("📊 Proj. Cred. Apos.", f"{len(df_credit):,}")
+ 
  
  
     with col3:
