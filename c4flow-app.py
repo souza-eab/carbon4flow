@@ -858,7 +858,7 @@ with tabs[0]:
             st.session_state.selected_state_overview = None
             st.rerun()
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(4)
     with col1:
         st.metric("Total de Projetos", f"{len(df_overview):,}")
     with col2:
@@ -871,6 +871,10 @@ with tabs[0]:
     #        active_count = (len(df_credit[df_credit["resourceName_x"].isin(df_credit["resourceName_x"])])
     #        if st.session_state.selected_state_overview else len(df_credit))
     #        st.metric("Projetos Cred. Apos", f"{active_count:,}")
+
+    with col5
+        st.metric(f"📊 Proj. Cred. Apos.**{len(df_credit_unique):,} ** ID (de {len(df_credit):,})")
+ 
  
     with col3:
         credit_count = (
