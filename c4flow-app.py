@@ -873,7 +873,7 @@ with tabs[0]:
     #        st.metric("Projetos Cred. Apos", f"{active_count:,}")
 
     with col5
-        st.metric("📊 Proj. Cred. Apos.",f"{len(df_credit_unique):,}")
+        st.metric("📊 Proj. Cred. Apos.", f"{len(df_credit):,}")
  
  
     with col3:
