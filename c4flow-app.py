@@ -874,9 +874,6 @@ with tabs[0]:
 
     with col5
         st.metric("📊 Proj. Cred. Apos.", f"{len(df_credit):,}")
- 
- 
- 
     with col3:
         credit_count = (
             len(df_credit[df_credit["resourceName_x"].isin(df_overview["resourceName_x"])])
