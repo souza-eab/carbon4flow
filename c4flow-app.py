@@ -858,13 +858,18 @@ with tabs[0]:
             st.session_state.selected_state_overview = None
             st.rerun()
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
         st.metric("Total de Projetos", f"{len(df_overview):,}")
     with col2:
         if "vcsProjectStatus" in df_overview.columns:
             active_count = len(df_overview[df_overview["vcsProjectStatus"] == "Registered"])
             st.metric("Projetos Registrados", f"{active_count:,}")
+    with col5:
+        if "vcsProjectStatus" in df_overview.columns:
+            active_count = len(df_overview[df_overview["vcsProjectStatus"] =! ""])
+            st.metric("Projetos Cred. Apos", f"{active_count:,}")
+ 
     with col3:
         credit_count = (
             len(df_credit[df_credit["resourceName_x"].isin(df_overview["resourceName_x"])])
